@@ -1,0 +1,31 @@
+# JetBrains IDEs
+.idea/
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Directories for test coverage reports
+coverage/
+
+# Production build files
+dist/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Mac system files
+.DS_Store
+
+# IDE specific files
+.vscode/
