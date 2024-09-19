@@ -1,0 +1,47 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        title= title
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        link(rel='stylesheet', href='stylesheets/style.css')
+        link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css')
+    body.bg-light.min-vh-100.d-flex.flex-column
+        div.phoframe
+        div.container-fluid.flex-grow-1.border.border-2.border-danger(style='min-height: 100%; position: relative;')
+            // Navbar
+            nav.navbar.navbar-expand-lg.navbar-light.bg-light
+                .container
+                    a.navbar-brand(href=domain)= title
+                    button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#mainNavbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+                        span.navbar-toggler-icon
+                    #mainNavbarNav.collapse.navbar-collapse
+                        ul.navbar-nav.ml-auto
+                            li.nav-item
+                                a.nav-link(href=domain, class=(activePage === 'Home' ? 'active' : ''))
+                                    div Home
+                            li.nav-item
+                                a.nav-link(href=domain + 'about', class=(activePage === 'About' ? 'active' : ''))
+                                    div About
+                            li.nav-item
+                                a.nav-link(href=domain + 'contact', class=(activePage === 'Contact' ? 'active' : ''))
+                                    div Contact
+            // Main content
+            block content
+            // Footer
+            footer(style='position: absolute; bottom: 0; width: 100%; color: gray;')
+                div.row
+                    div.col-12.text-center
+                        p
+                            | Copyright &#169; 2021-
+                            span(id='current-year')
+                            a(href=domain, style='text-decoration: none; color: gray;')
+                                |  #{author}
+    script(type='text/javascript').
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+// Include Bootstrap JS (via npm-installed file)
+script(src='/javascripts/bootstrap.bundle.min.js')
+script(src='/javascripts/script.js')
+// Include Font Awesome JS
+script(src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js')

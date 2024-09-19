@@ -1,0 +1,61 @@
+// Custom Colours - Define these BEFORE importing Bootstrap's styles
+$primary: #606c38
+$secondary: #283618
+$tertiary: #fefae0
+$quaternary: #dda15e
+$quinary: #bc6c25
+$frame-color: #ffc9b9
+
+// Now import Bootstrap's SCSS files so it uses the above variables
+@import "../../node_modules/bootstrap/scss/functions"
+@import "../../node_modules/bootstrap/scss/variables"
+@import "../../node_modules/bootstrap/scss/mixins"
+
+// Custom styles for your website
+body
+  padding: 50px
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+
+a
+  color: #00B7FF
+
+/* Floating border around the page */
+.phoframe
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  margin: 0
+  padding: 5px
+  border: 1em solid $frame-color
+  z-index: 9999
+  pointer-events: none
+
+
+// Custom styles to the active navbar item
+.nav-link
+  color: $tertiary
+
+  &.active
+    font-weight: bold
+    color: $quaternary
+
+    div
+      border-bottom: 4px solid $quaternary
+      border-radius: 50px
+      animation: border-bottom 1s ease-in-out both 0.5s
+
+
+  &:hover
+    color: $quaternary
+
+// Animation for the active navitem, from left to right drawing
+@keyframes border-bottom
+  0%
+    width: 0
+  100%
+    width: 100%
+
+// Finally, import Bootstrap's styles
+@import "../../node_modules/bootstrap/scss/bootstrap"

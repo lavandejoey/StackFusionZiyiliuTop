@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    .container.mt-5
+        h2.text-center.mb-4 Contact Me
+        p.text-center You can reach me through my social media accounts or via email.
+        .row.justify-content-center
+            // Social Media Links with QR codes on hover
+            .col-md-3.text-center
+                a(href='https://twitter.com/yourprofile', target='_blank')
+                    i.fab.fa-twitter.fa-2x(style='color: #1DA1F2') Twitter
+                div.qr-code.twitter-qr(style='display: none;')
+                    img(src='/images/twitter-qr.png', alt='Twitter QR', width='150')
+            .col-md-3.text-center
+                a(href='https://linkedin.com/in/yourprofile', target='_blank')
+                    i.fab.fa-linkedin.fa-2x(style='color: #0077B5') LinkedIn
+                div.qr-code.linkedin-qr(style='display: none;')
+                    img(src='/images/linkedin-qr.png', alt='LinkedIn QR', width='150')
+            .col-md-3.text-center
+                a(href='mailto:lavandejoey@outlook.com')
+                    i.fas.fa-envelope.fa-2x(style='color: #D44638') Email
+                div.qr-code.email-qr(style='display: none;')
+                    img(src='/images/email-qr.png', alt='Email QR', width='150')
