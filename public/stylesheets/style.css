@@ -19,22 +19,20 @@ a {
   pointer-events: none; }
 
 .nav-link {
-  color: #fefae0; }
+  color: #fefae0;
+  font-weight: normal;
+  min-width: 100px; }
   .nav-link.active {
     font-weight: bold;
-    color: #dda15e; }
-    .nav-link.active div {
-      border-bottom: 4px solid #dda15e;
-      border-radius: 50px;
-      animation: border-bottom 1s ease-in-out both 0.5s; }
+    pointer-events: none; }
   .nav-link:hover {
-    color: #dda15e; }
+    font-weight: bold;
+    transform: scale(1.1);
+    transition: all 0.25s ease-in-out; }
 
-@keyframes border-bottom {
-  0% {
-    width: 0; }
-  100% {
-    width: 100%; } }
+/* Remove the dropdown arrow */
+.no-caret::after {
+  display: none; }
 
 /*!
    * Bootstrap  v5.3.3 (https://getbootstrap.com/)

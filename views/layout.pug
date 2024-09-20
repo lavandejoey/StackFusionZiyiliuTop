@@ -8,40 +8,51 @@ html(lang='en')
         link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css')
     body.bg-light.min-vh-100.d-flex.flex-column
         div.phoframe
-        div.container-fluid.flex-grow-1.border.border-2.border-danger(style='min-height: 100%; position: relative;')
+        div.container-fluid.flex-grow-1(style='min-height: 100%; position: relative;')
             // Navbar
-            nav.navbar.navbar-expand-lg.navbar-light.bg-light
-                .container
-                    a.navbar-brand(href=domain)= title
+            nav.navbar.navbar-expand-sm.navbar-light.bg-light
+                div.container
                     button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#mainNavbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
                         span.navbar-toggler-icon
                     #mainNavbarNav.collapse.navbar-collapse
                         ul.navbar-nav.ml-auto
                             li.nav-item
                                 a.nav-link(href=domain, class=(activePage === 'Home' ? 'active' : ''))
-                                    div Home
+                                    span(class=(activePage === 'Home' ? 'underline' : '')) ZLiu's
                             li.nav-item
                                 a.nav-link(href=domain + 'about', class=(activePage === 'About' ? 'active' : ''))
-                                    div About
+                                    span(class=(activePage === 'About' ? 'underline' : '')) #{__('About')}
                             li.nav-item
                                 a.nav-link(href=domain + 'contact', class=(activePage === 'Contact' ? 'active' : ''))
-                                    div Contact
+                                    span(class=(activePage === 'Contact' ? 'underline' : '')) #{__('Contact')}
+                // Language Switcher
+                div.dropdown.d-flex.justify-content-center.align-items-center
+                    button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle='dropdown')
+                        i.fas.fa-language
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href='?lang=en') English
+                        li
+                            a.dropdown-item(href='?lang=fr') Français
+                        li
+                            a.dropdown-item(href='?lang=zh-CN') 中文
+                        li
+                            a.dropdown-item(href='?lang=zh-HK') 繁體中文
             // Main content
             block content
-            // Footer
-            footer(style='position: absolute; bottom: 0; width: 100%; color: gray;')
-                div.row
-                    div.col-12.text-center
-                        p
-                            | Copyright &#169; 2021-
-                            span(id='current-year')
-                            a(href=domain, style='text-decoration: none; color: gray;')
-                                |  #{author}
+            // Centered Footer
+            footer.w-100.d-flex.justify-content-center.py-3(style='position: absolute; bottom: 0; color: gray;')
+                div.text-center
+                    p.mb-0
+                        | Copyright &#169; 2021-
+                        span(id='current-year')
+                        a(href=domain, style='text-decoration: none; color: gray;')
+                            |  #{author}
     script(type='text/javascript').
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
 // Include Bootstrap JS (via npm-installed file)
 script(src='/javascripts/bootstrap.bundle.min.js')
-script(src='/javascripts/script.js')
+script(type='module' src='/javascripts/script.js')
 // Include Font Awesome JS
 script(src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js')

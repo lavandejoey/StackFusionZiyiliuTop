@@ -36,26 +36,22 @@ a
 // Custom styles to the active navbar item
 .nav-link
   color: $tertiary
+  font-weight: normal
+  min-width: 100px
 
   &.active
     font-weight: bold
-    color: $quaternary
-
-    div
-      border-bottom: 4px solid $quaternary
-      border-radius: 50px
-      animation: border-bottom 1s ease-in-out both 0.5s
-
+    // unclickable
+    pointer-events: none
 
   &:hover
-    color: $quaternary
+    font-weight: bold
+    transform: scale(1.1)
+    transition: all 0.25s ease-in-out
 
-// Animation for the active navitem, from left to right drawing
-@keyframes border-bottom
-  0%
-    width: 0
-  100%
-    width: 100%
+/* Remove the dropdown arrow */
+.no-caret::after
+  display: none
 
 // Finally, import Bootstrap's styles
 @import "../../node_modules/bootstrap/scss/bootstrap"
