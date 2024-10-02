@@ -8,6 +8,7 @@ const geoip = require('geoip-lite');
 const i18n = require('./i18nConfig');
 
 const indexRouter = require('./routes/index');
+const aboutMeRouter = require('./routes/about_me');
 const contactRouter = require('./routes/contact');
 const usersRouter = require('./routes/users');
 
@@ -33,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(i18n.init); // Initialize i18n middleware
 app.use((req, res, next) => {
     // Set default language
-    // let lang = req.cookies.locale || 'en'; // Use cookie if available, otherwise default to 'en'
+    let lang = req.cookies.locale || 'en'; // Use cookie if available, otherwise default to 'en'
 
     // Get browser/system language
     const browserLang = req.headers['accept-language']?.split(',')[0];
@@ -71,11 +72,12 @@ app.use((req, res, next) => {
 
 // Define global variable
 // app.locals.domain = 'https://ZiyiLiu.top/';
-app.locals.domain = 'http://localhost:3001/';// debug
+app.locals.domain = 'http://localhost:2069/';// debug
 app.locals.title = 'ZLiu';
 app.locals.author = 'Ziyi LIU';
 
 app.use('/', indexRouter);
+app.use('/about_me', aboutMeRouter);
 app.use('/contact', contactRouter);
 app.use('/users', usersRouter);
 

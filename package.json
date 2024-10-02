@@ -12,12 +12,14 @@
     "debug": "~4.3.5",
     "express": "^4.19.2",
     "geoip-lite": "^1.4.10",
+    "glob": "^9.3.5",
     "http-errors": "~1.6.3",
     "i18n": "^0.15.1",
     "morgan": "~1.9.1",
     "node-sass-middleware": "^1.1.0",
     "pug": "^3.0.3",
+    "rimraf": "^4.4.1",
     "rough-notation": "^0.5.1",
-    "sass": "^1.78.0"
+    "sass": "^1.79.4"
   }
 }

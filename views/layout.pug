@@ -14,30 +14,35 @@ html(lang='en')
                 div.container
                     button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#mainNavbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
                         span.navbar-toggler-icon
-                    #mainNavbarNav.collapse.navbar-collapse
-                        ul.navbar-nav.ml-auto
+                    #mainNavbarNav.collapse.navbar-collapse.d-flex
+                        ul.navbar-nav
                             li.nav-item
                                 a.nav-link(href=domain, class=(activePage === 'Home' ? 'active' : ''))
                                     span(class=(activePage === 'Home' ? 'underline' : '')) ZLiu's
                             li.nav-item
-                                a.nav-link(href=domain + 'about', class=(activePage === 'About' ? 'active' : ''))
-                                    span(class=(activePage === 'About' ? 'underline' : '')) #{__('About')}
+                                a.nav-link(href=domain + 'about_me', class=(activePage === 'About Me' ? 'active' : ''))
+                                    span(class=(activePage === 'About Me' ? 'underline' : '')) #{__('About Me')}
                             li.nav-item
                                 a.nav-link(href=domain + 'contact', class=(activePage === 'Contact' ? 'active' : ''))
                                     span(class=(activePage === 'Contact' ? 'underline' : '')) #{__('Contact')}
-                // Language Switcher
-                div.dropdown.d-flex.justify-content-center.align-items-center
-                    button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle='dropdown')
-                        i.fas.fa-language
-                    ul.dropdown-menu
-                        li
-                            a.dropdown-item(href='?lang=en') English
-                        li
-                            a.dropdown-item(href='?lang=fr') Français
-                        li
-                            a.dropdown-item(href='?lang=zh-CN') 中文
-                        li
-                            a.dropdown-item(href='?lang=zh-HK') 繁體中文
+                        // Empty space to push language switcher to the right
+                        div.ms-auto
+                            div.dropdown.d-flex.justify-content-center.align-items-center(style='width: 100px')
+                                button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle='dropdown')
+                                    i.fas.fa-language
+                                ul.dropdown-menu(style='min-width: 0; width: auto; white-space: nowrap;')
+                                    li
+                                        a.dropdown-item.d-flex.justify-content-center(href='?lang=en')
+                                            span English
+                                    li
+                                        a.dropdown-item.d-flex.justify-content-center(href='?lang=fr')
+                                            span Français
+                                    li
+                                        a.dropdown-item.d-flex.justify-content-center(href='?lang=zh-CN')
+                                            span 简体中文
+                                    li
+                                        a.dropdown-item.d-flex.justify-content-center(href='?lang=zh-TW')
+                                            span 繁體中文
             // Main content
             block content
             // Centered Footer

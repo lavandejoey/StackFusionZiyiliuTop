@@ -1,3 +1,20 @@
+// import fonts
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap')
+$weight: 400
+.shantell-sans-normal
+  font-family: "Shantell Sans", cursive
+  font-optical-sizing: auto
+  font-weight: $weight
+  font-style: normal
+  font-variation-settings: "BNCE" 0, "INFM" 0, "SPAC" 0
+
+.shantell-sans-italic
+  font-family: "Shantell Sans", cursive
+  font-optical-sizing: auto
+  font-weight: $weight
+  font-style: italic
+  font-variation-settings: "BNCE" 0, "INFM" 0, "SPAC" 0
+
 // Custom Colours - Define these BEFORE importing Bootstrap's styles
 $primary: #606c38
 $secondary: #283618
@@ -38,9 +55,12 @@ a
   color: $tertiary
   font-weight: normal
   min-width: 100px
+  // center the element in side
+  text-align: center
 
   &.active
     font-weight: bold
+    transform: scale(1.1)
     // unclickable
     pointer-events: none
 
@@ -52,6 +72,11 @@ a
 /* Remove the dropdown arrow */
 .no-caret::after
   display: none
+
+/* Center the dropdown menu */
+.dropdown-menu-center
+  left: 50%
+  transform: translateX(-50%)
 
 // Finally, import Bootstrap's styles
 @import "../../node_modules/bootstrap/scss/bootstrap"
