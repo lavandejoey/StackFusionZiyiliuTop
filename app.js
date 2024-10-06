@@ -6,11 +6,13 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const geoip = require('geoip-lite');
 const i18n = require('./i18nConfig');
+const auth = require('basic-auth');
 
 const indexRouter = require('./routes/index');
 const aboutMeRouter = require('./routes/about_me');
 const contactRouter = require('./routes/contact');
 const usersRouter = require('./routes/users');
+const monitorRouter = require('./routes/monitor');
 
 const app = express();
 
@@ -69,10 +71,26 @@ app.use((req, res, next) => {
     next();
 });
 
+// Authentication middleware for /monitor route
+const monitorAuth = (req, res, next) => {
+    const user = auth(req);
+    const authorizedUsername = "zliu2069";
+    const authorizedPassword = "?:*O65|CL0|?/3H2K$uUnnH.1b+tickAY{++`e:n={gwRUpU_+";
+
+    if (user && user.name === authorizedUsername && user.pass === authorizedPassword) {
+        next();
+    } else {
+        res.set('WWW-Authenticate', 'Basic realm="Monitor Section"');
+        return res.status(401).send('Authentication required.');
+    }
+};
 
 // Define global variable
-// app.locals.domain = 'https://ZiyiLiu.top/';
-app.locals.domain = 'http://localhost:2069/';// debug
+if (process.env.NODE_ENV === 'production') {
+    app.locals.domain = 'https://ziyiliu.top/';
+} else {
+    app.locals.domain = 'http://localhost:2069/';
+}
 app.locals.title = 'ZLiu';
 app.locals.author = 'Ziyi LIU';
 
@@ -80,6 +98,7 @@ app.use('/', indexRouter);
 app.use('/about_me', aboutMeRouter);
 app.use('/contact', contactRouter);
 app.use('/users', usersRouter);
+app.use('/monitor', monitorAuth, monitorRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

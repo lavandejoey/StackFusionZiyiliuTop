@@ -1,0 +1,57 @@
+doctype html
+html
+    head
+        title Visitor Monitor
+        script(src="https://cdn.jsdelivr.net/npm/chart.js")
+        style.
+            canvas {
+                width: 100%;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+    body
+        h1 Visitor Monitor
+
+        // Display parsed log data in chart form
+        canvas#visitorChart
+
+        script.
+            const ctx = document.getElementById('visitorChart').getContext('2d');
+
+            // Prepare data for chart.js
+            const labels = [];
+            const dataset = [];
+            const visitors = !{JSON.stringify(visitors)};
+
+            // Loop over visitors data and extract hourly domain access counts
+            visitors.forEach(visitor => {
+                for (let hour in visitor.requestHourlyDomains) {
+                    labels.push(hour);
+                    let totalRequests = 0;
+                    for (let domain in visitor.requestHourlyDomains[hour]) {
+                        totalRequests += visitor.requestHourlyDomains[hour][domain];
+                    }
+                    dataset.push(totalRequests);
+                }
+            });
+
+            // Create a line chart
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Requests Per Hour',
+                        data: dataset,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Hour' } },
+                        y: { title: { display: true, text: 'Requests' }, beginAtZero: true }
+                    }
+                }
+            });

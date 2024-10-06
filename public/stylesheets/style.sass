@@ -54,7 +54,7 @@ a
 .nav-link
   color: $tertiary
   font-weight: normal
-  min-width: 100px
+  width: 120px
   // center the element in side
   text-align: center
 
@@ -77,6 +77,20 @@ a
 .dropdown-menu-center
   left: 50%
   transform: translateX(-50%)
+
+
+/* CSS to style the vertical line */
+.vertical-line
+  width: 1px
+  /* Adjust height as needed */
+  height: 80%
+  background-color: #ddd
+  position: absolute
+  /* Position in the center between columns */
+  left: 50%
+  top: 10%
+  transform: translateX(-50%)
+
 
 // Finally, import Bootstrap's styles
 @import "../../node_modules/bootstrap/scss/bootstrap"
