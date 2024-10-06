@@ -128,4 +128,12 @@ function getHourlyKey(hoursAgo) {
 }
 
 // Exporting the function for use in other files
-module.exports = { v2rayLogParser };
+module.exports = {v2rayLogParser};
+
+// Usage example:
+const logPath = '/var/log/v2ray/access.log'; // Path to your log file
+v2rayLogParser(logPath, 10).then(visitors => {
+    console.log('Recent unique visitors:', visitors);
+}).catch(error => {
+    console.error('Error parsing logs:', error);
+});

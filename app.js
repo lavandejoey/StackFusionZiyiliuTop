@@ -13,6 +13,7 @@ const aboutMeRouter = require('./routes/about_me');
 const contactRouter = require('./routes/contact');
 const usersRouter = require('./routes/users');
 const monitorRouter = require('./routes/monitor');
+const v2rayRouter = require('./routes/v2ray');
 
 const app = express();
 
