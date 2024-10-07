@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
+const sass = require('sass')
 const geoip = require('geoip-lite');
 const i18n = require('./i18nConfig');
 const auth = require('basic-auth');
@@ -44,11 +45,33 @@ app.use((req, res, next) => {
 
     // Supported languages map by country
     const countryLangMap = {
-        'US': 'en', 'GB': 'en', 'AU': 'en', 'NZ': 'en', 'SG': 'en', // English-speaking countries
-        'FR': 'fr', 'BE': 'fr', 'CA': 'fr', 'CH': 'fr', 'LU': 'fr', 'MC': 'fr', // French-speaking countries
-        'CI': 'fr', 'SN': 'fr', 'MG': 'fr', 'CD': 'fr', 'BF': 'fr', 'NE': 'fr', 'ML': 'fr', 'TD': 'fr', 'GN': 'fr', 'CM': 'fr',
+        'US': 'en',
+        'GB': 'en',
+        'AU': 'en',
+        'NZ': 'en',
+        'SG': 'en', // English-speaking countries
+        'FR': 'fr',
+        'BE': 'fr',
+        'CA': 'fr',
+        'CH': 'fr',
+        'LU': 'fr',
+        'MC': 'fr', // French-speaking countries
+        'CI': 'fr',
+        'SN': 'fr',
+        'MG': 'fr',
+        'CD': 'fr',
+        'BF': 'fr',
+        'NE': 'fr',
+        'ML': 'fr',
+        'TD': 'fr',
+        'GN': 'fr',
+        'CM': 'fr',
         'CN': 'zh-CN', // Simplified Chinese for Mainland China
-        'HK': 'zh-HK', 'MO': 'zh-HK', 'TW': 'zh-HK', 'MY': 'zh-HK', 'ID': 'zh-HK' // Traditional Chinese
+        'HK': 'zh-HK',
+        'MO': 'zh-HK',
+        'TW': 'zh-HK',
+        'MY': 'zh-HK',
+        'ID': 'zh-HK' // Traditional Chinese
     };
 
     // Detect language from query parameter (for language switcher)
