@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const sassMiddleware = require('node-sass-middleware');
+const sassMiddleware = require('sass-middleware');
 const sass = require('sass')
 const geoip = require('geoip-lite');
 const i18n = require('./i18nConfig');
@@ -27,12 +27,16 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(sassMiddleware({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public'),
-    indentedSyntax: true, // true = .sass and false = .scss
-    sourceMap: true
-}));
+app.use(
+    sassMiddleware({
+        src: path.join(__dirname, 'public/stylesheets'),
+        dest: path.join(__dirname, 'public/stylesheets'),
+        indentedSyntax: true, // true = .sass and false = .scss
+        sourceMap: true,
+        outputStyle: 'compressed', // Optional: 'nested', 'expanded', 'compact', 'compressed'
+        prefix: '/stylesheets', // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
+    })
+);
 app.use(express.static(path.join(__dirname, 'public')));
 // Middleware to handle language switching
 app.use(i18n.init); // Initialize i18n middleware

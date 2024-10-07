@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "start:debug": "NODE_ENV=development node --inspect ./bin/www"
+    "start:debug": "NODE_ENV=development node --inspect ./bin/www",
+    "build-css": "sass public/stylesheets:public/stylesheets --no-source-map --style compressed",
+    "watch-css": "sass public/stylesheets:public/stylesheets --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
@@ -19,9 +21,9 @@
     "http-errors": "~1.6.3",
     "i18n": "^0.15.1",
     "morgan": "~1.9.1",
-    "node-sass-middleware": "^1.1.0",
     "pug": "^3.0.3",
     "sass": "^1.79.4",
+    "sass-middleware": "^0.0.3",
     "yaml": "^2.5.1"
   }
 }

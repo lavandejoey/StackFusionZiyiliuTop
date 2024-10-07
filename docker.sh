@@ -48,7 +48,7 @@ check_success "Updating the repository" $exit_status
 
 # Install dependencies on the host
 LOG "INFO" "Installing dependencies..."
-npm install --production
+npm install --omit=dev
 exit_status=$?
 check_success "Installing dependencies" $exit_status
 
