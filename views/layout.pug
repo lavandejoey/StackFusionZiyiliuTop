@@ -1,5 +1,5 @@
 doctype html
-html(lang='en')
+html(lang=lang)
     head
         meta(charset='UTF-8')
         title= title
@@ -8,10 +8,10 @@ html(lang='en')
         link(rel='preconnect', href='https://fonts.gstatic.com', crossorigin)
         link(rel='stylesheet', href='https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap')
         link(rel='stylesheet', href='stylesheets/style.css')
-        link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css')
+        link(rel='stylesheet', href='modules/@fortawesome/fontawesome-free/css/all.min.css')
     body.bg-light.min-vh-100.d-flex.flex-column
         div.phoframe
-        div.container-fluid.flex-grow-1(style='min-height: 100%; position: relative;')
+        div.container-fluid.flex-grow-1(style='min-height: 100%; position: relative;display: flex; flex-direction: column;')
             // Navbar
             nav.navbar.navbar-expand-sm.navbar-light.bg-light
                 div.container
@@ -49,7 +49,8 @@ html(lang='en')
             // Main content
             block content
             // Centered Footer
-            footer.w-100.d-flex.justify-content-center.py-3(style='position: absolute; bottom: 0; color: gray;')
+            //footer.w-100.d-flex.justify-content-center.py-3(style='position: absolute; bottom: 0; color: gray;')
+            footer.w-100.d-flex.justify-content-center.py-3.mt-auto(style='color: gray;')
                 div.text-center
                     p.mb-0
                         | Copyright &#169; 2021-
@@ -62,5 +63,6 @@ html(lang='en')
 // Include Bootstrap JS (via npm-installed file)
 script(src='/javascripts/bootstrap.bundle.min.js')
 script(type='module' src='/javascripts/script.js')
-// Include Font Awesome JS
-script(src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js')
+script(src='/modules/typewriter-effect/dist/core.js')
+script(src='/modules/typewriter-effect/dist/react.js')
+script(src='/modules/@fortawesome/fontawesome-free/js/all.min.js')

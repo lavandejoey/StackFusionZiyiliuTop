@@ -122,6 +122,8 @@ if (process.env.NODE_ENV === 'production') {
 app.locals.title = 'ZLiu';
 app.locals.author = 'Ziyi LIU';
 
+// Routes
+app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/', indexRouter);
 app.use('/about_me', aboutMeRouter);
 app.use('/contact', contactRouter);

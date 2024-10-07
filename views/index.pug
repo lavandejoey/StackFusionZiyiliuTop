@@ -1,8 +1,76 @@
 extends layout
 
 block content
-    div.container.border.border-2.border-primary
-        p.shantell-sans-normal.text-center(style='font-size: 2rem;')
-        | The Page is Under Construction
-    // a 2 page height spacer
-    //div(style='height: 100vh;')
+    div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center(style='height: 100%;')
+        div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center(style='height: 100%;')
+            div#typewriter-container.text-center
+                p#typewriter-text-wrapper(style='font-size: 2rem; white-space: pre-wrap; word-break: break-all; max-width: 100%; position: relative;')
+                    span#typewriter-text
+
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            const lang = document.documentElement.lang || 'en';
+            const texts = {
+                'en': [
+                    "I am <b>ZiYi Liu</b>",
+                    "I am <b>Zeniths</b> in <b>Yielding</b> Intelligence to Leverage Youthful Ideas"
+                ],
+                'fr': [
+                    "Je suis <b>ZiYi Liu</b>",
+                    "Je suis <b>Zeniths</b> in <b>Yielding</b> l'Intelligence pour Libérer les Idées Uniques"
+                ]
+            };
+            const currentTexts = texts[lang] || texts['en'];
+
+            const typewriter = new Typewriter('#typewriter-text', {
+                loop: true,
+                delay: 75,
+                cursor: '|',
+                autoStart: true,
+                html: true
+            });
+            if (lang === 'fr') {
+                typewriter
+                    .typeString(currentTexts[0])
+                    .pauseFor(1500)
+                    .deleteChars(8) // Delete back to "I am"
+                    .pauseFor(100)
+                    .typeString(currentTexts[1].substring(8))
+                    .pauseFor(1500)
+                    .deleteAll()
+                    .pauseFor(1000)
+                    .start();
+            } else {
+                typewriter
+                    .typeString(currentTexts[0])
+                    .pauseFor(1500)
+                    .deleteChars(8) // Delete back to "Je suis"
+                    .pauseFor(100)
+                    .typeString(currentTexts[1].substring(5))
+                    .pauseFor(1500)
+                    .deleteAll()
+                    .pauseFor(1000)
+                    .start();
+            }
+        });
+
+    style.
+        #typewriter-container {
+            display: inline-block;
+            overflow: hidden;
+            padding: 1rem;
+            max-width: 100%; /* Limit to ensure it doesn't stretch to full width */
+        }
+
+        #typewriter-text-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        #typewriter-text {
+            font-size: clamp(1.5rem, 5vw + 1rem, 3rem); /* Responsive size: min 1.5rem, max 3rem */
+            font-family: "Shantell Sans", cursive;
+            white-space: pre-wrap;
+            word-break: break-word; /* Allow the line to break naturally, preserving partial words */
+        }

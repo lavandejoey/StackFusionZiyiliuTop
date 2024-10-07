@@ -24,6 +24,7 @@
     "pug": "^3.0.3",
     "sass": "^1.79.4",
     "sass-middleware": "^0.0.3",
+    "typewriter-effect": "^2.21.0",
     "yaml": "^2.5.1"
   }
 }

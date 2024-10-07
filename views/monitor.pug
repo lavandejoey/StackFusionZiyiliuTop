@@ -1,16 +1,6 @@
-doctype html
-html
-    head
-        title Visitor Monitor
-        script(src="https://cdn.jsdelivr.net/npm/chart.js")
-        style.
-            canvas {
-                width: 100%;
-                max-width: 800px;
-                margin: 0 auto;
-            }
-    body
-        h1 Visitor Monitor
+extends layout
+block content
+    h1 Visitor Monitor
 
         // Display parsed log data in chart form
         canvas#visitorChart
@@ -50,8 +40,15 @@ html
                 },
                 options: {
                     scales: {
-                        x: { title: { display: true, text: 'Hour' } },
-                        y: { title: { display: true, text: 'Requests' }, beginAtZero: true }
+                        x: {title: {display: true, text: 'Hour'}},
+                        y: {title: {display: true, text: 'Requests'}, beginAtZero: true}
                     }
                 }
             });
+    script(src="https://cdn.jsdelivr.net/npm/chart.js")
+    style.
+        canvas {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }

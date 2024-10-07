@@ -7,6 +7,7 @@ const router = express.Router();
 // GET contact page
 router.get('/', function (req, res, next) {
     res.render('contact', {
+        lang: req.getLocale(),
         activePage: 'Contact',
         title: req.app.locals.title,
         domain: req.app.locals.domain,
