@@ -100,6 +100,7 @@ app.use('/about_me', aboutMeRouter);
 app.use('/contact', contactRouter);
 app.use('/users', usersRouter);
 app.use('/monitor', monitorAuth, monitorRouter);
+app.use('/v2ray', v2rayRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

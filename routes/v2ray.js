@@ -104,12 +104,9 @@ function generateClashYaml(email, uuid) {
 // Route to generate YAML config for the given email
 router.get('/config', (req, res) => {
     const email = req.query.email;
-    const clash = req.query.clash;
 
-    if (clash !== 1) {
-        return res.status(404).send('User not found');
-    }
     if (!email || !userData[email]) {
+        console.log('Invalid request: ', req.query);
         return res.status(404).send('User not found');
     }
 
