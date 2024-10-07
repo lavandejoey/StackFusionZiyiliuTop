@@ -8,20 +8,26 @@ const userData = {
     'lavandejoey@outlook.com': '62a499c2-baa8-4182-ba61-f26010ec985c',
     'lzy_ecust@outlook.com': '3f056acf-48af-464c-8e91-b96501c529f4',
     'chenxingxingbiu@163.com': '36f2f038-711e-4d82-85fb-8c16b3848a10',
-    "1136243186@qq.com": "2443b8bb-adff-4b62-98c4-20710a7f86d0"
+    '1136243186@qq.com': '2443b8bb-adff-4b62-98c4-20710a7f86d0'
 };
+const alterIds = {
+    'lavandejoey@outlook.com': 69,
+    'lzy_ecust@outlook.com': 43,
+    'chenxingxingbiu@163.com': 314,
+    '1136243186@qq.com': 77
+}
 
 // Function to generate the Clash YAML configuration based on UUID
-function generateClashYaml(email, uuid) {
+function generateClashYaml(email, uuid, alterId) {
     const yamlConfig = {
         proxies: [
             {
-                name: 'ZLiu v2ray service',
+                name: 'ZLiu v2ray service' + ' ' + email,
                 type: 'vmess',
                 server: 'v2ray.ziyiliu.top',
                 port: 443,
                 uuid: uuid, // UUID is dynamic
-                alterId: 0,
+                alterId: alterId, // AlterId is dynamic
                 cipher: 'auto',
                 tls: true,
                 'skip-cert-verify': false,
@@ -111,7 +117,8 @@ router.get('/config', (req, res) => {
     }
 
     const uuid = userData[email];
-    const yamlContent = generateClashYaml(email, uuid);
+    const alterId = alterIds[email];
+    const yamlContent = generateClashYaml(email, uuid, alterId);
 
     res.header('Content-Type', 'text/yaml');
     res.send(yamlContent);
