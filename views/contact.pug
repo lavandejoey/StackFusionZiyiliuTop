@@ -1,47 +1,52 @@
 extends layout
 
 block content
+    div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center(style='height: 100%;')
+        .container.mt-1.d-md-flex.flex-md-column.justify-content-md-between
+            h2.mb-4.text-center Hiiiiiii! I'm glad you're here!
 
-    // Main content in two columns for screens larger than 'md', centered vertically
-    .container.mt-5
-        .row.d-flex.justify-content-evenly
-            h1.mb-4.text-center Welcome! I'm excited that you're here.
-            // Left Column: Intro Passage and Social Media Icons
-            .col-md-5.my-auto
-                p.mb-4 Whether you have questions, feedback, or just want to connect, feel free to reach out through any of my social media channels or drop me an email. I'd love to hear from you and discuss how we can collaborate!
+            .row.d-flex.justify-content-evenly
+                // Left Column: Subtitle context and body context, social media icons
+                .col-md-5.my-auto
+                    h5.mb-4 Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!
 
-                // Social Media Section
-                h3.mb-3 Connect with me on social media
+                    // Flex container for icons with space between icons
+                    .d-flex.mb-5.justify-content-evenly
+                        // GitHub
+                        a(href='https://github.com/lavandejoey', target='_blank', class="mr-3")
+                            i.fab.fa-github.fa-2x(style='color: #333')
 
-                // Flex container for icons with space between icons
-                .d-flex.mb-5.justify-content-evenly
-                    // GitHub
-                    a(href='https://github.com/lavandejoey', target='_blank', class="mr-3")
-                        i.fab.fa-github.fa-2x(style='color: #333')
+                        // WhatsApp
+                        a(href='https://wa.me/330749976242', target='_blank', class="mr-3")
+                            i.fab.fa-whatsapp.fa-2x(style='color: #25D366')
 
-                    // WhatsApp
-                    a(href='https://wa.me/330749976242', target='_blank', class="mr-3")
-                        i.fab.fa-whatsapp.fa-2x(style='color: #25D366')
+                        // Instagram
+                        a(href='https://www.instagram.com/lavandecn/', target='_blank', class="mr-3")
+                            i.fab.fa-instagram.fa-2x(style='color: #E4405F')
 
-                    // Instagram
-                    a(href='https://www.instagram.com/lavandecn/', target='_blank', class="mr-3")
-                        i.fab.fa-instagram.fa-2x(style='color: #E4405F')
+                        // LinkedIn
+                        a(href='https://linkedin.com/in/ziyi-liu-88b872179/', target='_blank')
+                            i.fab.fa-linkedin.fa-2x(style='color: #0077B5')
 
-                    // LinkedIn
-                    a(href='https://linkedin.com/in/ziyi-liu-88b872179/', target='_blank')
-                        i.fab.fa-linkedin.fa-2x(style='color: #0077B5')
+                // Separator for md and larger screens
+                .d-none.d-md-flex.justify-content-center.align-items-center.col-md-1
+                    hr.bg-secondary.my-0(style='width: 1px; height: 80%;')
 
-            // Right Column: Email Form
-            .col-md-5.my-auto
-                h2.mb-4 or, email me ~
-                form
-                    .row.justify-content-around
-                        .form-group.col-md-6.mb-3
-                            input#surname.form-control(type='text', placeholder='Surname', required)
-                        .form-group.col-md-6.mb-3
-                            input#first-name.form-control(type='text', placeholder='First Name', required)
-                    .form-group.mb-3
-                        input#email.form-control(type='email', placeholder='Email Address', required)
-                    .form-group.mb-3
-                        textarea#message.form-control(rows='5', placeholder='Enter your message', required)
-                    button.btn.btn-primary(type='submit') Send Message
+                // Separator for smaller screens
+                .d-block.d-md-none.col-12
+                    hr.bg-secondary
+
+                // Right Column: Simple guidance content and email form
+                .col-md-5.my-auto
+                    h4.mb-4 #{__('or, start a chat ~')}
+                    form
+                        .row.justify-content-around
+                            .form-group.col-md-6.mb-3
+                                input#surname.form-control(type='text', placeholder='Surname', required)
+                            .form-group.col-md-6.mb-3
+                                input#first-name.form-control(type='text', placeholder='First Name', required)
+                        .form-group.mb-3
+                            input#email.form-control(type='email', placeholder='Email Address', required)
+                        .form-group.mb-3
+                            textarea#message.form-control(rows='5', placeholder='Enter your message', required)
+                        button.btn.btn-primary(type='submit') Send Message
