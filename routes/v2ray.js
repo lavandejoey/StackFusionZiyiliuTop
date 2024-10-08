@@ -8,13 +8,15 @@ const userData = {
     'lavandejoey@outlook.com': '62a499c2-baa8-4182-ba61-f26010ec985c',
     'lzy_ecust@outlook.com': '3f056acf-48af-464c-8e91-b96501c529f4',
     'chenxingxingbiu@163.com': '36f2f038-711e-4d82-85fb-8c16b3848a10',
-    '1136243186@qq.com': '2443b8bb-adff-4b62-98c4-20710a7f86d0'
+    '1136243186@qq.com': '2443b8bb-adff-4b62-98c4-20710a7f86d0',
+    'wuyuwuyu2020@outlook.com': '66375c16-990b-4513-a6e9-dd8b69de0bbe'
 };
 const alterIds = {
     'lavandejoey@outlook.com': 69,
     'lzy_ecust@outlook.com': 43,
     'chenxingxingbiu@163.com': 314,
-    '1136243186@qq.com': 77
+    '1136243186@qq.com': 77,
+    'wuyuwuyu2020@outlook.com': 50
 }
 
 // Function to generate the Clash YAML configuration based on UUID
