@@ -50,57 +50,51 @@ function generateClashYaml(email, uuid, alterId) {
                 type: 'http',
                 behavior: 'domain',
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt',
-                path: './ruleset/reject.yaml',
+                path: './RULE-SET/reject.yaml',
                 interval: 86400
             },
             icloud: {
                 type: 'http',
                 behavior: 'domain',
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt',
-                path: './ruleset/icloud.yaml',
+                path: './RULE-SET/icloud.yaml',
                 interval: 86400
             },
             apple: {
                 type: 'http',
                 behavior: 'domain',
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt',
-                path: './ruleset/apple.yaml',
+                path: './RULE-SET/apple.yaml',
                 interval: 86400
             },
             google: {
                 type: 'http',
                 behavior: 'domain',
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt',
-                path: './ruleset/google.yaml',
+                path: './RULE-SET/google.yaml',
                 interval: 86400
             },
             proxy: {
                 type: 'http',
                 behavior: 'domain',
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt',
-                path: './ruleset/proxy.yaml',
+                path: './RULE-SET/proxy.yaml',
                 interval: 86400
             }
         },
         rules: [
             'DOMAIN-SUFFIX,local,DIRECT',
-            'RULE-SET,applications,DIRECT',
             'DOMAIN,clash.razord.top,DIRECT',
             'DOMAIN,yacd.haishan.me,DIRECT',
-            'RULE-SET,private,DIRECT',
             'RULE-SET,reject,REJECT',
             'RULE-SET,icloud,DIRECT',
             'RULE-SET,apple,DIRECT',
-            'RULE-SET,google,ZLiu v2ray service',
-            'RULE-SET,proxy,ZLiu v2ray service',
-            'RULE-SET,direct,DIRECT',
-            'RULE-SET,lancidr,DIRECT',
-            'RULE-SET,cncidr,DIRECT',
-            'RULE-SET,telegramcidr,ZLiu v2ray service',
+            'RULE-SET,google,' + 'ZLiu v2ray service' + ' ' + email,
+            'RULE-SET,proxy,' + 'ZLiu v2ray service' + ' ' + email,
             'GEOIP,LAN,DIRECT',
             'GEOIP,CN,DIRECT',
             'DOMAIN-SUFFIX,.cn,DIRECT',
-            'MATCH,ZLiu v2ray service'
+            'MATCH,' + 'ZLiu v2ray service' + ' ' + email
         ]
     };
 
