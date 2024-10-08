@@ -3,15 +3,13 @@ extends layout
 block content
     div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center(style='height: 100%;')
         .container.mt-1.d-md-flex.flex-md-column.justify-content-md-between
-            h2.mb-4.text-center Hiiiiiii! I'm glad you're here!
-
             .row.d-flex.justify-content-evenly
                 // Left Column: Subtitle context and body context, social media icons
-                .col-md-5.my-auto
-                    h5.mb-4 Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!
-
+                .col-md-5.my-auto.d-flex.flex-column
+                    h1.mb-5.text-center #{__("Hiiiiiii!")} #{__("I'm glad you're here!")}
+                    h5.my-5 Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!
                     // Flex container for icons with space between icons
-                    .d-flex.mb-5.justify-content-evenly
+                    .d-flex.my-5.justify-content-evenly
                         // GitHub
                         a(href='https://github.com/lavandejoey', target='_blank', class="mr-3")
                             i.fab.fa-github.fa-2x(style='color: #333')

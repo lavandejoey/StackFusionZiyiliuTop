@@ -2,13 +2,13 @@ doctype html
 html(lang=lang)
     head
         meta(charset='UTF-8')
-        title= title
+        title=pageTitle
         link(rel='icon', href='images/favicon.ico', type='image/x-icon')
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         link(rel="preconnect" href="https://fonts.googleapis.com")
         link(rel='preconnect', href='https://fonts.gstatic.com', crossorigin)
         link(rel='stylesheet', href='https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap')
-        link(rel='stylesheet', href='stylesheets/style.css')
+        link(rel='stylesheet', href='/stylesheets/ziyiliu.css')
         link(rel='stylesheet', href='modules/@fortawesome/fontawesome-free/css/all.min.css')
     body.bg-light.min-vh-100.d-flex.flex-column
         div.phoframe
@@ -18,19 +18,19 @@ html(lang=lang)
                 div.container
                     button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#mainNavbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
                         span.navbar-toggler-icon
-                    #mainNavbarNav.collapse.navbar-collapse.d-flex
+                    #mainNavbarNav.collapse.navbar-collapse
                         ul.navbar-nav
-                            li.nav-item
+                            li.nav-item.d-flex.justify-content-center
                                 a.nav-link(href=domain, class=(activePage === 'Home' ? 'active' : ''))
                                     span(class=(activePage === 'Home' ? 'underline' : '')) ZLiu's
-                            li.nav-item
+                            li.nav-item.d-flex.justify-content-center
                                 a.nav-link(href=domain + 'about_me', class=(activePage === 'About Me' ? 'active' : ''))
                                     span(class=(activePage === 'About Me' ? 'underline' : '')) #{__('About Me')}
-                            li.nav-item
+                            li.nav-item.d-flex.justify-content-center
                                 a.nav-link(href=domain + 'contact', class=(activePage === 'Contact' ? 'active' : ''))
                                     span(class=(activePage === 'Contact' ? 'underline' : '')) #{__('Contact')}
                         // Empty space to push language switcher to the right
-                        div.ms-auto
+                        div.ms-auto.d-flex.justify-content-center
                             div.dropdown.d-flex.justify-content-center.align-items-center(style='width: 100px')
                                 button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle='dropdown')
                                     i.fas.fa-language
@@ -57,7 +57,7 @@ html(lang=lang)
                         | Copyright &#169; 2021-
                         span(id='current-year')
                         a(href=domain, style='text-decoration: none; color: gray;')
-                            |  #{author}
+                            |  #{__('Ziyi LIU')}
     script(type='text/javascript').
         document.getElementById('current-year').textContent = new Date().getFullYear();
 

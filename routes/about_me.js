@@ -9,9 +9,8 @@ router.get('/', function (req, res, next) {
     res.render('about_me', {
         lang: req.getLocale(),
         activePage: 'About Me',
-        title: req.app.locals.title,
+        pageTitle: res.__('About Me'),
         domain: req.app.locals.domain,
-        author: req.app.locals.author
     });
 });
 

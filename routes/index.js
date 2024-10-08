@@ -6,9 +6,8 @@ router.get('/', function (req, res, next) {
     res.render('index', {
         lang: req.getLocale(),
         activePage: 'Home',
-        title: req.app.locals.title,
+        pageTitle: res.__('Home'),
         domain: req.app.locals.domain,
-        author: req.app.locals.author
     });
 });
 

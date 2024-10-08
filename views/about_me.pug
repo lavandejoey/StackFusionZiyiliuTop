@@ -1,156 +1,114 @@
 extends layout
 
 block content
-    .container.mt-6
+    .container(style='margin-top: 100px;')
+        .row.align-items-center
+            .col-md-4.text-center.d-flex.justify-content-center
+                div.portrait-container(style='max-width: 240px; height: 300px; overflow: hidden;')
+                    img(src='/images/6702323f5tc220c8b48779336a48bb54.jpg',
+                        alt='Portrait', class='img-fluid mb-4 shadow-lg',
+                        style='scale: 1.2;')
+            .col-md-8
+                h1.display-4.bounce-hover #{__('Ziyi LIU')}
+                p.lead.text-muted Hello! I'm Ziyi, a passionate Master's student specializing in Data and Artificial Intelligence at Institut Polytechnique de Paris. I have a diverse background in robotics, computer vision, and software development, and I love tackling challenging problems that bring technology to life. My journey has taken me from Shanghai to Paris, and I'm excited to continue exploring new opportunities in AI and robotics.
+        hr.my-5
         .row
-            .col-lg-8.offset-lg-2
-                h2.text-center.mb-5
-                    i.fas.fa-user-circle.me-3
-                    | About Ziyi LIU
-
-                .card.mb-6
+            .col-md-6
+                h3.text-primary Education
+                p.text-muted Here are the educational milestones that shaped my journey, giving me a solid foundation in AI, robotics, and computer science:
+                .card.shadow-sm.mb-4
                     .card-body
-                        h3.card-title
-                            i.fas.fa-graduation-cap.me-2
-                            | Education
-                        ul.list-unstyled
-                            li.mb-3
-                                strong Institut Polytechnique de Paris / Télécom Paris
-                                br
-                                | MCS, Data and AI
-                                br
-                                small.text-muted
-                                    i.far.fa-calendar-alt.me-2
-                                    | Sept 2024 - Jul 2026
-                                br
-                                small.text-muted Paris, France
-                            li.mb-3
-                                strong East China University of Science and Technology (ECUST)
-                                br
-                                | BEng, Intelligence and Robotics, GPA: 3.0/4.0
-                                br
-                                small.text-muted
-                                    i.far.fa-calendar-alt.me-2
-                                    | Sept 2020 - Jul 2024
-                                br
-                                small.text-muted Shanghai, China
-                            li
-                                strong East China University of Science and Technology (ECUST)
-                                br
-                                | Mini-major Diploma, Computer Science
-                                br
-                                small.text-muted
-                                    i.far.fa-calendar-alt.me-2
-                                    | Oct 2021 - Mar 2024
-                                br
-                                small.text-muted Shanghai, China
-
-                .card.mb-6
+                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
+                            img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Institut_polytechnique_de_Paris_logo.svg/512px-Institut_polytechnique_de_Paris_logo.svg.png', alt='Institut Polytechnique de Paris logo', class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
+                            | Institut Polytechnique de Paris / Télécom Paris
+                        p MCS, Data and AI
+                        p.text-muted Sept 2024 - Jul 2026, Paris, France
+                .card.shadow-sm.mb-4
                     .card-body
-                        h3.card-title
-                            i.fas.fa-flask.me-2
-                            | Research Interests
-                        ul.list-unstyled
-                            li
-                                i.fas.fa-check-circle.me-2.text-success
-                                | Computer Vision: Semantic Segmentation, SLAM, 3D Reconstruction
-                            li
-                                i.fas.fa-check-circle.me-2.text-success
-                                | Robotics: Robot Kinematics and Dynamics
-
-                .card.mb-6
+                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
+                            img(src='https://upload.wikimedia.org/wikipedia/en/f/f5/ECUST_university_logo.png', alt='ECUST logo', class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
+                            | East China University of Science and Technology (ECUST)
+                        p BEng, Intelligence and Robotics
+                        p.text-muted Sept 2020 - Jul 2024, Shanghai, China
+                .card.shadow-sm.mb-4
                     .card-body
-                        h3.card-title
-                            i.fas.fa-briefcase.me-2
-                            | Work Experience
-                        .mb-4
-                            h5 Porsche Financial Leasing Ltd.
-                            p.mb-1
-                                strong PFS Residual Value Assistant
-                            p.mb-1
-                                small.text-muted
-                                    i.far.fa-calendar-alt.me-2
-                                    | Jan 2024 - Jul 2024
-                            p.mb-1
-                                small.text-muted Shanghai, China
+                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
+                            img(src='https://upload.wikimedia.org/wikipedia/en/f/f5/ECUST_university_logo.png', alt='ECUST logo', class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
+                            | East China University of Science and Technology (ECUST)
+                        p Mini-major Diploma, Computer Science
+                        p.text-muted Oct 2021 - Mar 2024, Shanghai, China
+            .col-md-6
+                h3.text-primary Research Interests
+                ul.list-group.list-group-flush.mb-4
+                    li.list-group-item Computer Vision: Semantic Segmentation, SLAM, 3D Reconstruction
+                    li.list-group-item Robotics: Robot Kinematics and Dynamics
+        hr.my-5
+        .row
+            .col-md-12
+                h3.text-primary Work Experience
+                .card-deck
+                    .card.shadow-sm.mb-4
+                        .card-body
+                            p.font-weight-bold(style='font-size: 1.25rem;') Porsche Financial Leasing Ltd.
+                            p.text-muted PFS Residual Value Assistant (Jan 2024 - Jul 2024, Shanghai, China)
                             ul
                                 li Programming models for financial leasing product return rates
                                 li Documenting credit strategy and fraud detection pipelines
                                 li Researching data disaster tolerance solutions
-
-                        .mb-4
-                            h5 Bank of Communication Financial Technology Co,Ltd.
-                            p.mb-1
-                                strong Back-end Developer
-                            p.mb-1
-                                small.text-muted
-                                    i.far.fa-calendar-alt.me-2
-                                    | Dec 2022 - Feb 2023
-                            p.mb-1
-                                small.text-muted Shanghai, China
+                    .card.shadow-sm.mb-4
+                        .card-body
+                            p.font-weight-bold(style='font-size: 1.25rem;') Bank of Communication Financial Technology Co, Ltd.
+                            p.text-muted Back-end Developer (Dec 2022 - Feb 2023, Shanghai, China)
                             ul
                                 li Built a new HRM platform with low-code and API support
                                 li Implemented AI functions' back-end based on openAPI standards
                                 li Participated in DevOps process for Supply Chain and Debt Management platform
+        hr.my-5
+        .row
+            .col-md-6
+                h3.text-primary Skills
+                h4 Languages
+                .language-visual
+                    .language-item(style='width: 80%; height: 30px; background-color: #4CAF50; margin-bottom: 10px; position: relative; border-radius: 5px;')
+                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') English (C1)
+                    .language-item(style='width: 30%; height: 30px; background-color: #2196F3; margin-bottom: 10px; position: relative; border-radius: 5px;')
+                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') French (A1)
+                    .language-item(style='width: 100%; height: 30px; background-color: #FF9800; margin-bottom: 10px; position: relative; border-radius: 5px;')
+                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') Mandarin (native)
+                    .language-item(style='width: 60%; height: 30px; background-color: #FF5722; margin-bottom: 10px; position: relative; border-radius: 5px;')
+                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') Cantonese
+                h4 Programming
+                ul.list-group.list-group-flush
+                    li.list-group-item Python, C, C++, R, Matlab
+                    li.list-group-item HTML/CSS/JS, LaTeX, Rust
+            .col-md-6
+                h3.text-primary Achievements
+                ul.list-group.list-group-flush
+                    li.list-group-item ECUST Outstanding Graduate Scholarship, June 2024
+                    li.list-group-item Huawei "Intelligence Base" Outstanding Student Scholarship, Nov 2021
+                    li.list-group-item Second Prize in 10th University Students Mechanical Engineering Innovation Contest, Shanghai (May 2021)
 
-                .card.mb-6
-                    .card-body
-                        h3.card-title
-                            i.fas.fa-cogs.me-2
-                            | Skills
-                        .row
-                            .col-md-6
-                                h5 Languages
-                                ul.list-unstyled
-                                    li
-                                        i.fas.fa-check-circle.me-2.text-success
-                                        | English (C1)
-                                    li
-                                        i.fas.fa-check-circle.me-2.text-success
-                                        | French (A1)
-                                    li
-                                        i.fas.fa-check-circle.me-2.text-success
-                                        | Mandarin (native)
-                                    li
-                                        i.fas.fa-check-circle.me-2.text-success
-                                        | Cantonese (fluent)
-                            .col-md-6
-                                h5 Programming
-                                ul.list-unstyled
-                                    li
-                                        i.fas.fa-code.me-2
-                                        | Python, C, C++, R, Matlab
-                                    li
-                                        i.fas.fa-code.me-2
-                                        | LaTeX, Rust, HTML/CSS/JS
+    style.
+        .portrait-container {
+            position: relative;
+            width: 250px;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
 
-                .card.mb-6
-                    .card-body
-                        h3.card-title
-                            i.fas.fa-award.me-2
-                            | Achievements
-                        ul.list-unstyled
-                            li.mb-2
-                                i.fas.fa-trophy.me-2.text-warning
-                                | ECUST Outstanding Graduate Scholarship, June 2024
-                            li.mb-2
-                                i.fas.fa-trophy.me-2.text-warning
-                                | Huawei "Intelligence Base" Outstanding Student Scholarship, Nov 2021
-                            li.mb-2
-                                i.fas.fa-certificate.me-2.text-info
-                                | Shanghai College Information Technology Level Examination, Big Data and Cloud Computing
-                            li.mb-2
-                                i.fas.fa-certificate.me-2.text-info
-                                | Shanghai College Information Technology Level Examination, C Programming and Application
-                            li
-                                i.fas.fa-medal.me-2.text-success
-                                | Second Prize in 10th University Students Mechanical Engineering Innovation Contest, Shanghai (May 2021)
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
 
-        .row.mt-5
-            .col-12.text-center
-                a.btn.btn-primary.me-3(href="#")
-                    i.fas.fa-envelope.me-2
-                    | Contact Me
-                a.btn.btn-outline-primary(href="https://www.ziyiliu.com" target="_blank")
-                    i.fas.fa-globe.me-2
-                    | Visit My Website
+        .bounce-hover:hover {
+            animation: bounce 1s;
+        }
