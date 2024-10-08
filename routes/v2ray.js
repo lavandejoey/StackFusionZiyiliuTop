@@ -80,9 +80,72 @@ function generateClashYaml(email, uuid, alterId) {
                 url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt',
                 path: './RULE-SET/proxy.yaml',
                 interval: 86400
+            },
+            direct: {
+                type: 'http',
+                behavior: 'domain',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt',
+                path: './ruleset/direct.yaml',
+                interval: 86400
+            },
+            private: {
+                type: 'http',
+                behavior: 'domain',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt',
+                path: './ruleset/private.yaml',
+                interval: 86400
+            },
+            gfw: {
+                type: 'http',
+                behavior: 'domain',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt',
+                path: './ruleset/gfw.yaml',
+                interval: 86400
+            },
+            'tld-not-cn': {
+                type: 'http',
+                behavior: 'domain',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt',
+                path: './ruleset/tld-not-cn.yaml',
+                interval: 86400
+            },
+            telegramcidr: {
+                type: 'http',
+                behavior: 'ipcidr',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt',
+                path: './ruleset/telegramcidr.yaml',
+                interval: 86400
+            },
+            cncidr: {
+                type: 'http',
+                behavior: 'ipcidr',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt',
+                path: './ruleset/cncidr.yaml',
+                interval: 86400
+            },
+            lancidr: {
+                type: 'http',
+                behavior: 'ipcidr',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt',
+                path: './ruleset/lancidr.yaml',
+                interval: 86400
+            },
+            applications: {
+                type: 'http',
+                behavior: 'classical',
+                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt',
+                path: './ruleset/applications.yaml',
+                interval: 86400
             }
         },
         rules: [
+            'RULE-SET,applications,DIRECT',
+            'RULE-SET,private,DIRECT',
+            'RULE-SET,direct,DIRECT',
+            'RULE-SET,lancidr,DIRECT',
+            'RULE-SET,cncidr,DIRECT',
+            'RULE-SET,telegramcidr,' + 'ZLiu v2ray service' + ' ' + email,
+
             'DOMAIN-SUFFIX,local,DIRECT',
             'DOMAIN,clash.razord.top,DIRECT',
             'DOMAIN,yacd.haishan.me,DIRECT',
