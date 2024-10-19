@@ -5,8 +5,8 @@ i18n.configure({
     // Define the languages you want to support
     locales: ['en', 'fr', 'zh-CN', 'zh-HK'], // More standard locale codes for Chinese
 
-    // Directory where translation JSON files are stored
-    directory: path.join(__dirname, 'locales'),
+    // Directory where translation JSON files are stored from the root directory
+    directory: path.join(__dirname, '../locales'),
 
     // Set the default locale
     defaultLocale: 'en',
@@ -18,6 +18,7 @@ i18n.configure({
     // Automatically update JSON files if a new key is introduced
     autoReload: false, // Reloading is unnecessary if updateFiles is false
     updateFiles: false, // Avoid automatic updates of language files to maintain consistency
+    syncFiles: true, // Synchronize locale files with default locale
 });
 
 module.exports = i18n

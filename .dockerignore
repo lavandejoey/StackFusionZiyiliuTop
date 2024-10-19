@@ -4,3 +4,9 @@ Docker*
 docker-compose.yml
 README.md
 docker*
+.env
+.vscode
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log

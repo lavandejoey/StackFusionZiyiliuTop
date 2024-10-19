@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'HarmonyOS Sans';
-  src: url('public/fonts/HarmonyOS/HarmonyOS_Sans_Regular.ttf') format('truetype');
+  src: url('../fonts/HarmonyOS/HarmonyOS_Sans_Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans';
-  src: url('public/fonts/HarmonyOS/HarmonyOS_Sans_Bold.ttf') format('truetype');
+  src: url('../fonts/HarmonyOS/HarmonyOS_Sans_Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans';
-  src: url('public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+  src: url('../fonts/HarmonyOS/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   unicode-range: U+4E00-9FFF; /* Simplified Chinese */
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: 'HarmonyOS Sans';
-  src: url('public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Regular.ttf') format('truetype');
+  src: url('../fonts/HarmonyOS/HarmonyOS_Sans_TC_Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   unicode-range: U+2E80 -U+9FFF; /* Traditional Chinese */

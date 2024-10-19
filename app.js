@@ -1,4 +1,5 @@
 // Load environment variables
+require("dotenv").config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -6,15 +7,19 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('sass-middleware');
 const geoIp = require('geoip-lite');
-const i18n = require('./i18nConfig');
 const auth = require('basic-auth');
+// Load custom modules
+const i18n = require("./packages/i18nConfig.js");
+// const mysql = require("./packages/mysql2Config.js"); // TODO
+// const {UserRole} = require("./models/authentication.js"); // TODO
+
 // Routes
 const indexRouter = require('./routes/index');
 const aboutMeRouter = require('./routes/about_me');
 const contactRouter = require('./routes/contact');
+// const authRouter = require('./routes/auth'); // TODO
 const monitorRouter = require('./routes/monitor');
 const v2rayRouter = require('./routes/v2ray');
-const sass = require('sass');
 
 // Create express app
 const app = express();
