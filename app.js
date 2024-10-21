@@ -1,51 +1,80 @@
 // Load environment variables
 require("dotenv").config();
-const createError = require('http-errors');
+
+// Core modules and third-party libraries
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 const logger = require('morgan');
+const session = require('express-session');
+const csurf = require('csurf');
 const sassMiddleware = require('sass-middleware');
-const geoIp = require('geoip-lite');
-const auth = require('basic-auth');
-// Load custom modules
+const rateLimit = require("express-rate-limit");
+
+// Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
-// const mysql = require("./packages/mysql2Config.js"); // TODO
-// const {UserRole} = require("./models/authentication.js"); // TODO
 
 // Routes
 const indexRouter = require('./routes/index');
 const aboutMeRouter = require('./routes/about_me');
 const contactRouter = require('./routes/contact');
-// const authRouter = require('./routes/auth'); // TODO
+const authRouter = require('./routes/auth');
 const monitorRouter = require('./routes/monitor');
 const v2rayRouter = require('./routes/v2ray');
 
 // Create express app
 const app = express();
 
-// view engine setup
+// Set up view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Middlewares
+// Middleware: Logging and parsing
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
+
+// Middleware: Session handling (must come before csurf)
+app.use(session({
+    secret: process.env.SECRET_KEY, // Keep your secret key secure
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true, // Helps prevent XSS attacks by disallowing JavaScript access to cookies
+        sameSite: 'strict', // Prevents CSRF attacks
+    }
+}));
+
+// Middleware: CSRF protection (after session middleware)
+app.use(csurf({
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // Secure cookies in production
+        httpOnly: true,  // Prevent JavaScript from accessing the CSRF token via JavaScript
+        sameSite: 'strict', // Prevent CSRF attacks
+    }
+}));
+
+// Middleware: Set CSRF token for views
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
+// Middleware: SASS compilation and static file serving
 app.use(sassMiddleware({
-        src: path.join(__dirname, 'public/stylesheets'),
-        dest: path.join(__dirname, 'public/stylesheets'),
-        indentedSyntax: false, // true = .sass and false = .scss
-        sourceMap: false,
-        debug: true,
-        outputStyle: 'nested', // Optional: 'nested', 'expanded', 'compact', 'compressed'
-        prefix: '/stylesheets', // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
-    }),
-    express.static(path.join(__dirname, 'public'))
-);
-// app.use(express.static(path.join(__dirname, 'public')));
-// Middleware to handle language switching
+    src: path.join(__dirname, 'public/stylesheets'),
+    dest: path.join(__dirname, 'public/stylesheets'),
+    indentedSyntax: false, // true = .sass, false = .scss
+    sourceMap: false,
+    debug: true,
+    outputStyle: 'nested', // Options: 'nested', 'expanded', 'compact', 'compressed'
+    prefix: '/stylesheets', // Where prefix is at <link rel="stylesheet" href="prefix/style.css"/>
+}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware: Internationalization (i18n)
 app.use(i18n.init);
 app.use((req, res, next) => {
     // Set default language
@@ -65,51 +94,56 @@ app.use((req, res, next) => {
 
     // Set the language and store in cookie
     res.setLocale(lang);
-    res.cookie('locale', lang);
-    next();
+    res.cookie('locale', lang, {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // Store for 30 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    });
+
+    next(); // Proceed to the next middleware
 });
 
-// Authentication middleware for /monitor route
-const monitorAuth = (req, res, next) => {
-    const user = auth(req);
-    const authorizedUsername = "zliu2069";
-    const authorizedPassword = "?:*O65|CL0|?/3H2K$uUnnH.1b+tickAY{++`e:n={gwRUpU_+";
+// Middleware: Rate limiting
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: (req, res) => {
+        return (req.session.isLoggedIn) ? 1000 : 30; // Limit to 30 requests per 15 minutes for non-logged in users
+    },
+    message: "Too many requests from this IP, please try again after 15 minutes"
+}));
 
-    if (user && user.name === authorizedUsername && user.pass === authorizedPassword) {
-        next();
-    } else {
-        res.set('WWW-Authenticate', 'Basic realm="Monitor Section"');
-        return res.status(401).send('Authentication required.');
-    }
-};
-
-// Define global variable
-if (process.env.NODE_ENV === 'production') {
-    app.locals.domain = 'https://ziyiliu.top/';
-} else {
-    app.locals.domain = 'http://localhost:2069/';
-}
+// Global variables accessible in templates
+app.locals.domain = (process.env.NODE_ENV === 'production') ? process.env.DOMAIN_PROD : process.env.DOMAIN_DEV;
 
 // Routes
 app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/', indexRouter);
 app.use('/about_me', aboutMeRouter);
 app.use('/contact', contactRouter);
-app.use('/monitor', monitorAuth, monitorRouter);
+app.use('/auth', authRouter);
+app.use('/monitor', monitorRouter);
 app.use('/v2ray', v2rayRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
+// Catch 404 and forward to error handler
+app.use((req, res, next) => {
     next(createError(404));
 });
 
-// error handler
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
+// Error handler
+app.use((err, req, res, next) => {
+    // Handle CSRF token errors
+    if (err.code === 'EBADCSRFTOKEN') {
+        res.status(403);
+        res.send('Form tampered with');
+        return;
+    }
+
+    // Set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
+    // Render the error page
     res.status(err.status || 500);
     res.render('error');
 });

@@ -19,6 +19,8 @@ i18n.configure({
     autoReload: false, // Reloading is unnecessary if updateFiles is false
     updateFiles: false, // Avoid automatic updates of language files to maintain consistency
     syncFiles: true, // Synchronize locale files with default locale
+    objectNotation: true, // Allow nested translation keys for better organization
+    fallbackOnMissing: true // Fallback to default language if translation key is missing
 });
 
 module.exports = i18n
