@@ -123,6 +123,10 @@ class User {
 
     // Update user status
     async updateUserStatus(status) {
+        if (![UserStatus.ACTIVE, UserStatus.INACTIVE].includes(status)) {
+            console.error("Invalid status");
+            return false;
+        }
         try {
             const sql_update = "UPDATE user SET status = ? WHERE uuid = ?";
             const params = [status, this.uuid];

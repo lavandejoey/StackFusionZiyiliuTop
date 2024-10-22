@@ -39,11 +39,12 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SECRET_KEY, // Keep your secret key secure
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true, // Helps prevent XSS attacks by disallowing JavaScript access to cookies
         sameSite: 'strict', // Prevents CSRF attacks
+        maxAge: 15 * 24 * 60 * 60 * 1000 // 15 days
     }
 }));
 
@@ -106,9 +107,9 @@ app.use((req, res, next) => {
 
 // Middleware: Rate limiting
 app.use(rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 10 * 60 * 1000, // 15 minutes
     limit: (req, res) => {
-        return (req.session.isLoggedIn) ? 1000 : 30; // Limit to 30 requests per 15 minutes for non-logged in users
+        return (req.session.isLoggedIn) ? 500 : 100; // Limit to 30 requests per 15 minutes for non-logged in users
     },
     message: "Too many requests from this IP, please try again after 15 minutes"
 }));

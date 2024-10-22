@@ -1,8 +1,10 @@
 extends layout
 
 block content
-    if error
-        .alert.alert-danger.text-center #{error}
+    .auth-container
+        if error
+            div.error-message.mb-3
+                p= error
 
     .container.mt-5
         .row.justify-content-center
@@ -10,16 +12,16 @@ block content
                 //- Login Form (Shown by default)
                 form#loginForm(action='/auth/login' method='POST')
                     input(type='hidden' name='_csrf' value=csrfToken)
-                    .card
+                    .card.mb-4
                         .card-header.text-center
-                            h3 Login
+                            h3.mb-3 Login
                         .card-body
-                            .form-group
+                            .form-group.mb-4
                                 label(for='email') Email:
-                                input.form-control(type='email' name='email' required)
-                            .form-group
+                                input.form-control#loginEmail(type='email' name='email' required placeholder="Enter your email")
+                            .form-group.mb-4
                                 label(for='password') Password:
-                                input.form-control(type='password' name='password' required)
+                                input.form-control#loginPassword(type='password' name='password' required placeholder="Enter your password")
                             button.btn.btn-primary.btn-block(type='submit') Login
                         .card-footer.text-center
                             p.mb-0
@@ -29,37 +31,37 @@ block content
                 //- Sign Up Form (Initially hidden)
                 form#signupForm(action='/auth/signup' method='POST' style='display: none;')
                     input(type='hidden' name='_csrf' value=csrfToken)
-                    .card
+                    .card.mb-4
                         .card-header.text-center
-                            h3 Sign Up
+                            h3.mb-3 Sign Up
                         .card-body
-                            .form-group
+                            .form-group.mb-4
                                 label(for='first_name') First Name:
-                                input.form-control(type='text' name='first_name' required)
-                            .form-group
+                                input.form-control#signupFirstName(type='text' name='first_name' required placeholder="Enter your first name")
+                            .form-group.mb-4
                                 label(for='last_name') Last Name:
-                                input.form-control(type='text' name='last_name' required)
-                            .form-group
+                                input.form-control#signupLastName(type='text' name='last_name' required placeholder="Enter your last name")
+                            .form-group.mb-4
                                 label(for='email') Email:
-                                input.form-control(type='email' name='email' required)
-                            .form-group
+                                input.form-control#signupEmail(type='email' name='email' required placeholder="Enter your email")
+                            .form-group.mb-4
                                 label(for='password') Password:
-                                input.form-control(type='password' name='password' required)
+                                input.form-control#signupPassword(type='password' name='password' required placeholder="Enter your password")
                             button.btn.btn-success.btn-block(type='submit') Sign Up
                         .card-footer.text-center
                             p.mb-0
                                 | Already have an account?
                                 a#showLogin(href='#') Log in here
 
-    block scripts
-        script.
-            // Toggle between login and signup forms
-            document.addEventListener('DOMContentLoaded', function() {
-                const showSignup = document.getElementById('showSignup');
-                const showLogin = document.getElementById('showLogin');
-                const loginForm = document.getElementById('loginForm');
-                const signupForm = document.getElementById('signupForm');
+    script.
+        // Toggle between login and signup forms
+        document.addEventListener('DOMContentLoaded', function() {
+            const showSignup = document.getElementById('showSignup');
+            const showLogin = document.getElementById('showLogin');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
 
+            if (showSignup && showLogin && loginForm && signupForm) {
                 showSignup.addEventListener('click', function(event) {
                     event.preventDefault();
                     loginForm.style.display = 'none';
@@ -71,4 +73,5 @@ block content
                     signupForm.style.display = 'none';
                     loginForm.style.display = 'block';
                 });
-            });
+            }
+        });

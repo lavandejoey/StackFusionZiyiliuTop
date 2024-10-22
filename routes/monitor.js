@@ -11,10 +11,8 @@ const {User, UserRole} = require("../models/authentication");
 // Logged in as admin -> Proceed to monitor page
 router.use(async (req, res, next) => {
     if (req.session && req.session.isLoggedIn) {
-        const user = req.session.user;
-
         // Fetch the user from the database to ensure all data is available
-        const userInstance = new User(user.uuid);
+        const userInstance = new User(req.session.userId);
         await userInstance.fetchUser(); // Ensure user data is loaded
 
         // Check if the user is an admin
