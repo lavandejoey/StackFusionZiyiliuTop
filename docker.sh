@@ -85,6 +85,7 @@ sudo docker run -d --name "$CONTAINER_NAME" \
     -p 127.0.0.1:2069:2069 \
     -v "$APP_DIR":"$APP_DIR" \
     -v /var/log:/var/log \
+    -v /etc/hosts:/etc/hosts \
     "$IMAGE_NAME"
 exit_status=$?
 check_success "Running the Docker container" $exit_status

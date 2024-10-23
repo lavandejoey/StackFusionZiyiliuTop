@@ -10,6 +10,8 @@ const session = require('express-session');
 const csurf = require('csurf');
 const sassMiddleware = require('sass-middleware');
 const rateLimit = require("express-rate-limit");
+const Redis = require("ioredis");
+const RedisStore = require('connect-redis').default;
 
 // Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
@@ -21,6 +23,29 @@ const contactRouter = require('./routes/contact');
 const authRouter = require('./routes/auth');
 const monitorRouter = require('./routes/monitor');
 const v2rayRouter = require('./routes/v2ray');
+
+// Start the SSH Tunnel
+try {
+    const { spawn } = require('child_process');
+    const ssh = spawn('autossh', [
+        '-L', `${process.env.REDIS_LOCAL_PORT}:127.0.0.1:${process.env.REDIS_REMOTE_PORT}`,
+        '-N',
+        '-f', // Run the SSH command in the background
+        `${process.env.REDIS_USER}@${process.env.REDIS_HOST}`,
+    ]);
+
+    ssh.on('error', (error) => {
+        console.error('SSH Tunnel Error:', error);
+    });
+
+    ssh.on('close', (code) => {
+        console.log(`SSH Tunnel closed with code ${code}`);
+    });
+
+    console.log(`SSH Tunnel to ${process.env.REDIS_REMOTE_PORT} established on local port ${process.env.REDIS_LOCAL_PORT}`);
+} catch (error) {
+    console.error('Error starting SSH Tunnel:', error);
+}
 
 // Create express app
 const app = express();
@@ -35,8 +60,17 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
+// Initialize Redis client
+const redis = new Redis({
+    port: process.env.REDIS_LOCAL_PORT,
+    host: "127.0.0.1",
+    username: process.env.REDIS_USER,
+    password: process.env.REDIS_PASSWORD
+});
+
 // Middleware: Session handling (must come before csurf)
 app.use(session({
+    store: new RedisStore({client: redis}),
     secret: process.env.SECRET_KEY, // Keep your secret key secure
     resave: false,
     saveUninitialized: false,

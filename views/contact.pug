@@ -36,15 +36,15 @@ block content
 
                 // Right Column: Simple guidance content and email form
                 .col-md-5.my-auto
-                    h4.mb-4 #{__('or, start a chat ~')}
+                    h4.mb-4 #{__("or, start a chat ~")}
                     form
                         .row.justify-content-around
                             .form-group.col-md-6.mb-3
-                                input#surname.form-control(type='text', placeholder='Surname', required)
+                                input#surname.form-control(type='text', placeholder=__("Surname"), required)
                             .form-group.col-md-6.mb-3
-                                input#first-name.form-control(type='text', placeholder='First Name', required)
+                                input#first-name.form-control(type='text', placeholder=__("First Name"), required)
                         .form-group.mb-3
-                            input#email.form-control(type='email', placeholder='Email Address', required)
+                            input#email.form-control(type='email', placeholder=__("Email"), required)
                         .form-group.mb-3
-                            textarea#message.form-control(rows='5', placeholder='Enter your message', required)
+                            textarea#message.form-control(rows='5', placeholder=__("Message"), required)
                         button.btn.btn-primary(type='submit') Send Message
