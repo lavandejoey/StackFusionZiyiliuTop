@@ -27,6 +27,7 @@ const v2rayRouter = require('./routes/v2ray');
 
 // Create express app
 const app = express();
+app.set('trust proxy', 1);
 
 // Set up view engine
 app.set("views", path.join(__dirname, "views"));
