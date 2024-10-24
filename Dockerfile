@@ -4,6 +4,9 @@ FROM node:20-alpine
 # Set the working directory inside the container
 WORKDIR /app/ziyiliu.top-by-express
 
+# Install required packages
+RUN apk add --no-cache autossh
+
 # Expose the port the app runs on
 EXPOSE 2069
 

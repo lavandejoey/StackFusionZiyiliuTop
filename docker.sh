@@ -78,14 +78,23 @@ sudo docker build --no-cache -t "$IMAGE_NAME" .
 exit_status=$?
 check_success "Building the Docker image" $exit_status
 
+# ssh tunnel with autossh in host env
+LOG "INFO" "Starting ssh tunnel with autossh..."
+#87.106.39.207:6379 -> localhost:6379
+autossh -M 0 -f -N -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -L 6379:localhost:6379 ionosAllemagneUbuntu
+exit_status=$?
+check_success "Starting ssh tunnel with autossh" $exit_status
+
 # Run the Docker container with a bind mount
 LOG "INFO" "Running the Docker container with a bind mount..."
 sudo docker run -d --name "$CONTAINER_NAME" \
     --restart unless-stopped \
     -p 127.0.0.1:2069:2069 \
+    -p 127.0.0.1:6379:6379 \
     -v "$APP_DIR":"$APP_DIR" \
     -v /var/log:/var/log \
     -v /etc/hosts:/etc/hosts \
+    --net=host \
     "$IMAGE_NAME"
 exit_status=$?
 check_success "Running the Docker container" $exit_status

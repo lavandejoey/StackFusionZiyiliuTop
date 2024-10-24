@@ -25,12 +25,14 @@ const monitorRouter = require('./routes/monitor');
 const v2rayRouter = require('./routes/v2ray');
 
 // Start the SSH Tunnel
+/**
 try {
     const { spawn } = require('child_process');
     const ssh = spawn('autossh', [
         '-L', `${process.env.REDIS_LOCAL_PORT}:127.0.0.1:${process.env.REDIS_REMOTE_PORT}`,
-        '-N',
-        '-f', // Run the SSH command in the background
+        '-N', // Do not execute a remote command
+        '-f', // Run in background
+        '-o', 'ServerAliveInterval=30 ServerAliveCountMax=3 ExitOnForwardFailure=yes',
         `${process.env.REDIS_USER}@${process.env.REDIS_HOST}`,
     ]);
 
@@ -45,7 +47,7 @@ try {
     console.log(`SSH Tunnel to ${process.env.REDIS_REMOTE_PORT} established on local port ${process.env.REDIS_LOCAL_PORT}`);
 } catch (error) {
     console.error('Error starting SSH Tunnel:', error);
-}
+}*/
 
 // Create express app
 const app = express();
