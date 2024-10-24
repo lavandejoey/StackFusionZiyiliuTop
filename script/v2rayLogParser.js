@@ -1,5 +1,5 @@
-const fs = require('fs');
-const readline = require('readline');
+const fs = require("fs");
+const readline = require("readline");
 const geoip = require('geoip-lite');
 
 // Function to parse log files and extract recent unique visitors and their domain visits
@@ -22,7 +22,7 @@ async function v2rayLogParser(filePath, maxVisitors = 10) {
                 const geo = geoip.lookup(ipAddress);
                 visitors.set(ipAddress, {
                     ip: ipAddress,
-                    location: geo ? `${geo.city}, ${geo.country}` : 'Unknown',
+                    location: geo ? `${geo.city}, ${geo.country}` : "Unknown",
                     requestHourlyCounts: generateHourlyKeys(48), // 2 days * 24 hours
                     requestDailyCounts: generateDailyKeys(7),    // 7 days
                     requestHourlyDomains: {} // Initialize domain tracking with an empty object

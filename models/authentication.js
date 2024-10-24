@@ -1,17 +1,17 @@
 const db = require("../packages/mysql2Config");
 const {hashPassword, verifyPassword} = require("../packages/argon2");
-const {v4: uuidv4, validate: uuidValidate} = require('uuid');
+const {v4: uuidv4, validate: uuidValidate} = require("uuid");
 
 // Enums
 const UserRole = {
-    ADMIN: {id: 1, name: 'admin', description: 'Administrator'},
-    USER_MANAGER: {id: 2, name: 'user_manager', description: 'User Manager'},
-    USER_FRIEND: {id: 3, name: 'user_friend', description: 'User Friend'},
-    USER_GUEST: {id: 4, name: 'user_guest', description: 'User Guest'}
+    ADMIN: {id: 1, name: "admin", description: "Administrator"},
+    USER_MANAGER: {id: 2, name: "user_manager", description: "User Manager"},
+    USER_FRIEND: {id: 3, name: "user_friend", description: "User Friend"},
+    USER_GUEST: {id: 4, name: "user_guest", description: "User Guest"}
 };
 const UserStatus = {
-    ACTIVE: 'active',
-    INACTIVE: 'inactive',
+    ACTIVE: "active",
+    INACTIVE: "inactive",
 }
 
 class User {
@@ -23,7 +23,7 @@ class User {
 
     // Fetch user data from database
     async fetchUser() {
-        let sql_select = '';
+        let sql_select = "";
         let params = [];
         if (this.uuid) {
             if (!uuidValidate(this.uuid)) {
@@ -113,6 +113,17 @@ class User {
         try {
             const sql_select = "SELECT * FROM user_role_mapping WHERE user_uuid = ? AND role_id = ?";
             const params = [this.uuid, UserRole.ADMIN.id];
+            const result = await db.query(sql_select, params);
+            return result.length > 0;  // Simply return boolean
+        } catch (error) {
+            console.error("Error checking user role:", error);
+            return false;
+        }
+    }
+    async isUserManager() {
+        try {
+            const sql_select = "SELECT * FROM user_role_mapping WHERE user_uuid = ? AND role_id = ?";
+            const params = [this.uuid, UserRole.USER_MANAGER.id];
             const result = await db.query(sql_select, params);
             return result.length > 0;  // Simply return boolean
         } catch (error) {

@@ -1,4 +1,4 @@
-const argon2 = require('argon2');
+const argon2 = require("argon2");
 
 // Hash password with random salt
 async function hashPassword(password) {

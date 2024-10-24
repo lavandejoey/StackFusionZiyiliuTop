@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    .container.mt-5
+        .row
+            .col-md-8.offset-md-2
+                .card
+                    .card-header.bg-primary.text-white
+                        h2= pageTitle
+
+                    .card-body
+                        .row.mb-3
+                            .col-md-4.text-right
+                                strong Email:
+                            .col-md-8
+                                p= user.email
+
+                        .row.mb-3
+                            .col-md-4.text-right
+                                strong First Name:
+                            .col-md-8
+                                p= user.firstName
+
+                        .row.mb-3
+                            .col-md-4.text-right
+                                strong Last Name:
+                            .col-md-8
+                                p= user.lastName
+
+                    .card-footer.text-right
+                        a.btn.btn-secondary(href="/user/edit/" + user.uuid) Edit Profile
+                        a.btn.btn-danger.ml-2(href="/auth/logout") Logout

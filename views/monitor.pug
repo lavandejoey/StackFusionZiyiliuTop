@@ -6,7 +6,7 @@ block content
         canvas#visitorChart
 
         script.
-            const ctx = document.getElementById('visitorChart').getContext('2d');
+            const ctx = document.getElementById("visitorChart").getContext("2d");
 
             // Prepare data for chart.js
             const labels = [];
@@ -27,11 +27,11 @@ block content
 
             // Create a line chart
             new Chart(ctx, {
-                type: 'line',
+                type: "line",
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Total Requests Per Hour',
+                        label: "Total Requests Per Hour",
                         data: dataset,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -40,8 +40,8 @@ block content
                 },
                 options: {
                     scales: {
-                        x: {title: {display: true, text: 'Hour'}},
-                        y: {title: {display: true, text: 'Requests'}, beginAtZero: true}
+                        x: {title: {display: true, text: "Hour"}},
+                        y: {title: {display: true, text: "Requests"}, beginAtZero: true}
                     }
                 }
             });

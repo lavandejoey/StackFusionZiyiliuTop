@@ -19,16 +19,16 @@ function applyAnnotation(target, type, color) {
 
 // Underline
 const underline = document.querySelector('.underline');
-applyAnnotation(underline, 'underline', quaternary);
+applyAnnotation(underline, "underline", quaternary);
 // Circle
 const circle = document.querySelector('.circle');
-applyAnnotation(circle, 'circle', quaternary);
+applyAnnotation(circle, "circle", quaternary);
 // Box
 const box = document.querySelector('.box');
-applyAnnotation(box, 'box', quaternary);
+applyAnnotation(box, "box", quaternary);
 // Highlight
 const highlight = document.querySelector('.highlight');
-applyAnnotation(highlight, 'highlight', quaternary);
+applyAnnotation(highlight, "highlight", quaternary);
 // Bracket
 const bracket = document.querySelector('.bracket');
-applyAnnotation(bracket, 'bracket', quaternary);
+applyAnnotation(bracket, "bracket", quaternary);

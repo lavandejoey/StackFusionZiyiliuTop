@@ -18,7 +18,7 @@ class MySQL {
                 console.error('Error connecting to MySQL: ' + err.stack);
                 return;
             }
-            console.log('Connected to MySQL');
+            console.log("Connected to MySQL");
         });
     }
     // General query function (asynchronous)

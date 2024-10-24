@@ -1,12 +1,12 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     const textElement = document.getElementById('typewriter-text');
-    const cursorElement = document.getElementById('cursor');
-    const lang = document.documentElement.lang || 'en';
+    const cursorElement = document.getElementById("cursor");
+    const lang = document.documentElement.lang || "en";
     const texts = {
-        'en': "Zeniths in Yielding Intelligence to Leverage Youthful Ideas",
-        'fr': "Zèle en Ymaginant l'Intelligence pour Libérer les Idées Uniques"
+        "en": "Zeniths in Yielding Intelligence to Leverage Youthful Ideas",
+        "fr": "Zèle en Ymaginant l'Intelligence pour Libérer les Idées Uniques"
     };
-    const currentText = texts[lang] || texts['en'];
+    const currentText = texts[lang] || texts["en"];
     let letterIndex = 0;
     let typing = true; // Controls whether we are typing or deleting
     let typingInterval;
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function blinkCursor() {
         setInterval(() => {
-            cursorElement.style.visibility = cursorElement.style.visibility === 'hidden' ? 'visible' : 'hidden';
+            cursorElement.style.visibility = cursorElement.style.visibility === "hidden" ? "visible" : "hidden";
         }, 500); // Cursor blink every 500ms
     }
 

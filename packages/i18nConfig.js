@@ -1,19 +1,19 @@
-const i18n = require('i18n');
-const path = require('path');
+const i18n = require("i18n");
+const path = require("path");
 
 i18n.configure({
     // Define the languages you want to support
-    locales: ['en', 'fr', 'zh-CN', 'zh-HK'], // More standard locale codes for Chinese
+    locales: ["en", "fr", 'zh-CN', 'zh-HK'], // More standard locale codes for Chinese
 
     // Directory where translation JSON files are stored from the root directory
     directory: path.join(__dirname, '../locales'),
 
     // Set the default locale
-    defaultLocale: 'en',
+    defaultLocale: "en",
 
     // Enable automatic language detection based on headers
-    queryParameter: 'lang', // Optional: allows switching by ?lang=fr in URL
-    cookie: 'locale', // Optional: set language via cookies
+    queryParameter: "lang", // Optional: allows switching by ?lang=fr in URL
+    cookie: "locale", // Optional: set language via cookies
 
     // Automatically update JSON files if a new key is introduced
     autoReload: false, // Reloading is unnecessary if updateFiles is false

@@ -1,6 +1,5 @@
 // routes/monitor.js
-const express = require('express');
-const path = require('path');
+const express = require("express");
 const router = express.Router();
 const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
 const {User, UserRole} = require("../models/authentication");
@@ -36,10 +35,10 @@ router.get('/', async (req, res) => {
         const visitors = await v2rayLogParser(logPath); // Parse the logs
 
         // Send data to Pug template
-        res.render('monitor', {visitors});
+        res.render("monitor", {visitors});
     } catch (error) {
         console.error('Error parsing logs:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send("Internal Server Error");
     }
 });
 
