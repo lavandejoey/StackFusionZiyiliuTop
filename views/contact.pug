@@ -43,14 +43,55 @@ block content
                 // Right Column: Simple guidance content and email form
                 .col-md-5.my-auto
                     h4.mb-4 #{__("or, start a chat ~")}
-                    form
+                    // TODO: Add a form to send an email
+                    form(method='POST', action='#', id='contact-form')
+                        input(type='hidden', name='_csrf', value=csrfToken)
                         .row.justify-content-around
                             .form-group.col-md-6.mb-3
-                                input#surname.form-control(type="text", placeholder=__("Surname"), required)
+                                input#surname.form-control(type="text", name="surname", placeholder=__("Surname"), required)
                             .form-group.col-md-6.mb-3
-                                input#first-name.form-control(type="text", placeholder=__("First Name"), required)
+                                input#first-name.form-control(type="text", name="firstName", placeholder=__("First Name"), required)
                         .form-group.mb-3
-                            input#email.form-control(type="email", placeholder=__("Email"), required)
+                            input#email.form-control(type="email", name="email", placeholder=__("Email"), required)
                         .form-group.mb-3
-                            textarea#message.form-control(rows="5", placeholder=__("Message"), required)
-                        button.btn.btn-primary(type="submit") Send Message
+                            textarea#message.form-control(name="message", rows="5", placeholder=__("Message"), required)
+                        button.btn.btn-primary(type="submit", id="send-button")
+                            span #{__("Send")}
+                            i.fas.fa-paper-plane.mx-2#send-icon
+
+    style.
+        /* Ensure the icon is positioned so it can move */
+        #send-icon {
+            display: inline-block;
+            position: relative;
+            transition: color 0.2s, transform 5s ease-in, opacity 1s ease-in;
+        }
+
+        /* Define the animation */
+        @keyframes flyAway {
+            to {
+                color: #bc6c25;
+                transform: translate(40vw, -50vh) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Class to trigger the animation */
+        .animate-fly-away {
+            animation: flyAway 1s forwards;
+        }
+
+    script.
+        document.getElementById('send-button').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission to see the animation
+            const icon = document.getElementById('send-icon');
+            icon.classList.add('animate-fly-away');
+
+            // Optionally, submit the form after the animation
+            setTimeout(function () {
+                // Remove the icon
+                icon.remove();
+                // Submit the form
+                document.querySelector('form').submit();
+            }, 1000); // Delay equal to animation duration
+        });

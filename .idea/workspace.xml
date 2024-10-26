@@ -5,22 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/email.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/fr.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-HK.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/bootstrap.bundle.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/bootstrap.bundle.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/bootstrap.bundle.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/bootstrap.bundle.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/about-me.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/about-me.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/about-me.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/about-me.pug" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/contact.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/contact.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +140,7 @@
       <workItem from="1728325245272" duration="14571000" />
       <workItem from="1728413309088" duration="15802000" />
       <workItem from="1729628707479" duration="7277000" />
-      <workItem from="1729879293324" duration="29018000" />
+      <workItem from="1729879293324" duration="41248000" />
     </task>
     <servers />
   </component>
