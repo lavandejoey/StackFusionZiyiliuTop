@@ -6,13 +6,23 @@ block content
             .row.d-flex.justify-content-evenly
                 // Left Column: Subtitle context and body context, social media icons
                 .col-md-5.my-auto.d-flex.flex-column
-                    h1.mb-5.text-center #{__("Hiiiiiii!")} #{__("I'm glad you're here!")}
-                    h5.my-5 Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!
+                    h1.mb-0.text-center
+                        | #{__("Hiiiiiiiii!")}
+                    h2.mb-5.text-center
+                        | #{__("I'm glad you're here!")}
+                    h5.my-5.text-center
+                        | #{__("Got questions, feedback, or want to connect?")}
+                        | #{__("Reach out via my social media channels or email.")}
+                        | #{__("Let's collaborate!")}
                     // Flex container for icons with space between icons
                     .d-flex.my-5.justify-content-evenly
                         // GitHub
                         a(href='https://github.com/lavandejoey', target="_blank", class="mr-3")
                             i.fab.fa-github.fa-2x(style='color: #333')
+
+                        // LinkedIn
+                        a(href='https://linkedin.com/in/ziyi-liu-88b872179/', target="_blank")
+                            i.fab.fa-linkedin.fa-2x(style='color: #0077B5')
 
                         // WhatsApp
                         a(href='https://wa.me/330749976242', target="_blank", class="mr-3")
@@ -21,10 +31,6 @@ block content
                         // Instagram
                         a(href='https://www.instagram.com/lavandecn/', target="_blank", class="mr-3")
                             i.fab.fa-instagram.fa-2x(style='color: #E4405F')
-
-                        // LinkedIn
-                        a(href='https://linkedin.com/in/ziyi-liu-88b872179/', target="_blank")
-                            i.fab.fa-linkedin.fa-2x(style='color: #0077B5')
 
                 // Separator for md and larger screens
                 .d-none.d-md-flex.justify-content-center.align-items-center.col-md-1

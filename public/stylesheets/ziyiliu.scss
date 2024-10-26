@@ -16,6 +16,16 @@ $quaternary: #dda15e;
 $quinary: #bc6c25;
 $frame-color: #ffc9b9;
 
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+$theme-colors: map-merge((
+        "primary": $primary,
+        "secondary": $secondary,
+        "tertiary": $tertiary,
+        "quaternary": $quaternary,
+        "quinary": $quinary
+), $theme-colors);
+
 // Now import Bootstrap's SCSS files so it uses the above variables
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";

@@ -1,114 +1,241 @@
 extends layout
 
 block content
-    .container(style='margin-top: 100px;')
-        .row.align-items-center
-            .col-md-4.text-center.d-flex.justify-content-center
-                div.portrait-container(style='max-width: 240px; height: 300px; overflow: hidden;')
-                    img(src='/images/6702323f5tc220c8b48779336a48bb54.jpg',
-                        alt="Portrait", class='img-fluid mb-4 shadow-lg',
-                        style='scale: 1.2;')
-            .col-md-8
-                h1.display-4.bounce-hover #{__("Ziyi LIU")}
-                p.lead.text-muted Hello! I'm Ziyi, a passionate Master's student specializing in Data and Artificial Intelligence at Institut Polytechnique de Paris. I have a diverse background in robotics, computer vision, and software development, and I love tackling challenging problems that bring technology to life. My journey has taken me from Shanghai to Paris, and I'm excited to continue exploring new opportunities in AI and robotics.
-        hr.my-5
-        .row
-            .col-md-6
-                h3.text-primary Education
-                p.text-muted Here are the educational milestones that shaped my journey, giving me a solid foundation in AI, robotics, and computer science:
-                .card.shadow-sm.mb-4
-                    .card-body
-                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
-                            img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Institut_polytechnique_de_Paris_logo.svg/512px-Institut_polytechnique_de_Paris_logo.svg.png', alt="Institut Polytechnique de Paris logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
-                            | Institut Polytechnique de Paris / Télécom Paris
-                        p MCS, Data and AI
-                        p.text-muted Sept 2024 - Jul 2026, Paris, France
-                .card.shadow-sm.mb-4
-                    .card-body
-                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
-                            img(src='https://upload.wikimedia.org/wikipedia/en/f/f5/ECUST_university_logo.png', alt="ECUST logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
-                            | East China University of Science and Technology (ECUST)
-                        p BEng, Intelligence and Robotics
-                        p.text-muted Sept 2020 - Jul 2024, Shanghai, China
-                .card.shadow-sm.mb-4
-                    .card-body
-                        p.font-weight-bold(style='font-size: 1.25rem; display: flex; align-items: center;')
-                            img(src='https://upload.wikimedia.org/wikipedia/en/f/f5/ECUST_university_logo.png', alt="ECUST logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;')
-                            | East China University of Science and Technology (ECUST)
-                        p Mini-major Diploma, Computer Science
-                        p.text-muted Oct 2021 - Mar 2024, Shanghai, China
-            .col-md-6
-                h3.text-primary Research Interests
-                ul.list-group.list-group-flush.mb-4
-                    li.list-group-item Computer Vision: Semantic Segmentation, SLAM, 3D Reconstruction
-                    li.list-group-item Robotics: Robot Kinematics and Dynamics
-        hr.my-5
-        .row
-            .col-md-12
-                h3.text-primary Work Experience
-                .card-deck
-                    .card.shadow-sm.mb-4
-                        .card-body
-                            p.font-weight-bold(style='font-size: 1.25rem;') Porsche Financial Leasing Ltd.
-                            p.text-muted PFS Residual Value Assistant (Jan 2024 - Jul 2024, Shanghai, China)
-                            ul
-                                li Programming models for financial leasing product return rates
-                                li Documenting credit strategy and fraud detection pipelines
-                                li Researching data disaster tolerance solutions
-                    .card.shadow-sm.mb-4
-                        .card-body
-                            p.font-weight-bold(style='font-size: 1.25rem;') Bank of Communication Financial Technology Co, Ltd.
-                            p.text-muted Back-end Developer (Dec 2022 - Feb 2023, Shanghai, China)
-                            ul
-                                li Built a new HRM platform with low-code and API support
-                                li Implemented AI functions' back-end based on openAPI standards
-                                li Participated in DevOps process for Supply Chain and Debt Management platform
-        hr.my-5
-        .row
-            .col-md-6
-                h3.text-primary Skills
-                h4 Languages
-                .language-visual
-                    .language-item(style='width: 80%; height: 30px; background-color: #4CAF50; margin-bottom: 10px; position: relative; border-radius: 5px;')
-                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') English (C1)
-                    .language-item(style='width: 30%; height: 30px; background-color: #2196F3; margin-bottom: 10px; position: relative; border-radius: 5px;')
-                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') French (A1)
-                    .language-item(style='width: 100%; height: 30px; background-color: #FF9800; margin-bottom: 10px; position: relative; border-radius: 5px;')
-                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') Mandarin (native)
-                    .language-item(style='width: 60%; height: 30px; background-color: #FF5722; margin-bottom: 10px; position: relative; border-radius: 5px;')
-                        span(style='position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold;') Cantonese
-                h4 Programming
-                ul.list-group.list-group-flush
-                    li.list-group-item Python, C, C++, R, Matlab
-                    li.list-group-item HTML/CSS/JS, LaTeX, Rust
-            .col-md-6
-                h3.text-primary Achievements
-                ul.list-group.list-group-flush
-                    li.list-group-item ECUST Outstanding Graduate Scholarship, June 2024
-                    li.list-group-item Huawei "Intelligence Base" Outstanding Student Scholarship, Nov 2021
-                    li.list-group-item Second Prize in 10th University Students Mechanical Engineering Innovation Contest, Shanghai (May 2021)
+    .container.mt-5
+        // For small to medium screens (d-lg-none)
+        .d-lg-none
+            .row
+                .col-12.border.border-danger
+                    .left-content(style='min-height: 100%; text-align: center;')
+                .col-12.border.border-danger.mt-3
+                    .right-content(style='min-height: 100%;')
+        // For large screens (d-none.d-lg-block)
+        .d-none.d-lg-block
+            // Left sidebar
+            .container.py-3.position-fixed.fixed-container.rounded-5.bg-white.bg-opacity-0.border.border-primary
+                .container.d-flex.flex-wrap.align-content-around
+                    .container.my-5.d-flex.justify-content-center.align-items-center
+                        img.rounded-4(src='/images/6702323f5tc220c8b48779336a48bb54.jpg', alt='Ziyi Liu Portrait', style='scale: 1.5; object-fit: cover;' width='80' height='80')
+                    .container.d-flex.flex-column.justify-content-center.align-items-center
+                        h1(title='Ziyi Liu') #{__("Ziyi Liu")}
+                        p.my-0.py-0.title #{__("AI Engineer")}
+                .container.d-flex.justify-content-center.align-items-center
+                    hr.w-75
+                .container.d-flex.justify-content-center.align-items-center
+                    // Contact information, left-aligned text
+                    ul.container.m-auto.p-auto
+                        li.row.my-4
+                            .col-3.d-flex.justify-content-center.align-items-center
+                                i.fas.fa-envelope.shadow
+                            .col-9
+                                p.my-0.text-start.text-muted #{__("Email")}
+                                p.my-0.text-start
+                                    a.contact-link(href='mailto:ziyi.ipparis@outlook.com' style='text-decoration: none;')
+                                        | ziyi.ipparis@outlook.com
+                        li.row.my-4
+                            .col-3.d-flex.justify-content-center.align-items-center
+                                i.fas.fa-phone
+                            .col-9
+                                p.my-0.text-start.text-muted #{__("Phone")}
+                                p.my-0.text-start
+                                    a.contact-link(href='tel:+33749976242' style='text-decoration: none;')
+                                        | +33 749 976 242
+                        li.row.my-4
+                            .col-3.d-flex.justify-content-center.align-items-center
+                                i.fas.fa-calendar-alt
+                            .col-9
+                                p.my-0.text-start.text-muted #{__("Birthday")}
+                                p.my-0.text-start #{__("December 11, 2001")}
+                        li.row.my-4
+                            .col-3.d-flex.justify-content-center.align-items-center
+                                i.fas.fa-map-marker-alt
+                            .col-9
+                                p.my-0.text-start.text-muted #{__("Location")}
+                                p.my-0.text-start #{__("Rte de Saclay, 91120 Palaiseau, France")}
+            .row
+                .col-lg-4
+                // Right content
+                .col-lg-8.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
+                    // About me
+                    .container
+                        h2.mb-3 #{__("About Me")}
+                        // Use pageData.aboutMe to display the about me content
+                        p(style='text-align: justify;') #{pageData.aboutMe1}
+                        p(style='text-align: justify;') #{pageData.aboutMe2}
+                    // SVG Container for the line
+                    svg#timeline-line(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
+                    // Education
+                    .container
+                        // Short thick line
+                        hr.w-25.bg-primary
+                        // Education
+                        .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
+                            .d-flex.justify-content-center.align-items-center
+                                i.fas.fa-solid.fa-book.fa-2x#book-icon(style='z-index: 99;')
+                            h2.mb-1.mx-5.p-0.text-nowrap #{__("Education")}
+                        // Vertical timeline of education
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                                    img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Institut_polytechnique_de_Paris_logo.svg/512px-Institut_polytechnique_de_Paris_logo.svg.png', alt="Institut Polytechnique de Paris logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title="Institut Polytechnique de Paris")
+                                .col-auto.text-nowrap.m-0.p-0
+                                    strong.m-0 #{__("Institut Polytechnique de Paris")} / #{__("Télécom Paris")}
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center
+                                    i.fas.fa-solid.fa-circle.fa-2xs.education-circle(style='z-index: 99;')
+                                .col-8.d-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted #{__("2024")} &ndash; #{__("2026")}
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{__("Paris, France")}
+                            .row
+                                .col-10.offset-1
+                                    p.m-0 #{__("Master of Computer Science, Data and Artificial Intelligence")}
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                                    img(src='https://upload.wikimedia.org/wikipedia/en/f/f5/ECUST_university_logo.png', alt="ECUST logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title="East China University of Science and Technology")
+                                .col-auto.text-nowrap.m-0.p-0
+                                    strong.m-0 #{__("East China University of Science and Technology")} (ECUST)
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center
+                                    i.fas.fa-solid.fa-circle.fa-2xs.education-circle(style='z-index: 99;')
+                                .col-8.d-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted #{__("2020")} &ndash; #{__("2024")}
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{__("Shanghai, China")}
+                            .row
+                                .col-10.offset-1
+                                    p.m-0 #{__("Bachelor of Engineering, Intelligence and Robotics")}
+                                    p.m-0 #{__("Mini-major Diploma, Computer Science (2021 - 2024)")}
+                    // Internships
+                    .container
+                        // Short thick line
+                        hr.w-25.bg-primary
+                        // Internships
+                        .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
+                            .d-flex.justify-content-center.align-items-center
+                                i.fas.fa-briefcase.fa-2x#briefcase-icon(style='z-index: 99;')
+                            h2.mb-1.mx-5.p-0.text-nowrap #{__("Internships")}
+                        // Vertical timeline of education
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                                    img(src="https://media.licdn.com/dms/image/v2/C560BAQF886_Hz2IxqA/company-logo_100_100/company-logo_100_100/0/1649235657423/porsche_china_motors_ltd_logo?e=1738195200&v=beta&t=Zkg5K5CXZ_-cGd0Um9E8UklNMHgRbP0CgaCUhL9_u4w", alt="Porsche Financial Leasing Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Porsche Financial Leasing Ltd.")
+                                .col-auto.text-nowrap.m-0.p-0
+                                    strong.m-0 #{__("Porsche Financial Leasing Ltd.")}
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center
+                                    i.fas.fa-solid.fa-circle.fa-2xs.internship-circle(style='z-index: 99;')
+                                .col-8.d-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted #{__("Jan 2024")} &ndash; #{__("Jul 2024")}
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{__("Shanghai, China")}
+                            .row
+                                .col-10.offset-1
+                                    p.m-0 #{__("PFS Residual Value Assistant")}
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                                    img(src="https://media.licdn.com/dms/image/v2/C4E0BAQFXFXajkyog9g/company-logo_100_100/company-logo_100_100/0/1650636716934/bank_of_communications_co_ltd_logo?e=1738195200&v=beta&t=Aw0tBEFhfVZOY-ezxSxSpEYxicbLYhSE89D07eTFMKc", alt="Bank of Communication Financial Technology Co, Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Bank of Communication Financial Technology Co, Ltd.")
+                                .col-auto.text-nowrap.m-0.p-0
+                                    strong.m-0 #{__("Bank of Communication Financial Technology Co, Ltd.")}
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center
+                                    i.fas.fa-solid.fa-circle.fa-2xs.internship-circle(style='z-index: 99;')
+                                .col-8.d-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted #{__("Dec 2022")} &ndash; #{__("Feb 2023")}
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{__("Shanghai, China")}
+                            .row
+                                .col-10.offset-1
+                                    p.m-0 #{__("PFS Residual Value Assistant")}
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                                    img(src="https://media.licdn.com/dms/image/v2/C4E0BAQESn_MRz7dZdg/company-logo_100_100/company-logo_100_100/0/1631355237967?e=1738195200&v=beta&t=ebfzwYgdyqjaqWNVg2zHIShmNCNJPsfLxHffIpCgzZ0", alt="Institute of Software, Chinese Academy of Sciences (ISCAS) logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Institute of Software, Chinese Academy of Sciences (ISCAS)")
+                                .col-auto.text-nowrap.m-0.p-0
+                                    strong.m-0 #{__("Institute of Software, Chinese Academy of Sciences (ISCAS)")}
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center
+                                    i.fas.fa-solid.fa-circle.fa-2xs.internship-circle(style='z-index: 99;')
+                                .col-8.d-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted #{__("Apr 2022")} &ndash; #{__("Sept 2022")}
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{__("Shanghai, China")} #{__("(Remote)")}
+                            .row
+                                .col-10.offset-1
+                                    p.m-0 #{__("Development and Testing")}
 
-    style.
-        .portrait-container {
-            position: relative;
-            width: 250px;
-            height: 300px;
-            overflow: hidden;
-            border-radius: 50%;
-        }
+    script.
+        window.addEventListener('DOMContentLoaded', function () {
+            adjustFixedContainerWidth();
+        });
+        window.addEventListener('resize', function () {
+            adjustFixedContainerWidth();
+        });
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-20px);
-            }
-            60% {
-                transform: translateY(-10px);
-            }
-        }
+        function adjustFixedContainerWidth() {
+            const parentElement = document.querySelector('.d-none.d-lg-block');
+            const fixedContainer = document.querySelector('.fixed-container');
+            if (parentElement && fixedContainer) {
+                fixedContainer.style.width = (parentElement.clientWidth * 0.25) + 'px';
 
-        .bounce-hover:hover {
-            animation: bounce 1s;
+            }
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            const bookIcon = document.querySelector("#book-icon");
+            const internIcon = document.querySelector("#briefcase-icon");
+            const educationCircles = document.querySelectorAll(".education-circle");
+            const internshipCircles = document.querySelectorAll(".internship-circle");
+            const svg = document.querySelector("#timeline-line");
+
+            if (!bookIcon || educationCircles.length === 0 ||
+                !internIcon || internshipCircles.length === 0 ||
+                !svg) {
+                return; // Exit if the required elements are not found
+            }
+
+            // Get the last circle element
+            const lastEduCircle = educationCircles[educationCircles.length - 1];
+            const lastInternCircle = internshipCircles[internshipCircles.length - 1];
+
+            // Get bounding rectangles
+            const bookIconRect = bookIcon.getBoundingClientRect();
+            const internIconRect = internIcon.getBoundingClientRect();
+            const lastEduCircleRect = lastEduCircle.getBoundingClientRect();
+            const lastInternCircleRect = lastInternCircle.getBoundingClientRect();
+            const svgRect = svg.getBoundingClientRect();
+
+            // Traverse icon and circle pairs
+            const iconRects = [bookIconRect, internIconRect];
+            const circleRects = [lastEduCircleRect, lastInternCircleRect];
+
+            for (let i = 0; i < iconRects.length; i++) {
+                // Get the bounding rectangles
+                const iconRect = iconRects[i];
+                const circleRect = circleRects[i];
+                // Calculate the bottom center of the icon
+                const iconBottomY = iconRect.bottom - svgRect.top;
+                // Calculate the center of the circle
+                const circleCenterY = circleRect.top + circleRect.height / 2 - svgRect.top;
+                // Calculate the center of the last circle
+                const circleX = circleRect.left + circleRect.width / 2 - svgRect.left;
+
+                // Create a line element
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", circleX);
+                line.setAttribute("x2", circleX);
+                line.setAttribute("y1", iconBottomY);
+                line.setAttribute("y2", circleCenterY);
+                line.setAttribute("stroke", "gray");
+                line.setAttribute("stroke-width", "1");
+
+                // Append the line to the SVG
+                svg.appendChild(line);
+            }
+        });

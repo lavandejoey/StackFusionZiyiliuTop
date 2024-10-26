@@ -93,6 +93,7 @@ router.post('/signup', [
 router.get('/logout', (req, res) => {
     // Store the redirectTo value before destroying the session
     const redirectTo = req.session.redirectTo || "/";
+    delete req.session.redirectTo;
 
     req.session.destroy((err) => {
         if (err) {
