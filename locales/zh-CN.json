@@ -54,7 +54,9 @@
     "Message": "留言",
     "I'm currently pursuing the Master's degree in Data and AI at the IP Paris.": "我目前正在巴黎理工学院攻读数据与人工智能硕士学位。",
     "My background in Intelligence and Robotics, with a BEng from East China University of Science and Technology, includes research experience in SLAM using computer vision.": "我曾在华东理工大学获得智能与机器人工学学士学位，拥有丰富的计算机视觉和 SLAM 开发经验。",
-    "I am passionate about making AI more transparent and interpretable, which drives my interest in Explainable AI and Computer Vision.": "我热衷于探索 AI 模型的透明性和可解释性，对可解释 AI 和计算机视觉领域有浓厚兴趣。",
+    "I am passionate about making AI more transparent and interpretable, which drives my interest in Explainable AI and Computer Vision.": "我热衷于探索 AI 模型的透明度和可解释性，对可解释 AI （XAI）和计算机视觉领域有浓厚兴趣。",
     "Proficient in Python, C++, Rust, SQL Query, MATLAB, I also have experience with TensorFlow and PyTorch or dealing full stack development works under Linux environment.": "我熟悉 Python、C++、Rust、SQL、MATLAB 等工具，熟悉 TensorFlow 和 PyTorch 深度学习框架，拥有在 Linux 环境下进行全栈开发的经验。",
-    "I am proficient in English, Mandarin and Cantonese, and currently learning French and Italian to expand my international profile.": "我精通英语、普通话和粤语，目前正在学习法语和意大利语，以拓展我的国际视野。"
+    "I am proficient in English, Mandarin and Cantonese, and currently learning French and Italian to expand my international profile.": "我精通英语、普通话和粤语，目前正在学习法语和意大利语，使我拥有更广阔的国际视野。",
+    "Full-stack Developer": "全栈开发工程师",
+    "Send": "发送"
 }
