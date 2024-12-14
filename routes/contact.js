@@ -2,7 +2,6 @@
 
 // Require express and create a router
 const express = require("express");
-const sendEmail = require("../packages/email");
 const router = express.Router();
 
 // GET contact page

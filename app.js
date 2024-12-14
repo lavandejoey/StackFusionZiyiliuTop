@@ -15,7 +15,6 @@ const RedisStore = require('connect-redis').default;
 
 // Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
-const sendEmail = require("./packages/email.js");
 
 // Routes
 const indexRouter = require('./routes/index');
@@ -140,38 +139,6 @@ app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/monitor', monitorRouter);
 app.use('/v2ray', v2rayRouter);
-
-// Express route to send email
-app.post('/emailing', async (req, res) => {
-    // TODO debug log
-    console.log('Received email request');
-    const {
-        name,
-        fromEmail = process.env.NO_REPLY_EMAIL,
-        toEmail,
-        subject = `[ZiyiLiu.top] Message from ${name}`,
-        message
-    } = req.body;
-    const emailOptions = {
-        to: toEmail,
-        from: fromEmail,
-        subject: subject,
-        message: message,
-
-    };
-
-    try {
-        // TODO debug log
-        console.log(emailOptions);
-        console.log('Sending email...');
-        await sendEmail(emailOptions);
-        console.log('Email sent successfully');
-        res.status(200).send('Email sent successfully');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error sending email');
-    }
-});
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

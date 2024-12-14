@@ -9,14 +9,16 @@ const userData = {
     'lzy_ecust@outlook.com': '3f056acf-48af-464c-8e91-b96501c529f4',
     'chenxingxingbiu@163.com': '36f2f038-711e-4d82-85fb-8c16b3848a10',
     '1136243186@qq.com': '2443b8bb-adff-4b62-98c4-20710a7f86d0',
-    'wuyuwuyu2020@outlook.com': '66375c16-990b-4513-a6e9-dd8b69de0bbe'
+    'wuyuwuyu2020@outlook.com': '66375c16-990b-4513-a6e9-dd8b69de0bbe',
+    'elvislongzheng@gmail.com': '56112055-0d16-4037-b52a-3529c9d7c847'
 };
 const alterIds = {
     'lavandejoey@outlook.com': 69,
     'lzy_ecust@outlook.com': 43,
     'chenxingxingbiu@163.com': 314,
     '1136243186@qq.com': 77,
-    'wuyuwuyu2020@outlook.com': 50
+    'wuyuwuyu2020@outlook.com': 50,
+    'elvislongzheng@gmail.com': 11
 }
 
 // Function to generate the Clash YAML configuration based on UUID
@@ -24,7 +26,7 @@ function generateClashYaml(email, uuid, alterId) {
     const yamlConfig = {
         proxies: [
             {
-                name: "ZLiu v2ray service" + " " + email,
+                name: "ZLiu v2ray service" + " " + email.slice(0, email.indexOf('@')),
                 type: "vmess",
                 server: 'v2ray.ziyiliu.top',
                 port: 443,
