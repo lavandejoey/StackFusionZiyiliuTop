@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production node ./bin/www",
+    "start": "npm install --omit=dev && NODE_ENV=production node ./bin/www",
     "start:debug": "npm run build-css && NODE_ENV=development node --inspect ./bin/www --debug",
     "build-css": "sass public/stylesheets:public/stylesheets --no-source-map --style compressed",
     "watch-css": "sass public/stylesheets:public/stylesheets --watch"
