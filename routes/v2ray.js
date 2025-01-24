@@ -5,20 +5,20 @@ const YAML = require("yaml");
 
 // In-memory data for users with UUIDs (You can replace this with a database)
 const userData = {
-    'lavandejoey@outlook.com': '62a499c2-baa8-4182-ba61-f26010ec985c',
-    'lzy_ecust@outlook.com': '3f056acf-48af-464c-8e91-b96501c529f4',
-    'chenxingxingbiu@163.com': '36f2f038-711e-4d82-85fb-8c16b3848a10',
-    '1136243186@qq.com': '2443b8bb-adff-4b62-98c4-20710a7f86d0',
-    'wuyuwuyu2020@outlook.com': '66375c16-990b-4513-a6e9-dd8b69de0bbe',
-    'elvislongzheng@gmail.com': '56112055-0d16-4037-b52a-3529c9d7c847'
+    "lavandejoey@outlook.com": "62a499c2-baa8-4182-ba61-f26010ec985c",
+    "lzy_ecust@outlook.com": "3f056acf-48af-464c-8e91-b96501c529f4",
+    "chenxingxingbiu@163.com": "36f2f038-711e-4d82-85fb-8c16b3848a10",
+    "1136243186@qq.com": "2443b8bb-adff-4b62-98c4-20710a7f86d0",
+    "wuyuwuyu2020@outlook.com": "66375c16-990b-4513-a6e9-dd8b69de0bbe",
+    "elvislongzheng@gmail.com": "56112055-0d16-4037-b52a-3529c9d7c847"
 };
 const alterIds = {
-    'lavandejoey@outlook.com': 69,
-    'lzy_ecust@outlook.com': 43,
-    'chenxingxingbiu@163.com': 314,
-    '1136243186@qq.com': 77,
-    'wuyuwuyu2020@outlook.com': 50,
-    'elvislongzheng@gmail.com': 11
+    "lavandejoey@outlook.com": 69,
+    "lzy_ecust@outlook.com": 43,
+    "chenxingxingbiu@163.com": 314,
+    "1136243186@qq.com": 77,
+    "wuyuwuyu2020@outlook.com": 50,
+    "elvislongzheng@gmail.com": 11
 }
 
 // Function to generate the Clash YAML configuration based on UUID
@@ -26,142 +26,174 @@ function generateClashYaml(email, uuid, alterId) {
     const yamlConfig = {
         proxies: [
             {
-                name: "ZLiu v2ray service" + " " + email.slice(0, email.indexOf('@')),
+                name: "ZLiu US proxy" + " " + email.slice(0, email.indexOf("@")),
                 type: "vmess",
-                server: 'v2ray.ziyiliu.top',
+                server: "us.ziyiliu.top",
                 port: 443,
                 uuid: uuid, // UUID is dynamic
                 alterId: alterId, // AlterId is dynamic
                 cipher: "auto",
                 tls: true,
-                'skip-cert-verify': false,
+                "skip-cert-verify": false,
                 network: "ws",
-                'ws-opts': {
-                    path: '/v2ray',
+                "ws-opts": {
+                    path: "/v2ray",
                     headers: {
-                        Host: 'v2ray.ziyiliu.top'
+                        Host: "us.ziyiliu.top"
                     }
                 },
                 sniffing: {
                     enabled: true,
-                    'dest-override': ["http", "tls"]
+                    "dest-override": ["http", "tls"]
+                }
+            },
+            {
+                name: "ZLiu DE proxy" + " " + email.slice(0, email.indexOf("@")),
+                type: "vmess",
+                server: "de.ziyiliu.top",
+                port: 443,
+                uuid: uuid, // UUID is dynamic
+                alterId: alterId, // AlterId is dynamic
+                cipher: "auto",
+                tls: true,
+                "skip-cert-verify": false,
+                network: "ws",
+                "ws-opts": {
+                    path: "/v2ray",
+                    headers: {
+                        Host: "us.ziyiliu.top"
+                    }
+                },
+                sniffing: {
+                    enabled: true,
+                    "dest-override": ["http", "tls"]
                 }
             },
         ],
+        "proxy-groups": [
+            {
+                name: "ZLiu Proxy" + " " + email,
+                type: "select",
+                proxies: [
+                    "ZLiu US proxy" + " " + email.slice(0, email.indexOf("@")),
+                    "ZLiu DE proxy" + " " + email.slice(0, email.indexOf("@"))
+                ]
+            }
+        ],
         mode: "Rule",
-        'rule-providers': {
+        "rule-providers": {
             reject: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt',
-                path: './RULE-SET/reject.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt",
+                path: "./RULE-SET/reject.yaml",
                 interval: 86400
             },
             icloud: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt',
-                path: './RULE-SET/icloud.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt",
+                path: "./RULE-SET/icloud.yaml",
                 interval: 86400
             },
             apple: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt',
-                path: './RULE-SET/apple.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt",
+                path: "./RULE-SET/apple.yaml",
                 interval: 86400
             },
             google: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt',
-                path: './RULE-SET/google.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt",
+                path: "./RULE-SET/google.yaml",
                 interval: 86400
             },
             proxy: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt',
-                path: './RULE-SET/proxy.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt",
+                path: "./RULE-SET/proxy.yaml",
                 interval: 86400
             },
             direct: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt',
-                path: './ruleset/direct.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
+                path: "./ruleset/direct.yaml",
                 interval: 86400
             },
             private: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt',
-                path: './ruleset/private.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt",
+                path: "./ruleset/private.yaml",
                 interval: 86400
             },
             gfw: {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt',
-                path: './ruleset/gfw.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt",
+                path: "./ruleset/gfw.yaml",
                 interval: 86400
             },
-            'tld-not-cn': {
+            "tld-not-cn": {
                 type: "http",
                 behavior: "domain",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt',
-                path: './ruleset/tld-not-cn.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt",
+                path: "./ruleset/tld-not-cn.yaml",
                 interval: 86400
             },
             telegramcidr: {
                 type: "http",
                 behavior: "ipcidr",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt',
-                path: './ruleset/telegramcidr.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt",
+                path: "./ruleset/telegramcidr.yaml",
                 interval: 86400
             },
             cncidr: {
                 type: "http",
                 behavior: "ipcidr",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt',
-                path: './ruleset/cncidr.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt",
+                path: "./ruleset/cncidr.yaml",
                 interval: 86400
             },
             lancidr: {
                 type: "http",
                 behavior: "ipcidr",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt',
-                path: './ruleset/lancidr.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt",
+                path: "./ruleset/lancidr.yaml",
                 interval: 86400
             },
             applications: {
                 type: "http",
                 behavior: "classical",
-                url: 'https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt',
-                path: './ruleset/applications.yaml',
+                url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
+                path: "./ruleset/applications.yaml",
                 interval: 86400
             }
         },
         rules: [
-            'RULE-SET,applications,DIRECT',
-            'RULE-SET,private,DIRECT',
-            'RULE-SET,direct,DIRECT',
-            'RULE-SET,lancidr,DIRECT',
-            'RULE-SET,cncidr,DIRECT',
-            'RULE-SET,telegramcidr,' + "ZLiu v2ray service" + " " + email,
+            "RULE-SET,applications,DIRECT",
+            "RULE-SET,private,DIRECT",
+            "RULE-SET,direct,DIRECT",
+            "RULE-SET,lancidr,DIRECT",
+            "RULE-SET,cncidr,DIRECT",
+            "RULE-SET,telegramcidr," + "ZLiu Proxy" + " " + email,
 
-            'DOMAIN-SUFFIX,local,DIRECT',
-            'DOMAIN,clash.razord.top,DIRECT',
-            'DOMAIN,yacd.haishan.me,DIRECT',
-            'RULE-SET,reject,REJECT',
-            'RULE-SET,icloud,DIRECT',
-            'RULE-SET,apple,DIRECT',
-            'RULE-SET,google,' + "ZLiu v2ray service" + " " + email,
-            'RULE-SET,proxy,' + "ZLiu v2ray service" + " " + email,
-            'GEOIP,LAN,DIRECT',
-            'GEOIP,CN,DIRECT',
-            'DOMAIN-SUFFIX,.cn,DIRECT',
-            'MATCH,' + "ZLiu v2ray service" + " " + email
+            "DOMAIN-SUFFIX,local,DIRECT",
+            "DOMAIN,clash.razord.top,DIRECT",
+            "DOMAIN,yacd.haishan.me,DIRECT",
+            "RULE-SET,reject,REJECT",
+            "RULE-SET,icloud,DIRECT",
+            "RULE-SET,apple,DIRECT",
+            "RULE-SET,google," + "ZLiu Proxy" + " " + email,
+            "RULE-SET,proxy," + "ZLiu Proxy" + " " + email,
+            "GEOIP,LAN,DIRECT",
+            "GEOIP,CN,DIRECT",
+            "DOMAIN-SUFFIX,.cn,DIRECT",
+            "MATCH," + "ZLiu Proxy" + " " + email,
         ]
     };
 
@@ -169,11 +201,11 @@ function generateClashYaml(email, uuid, alterId) {
 }
 
 // Route to generate YAML config for the given email
-router.get('/config', (req, res) => {
+router.get("/config", (req, res) => {
     const email = req.query.email;
 
     if (!email || !userData[email]) {
-        console.log('Invalid request: ', req.query);
+        console.log("Invalid request: ", req.query);
         return res.status(404).send("User not found");
     }
 
@@ -181,7 +213,7 @@ router.get('/config', (req, res) => {
     const alterId = alterIds[email];
     const yamlContent = generateClashYaml(email, uuid, alterId);
 
-    res.header('Content-Type', 'text/yaml');
+    res.header("Content-Type", "text/yaml");
     res.send(yamlContent);
 });
 
