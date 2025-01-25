@@ -21,10 +21,11 @@ class User {
         this.email = email;
     }
 
-    // Fetch user data from database
+    // Fetch user data from database with case-insensitive email query
     async fetchUser() {
         let sql_select = "";
         let params = [];
+
         if (this.uuid) {
             if (!uuidValidate(this.uuid)) {
                 console.error("Invalid UUID format");
@@ -38,11 +39,12 @@ class User {
                 console.error("Invalid email format");
                 return false;
             }
-            sql_select = "SELECT * FROM user WHERE email = ?";
+            sql_select = "SELECT * FROM user WHERE LOWER(email) = LOWER(?)";  // Case-insensitive query
             params = [this.email];
         } else {
             return;
         }
+
         try {
             const result = await db.query(sql_select, params);
             if (result.length > 0) {
@@ -55,6 +57,9 @@ class User {
                 this.status = result[0].status;
                 this.created_at = result[0].created_at;
                 this.updated_at = result[0].updated_at;
+            } else {
+                console.log("User not found for email:", this.email);
+                return false;
             }
         } catch (error) {
             console.error("Error fetching user:", error);
@@ -216,3 +221,4 @@ class User {
 }
 
 module.exports = {User, UserRole, UserStatus};
+
