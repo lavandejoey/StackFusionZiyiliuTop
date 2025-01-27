@@ -2,18 +2,22 @@ const express = require("express");
 const router = express.Router();
 const YAML = require("yaml");
 const {User} = require("../models/authentication");
+SERVER_LIST = [
+    {name: "ZLiu US proxy", server: "us.ziyiliu.top"},
+    {name: "ZLiu DE proxy", server: "de.ziyiliu.top"}
+];
 
 // Function to generate the Clash YAML configuration based on UUID
 function generateClashYaml(email, uuid, alterId) {
     const yamlConfig = {
-        proxies: [
-            {
-                name: "ZLiu US proxy" + " " + email.slice(0, email.indexOf("@")),
+        proxies: SERVER_LIST.map((server) => {
+            return {
+                name: server.name,
                 type: "vmess",
-                server: "us.ziyiliu.top",
+                server: server.server,
                 port: 443,
-                uuid: uuid, // UUID is dynamic
-                alterId: alterId, // AlterId is dynamic
+                uuid: uuid,
+                alterId: alterId,
                 cipher: "auto",
                 tls: true,
                 "skip-cert-verify": false,
@@ -21,47 +25,20 @@ function generateClashYaml(email, uuid, alterId) {
                 "ws-opts": {
                     path: "/v2ray",
                     headers: {
-                        Host: "us.ziyiliu.top"
+                        Host: server.server
                     }
                 },
                 sniffing: {
                     enabled: true,
                     "dest-override": ["http", "tls"]
                 }
-            },
-            {
-                name: "ZLiu DE proxy" + " " + email.slice(0, email.indexOf("@")),
-                type: "vmess",
-                server: "de.ziyiliu.top",
-                port: 443,
-                uuid: uuid, // UUID is dynamic
-                alterId: alterId, // AlterId is dynamic
-                cipher: "auto",
-                tls: true,
-                "skip-cert-verify": false,
-                network: "ws",
-                "ws-opts": {
-                    path: "/v2ray",
-                    headers: {
-                        Host: "us.ziyiliu.top"
-                    }
-                },
-                sniffing: {
-                    enabled: true,
-                    "dest-override": ["http", "tls"]
-                }
-            },
-        ],
-        "proxy-groups": [
-            {
-                name: "ZLiu Proxy" + " " + email,
-                type: "select",
-                proxies: [
-                    "ZLiu US proxy" + " " + email.slice(0, email.indexOf("@")),
-                    "ZLiu DE proxy" + " " + email.slice(0, email.indexOf("@"))
-                ]
-            }
-        ],
+            };
+        }),
+        "proxy-groups": [{
+            name: "ZLiu Proxy" + " " + email,
+            type: "select",
+            proxies: SERVER_LIST.map((server) => server.name + " " + email.slice(0, email.indexOf("@")))
+        }],
         mode: "Rule",
         "rule-providers": {
             reject: {
@@ -200,10 +177,10 @@ router.get("/config", async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        const { uuid, v2_iter_id: alterId } = user;
+        const {uuid, v2_iter_id: alterId} = user;
         const yamlContent = generateClashYaml(email, uuid, alterId);
 
-        console.log("The user info from db is:", user);
+        // console.log("The user info from db is:", user);
 
         res.header("Content-Type", "text/yaml");
         res.send(yamlContent);

@@ -1,14 +1,16 @@
 // Load environment variables
 require("dotenv").config();
 
-// Core modules and third-party libraries
-const express = require("express");
+// Core Modules
 const path = require("path");
+
+// Third-Party Libraries
+const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const session = require('express-session');
+const session = require("express-session");
 const csurf = require("csurf");
-const sassMiddleware = require('sass-middleware');
+const sassMiddleware = require("sass-middleware");
 const rateLimit = require("express-rate-limit");
 const Redis = require("ioredis");
 const RedisStore = require('connect-redis').default;
@@ -164,3 +166,4 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
