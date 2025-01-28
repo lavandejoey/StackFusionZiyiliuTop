@@ -12,7 +12,7 @@ function generateClashYaml(email, uuid, alterId) {
     const yamlConfig = {
         proxies: SERVER_LIST.map((server) => {
             return {
-                name: server.name,
+                name: server.name + " " + email.slice(0, email.indexOf("@")),
                 type: "vmess",
                 server: server.server,
                 port: 443,
