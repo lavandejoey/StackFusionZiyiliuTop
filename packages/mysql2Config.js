@@ -2,7 +2,7 @@ const mysql = require("mysql2");
 
 class MySQL {
     constructor() {
-        this.sql_connection = mysql.createConnection({
+        this.pool = mysql.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
@@ -12,30 +12,25 @@ class MySQL {
             connectionLimit: 10,
             queueLimit: 0
         });
-        // Connect test
-        this.sql_connection.connect(function (err) {
+
+        // Verify pool connectivity
+        this.pool.getConnection((err, connection) => {
             if (err) {
-                console.error('Error connecting to MySQL: ' + err.stack);
+                console.error('Error connecting to MySQL:', err);
                 return;
             }
             console.log("Connected to MySQL");
+            connection.release();
         });
     }
-    // General query function (asynchronous)
-    query(sql, params) {
+
+    async query(sql, params) {
         try {
-            return new Promise((resolve, reject) => {
-                this.sql_connection.query(sql, params, function (err, result) {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            });
-        }
-        catch (error) {
+            const [results] = await this.pool.promise().query(sql, params);
+            return results;
+        } catch (error) {
             console.error('Error querying MySQL:', error);
+            throw error; // Re-throw to allow proper error handling in callers
         }
     }
 }

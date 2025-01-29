@@ -10,8 +10,13 @@ router.get('/', function (req, res, next) {
         domain: req.app.locals.domain,
     });
 });
-router.use(['/index', '/home'], (req, res, next) => {
+router.get(['/index', '/home'], (req, res, next) => {
     res.redirect('/');
+});
+
+// Other Sub-routes Redirection
+router.get(['/login', '/logout'], (req, res) => {
+    res.redirect('/auth');
 });
 
 module.exports = router;

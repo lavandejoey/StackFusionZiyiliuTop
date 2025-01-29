@@ -4,7 +4,7 @@ const {User, UserRole} = require("../models/authentication"); // Import User dir
 const {check, validationResult} = require('express-validator');
 
 // GET /auth
-router.get('/', (req, res) => {
+router.get(['/', '/login', '/logout'], (req, res) => {
     res.render("auth", {
         lang: req.getLocale(),
         activePage: "Login",
