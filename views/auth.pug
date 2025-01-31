@@ -1,21 +1,11 @@
 extends layout
 
 block content
-    // If there's an error message, show it
-    if error
-        .error-message.mb-3
-            p= error
-
-    // If using server-side validation errors (from express-validator)
-    if errors
-        ul.error-list
-            each err in errors
-                li= err.msg
-
     // Container for both forms
     .container.mt-3.mt-sm-5.pt-sm-5
         .row.justify-content-center
-            .col-md-5
+            // Hide when smaller than md
+            .col-md-5.d-none.d-md-block
             .col-md-6
                 //--- LOGIN FORM (shown by default) ---
                 .w-100.w-sm-75
@@ -27,30 +17,35 @@ block content
 
                         // Email field
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="email") Email
-                        .form-group.mb-2.mb-sm-4
+                            label(for="loginEmail") Email
+                        .form-group.mb-2.mb-sm-3
                             input.form-control#loginEmail(type="email" name="email" required placeholder="Enter your email")
+                            // Field error container
+                            .invalid-feedback#loginEmailError
 
                         // Password + "forgot password?" link on same row
                         .d-flex.flex-wrap.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="password") Password
+                            label(for="loginPassword") Password
                             a.forgot-password(href="#") Forgot password?
-                        .form-group.mb-2.mb-sm-4
+                        .form-group.mb-2.mb-sm-3
                             input.form-control#loginPassword(type="password" name="password" required placeholder="Enter your password")
+                            // Field error container
+                            .invalid-feedback#loginPasswordError
 
                         // Keep me logged in checkbox
                         .form-check.mb-2.mb-sm-4
                             input.form-check-input(type="checkbox" id="keepLoggedIn" name="keepLoggedIn")
                             label.form-check-label(for="keepLoggedIn") Keep me logged in
 
-                        // Sign In button
+                        // Sign In button (disabled initially)
                         .d-grid.m-auto.p-auto.mt-2.mt-sm-5
-                            button.btn.btn-primary.btn-block(type="submit") Sign in
+                            button.btn.btn-primary.btn-block(type="submit" disabled) Sign in
+
                         // Toggle link
                         p.mt-2
                             span.text-muted
                                 | Don’t have an account? &nbsp;
-                            a#showSignup(href='#') Sign up
+                            a#showSignup(href="#signup") Sign up
 
                 .w-100
                     //--- SIGNUP FORM (hidden by default) ---
@@ -64,62 +59,301 @@ block content
                             // First name
                             .mb-2.mb-sm-4.col-md-6
                                 .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                                    label(for="first_name") First Name
+                                    label(for="signupFirstName") First Name
                                 .form-group.m-auto.p-auto.mb-0
                                     input.form-control#signupFirstName(type="text" name="first_name" required placeholder="Enter your first name")
-
+                                    .invalid-feedback#signupFirstNameError
                             // Last name
                             .mb-2.mb-sm-4.col-md-6
                                 .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                                    label(for="last_name") Last Name
+                                    label(for="signupLastName") Last Name
                                 .form-group.m-auto.p-auto.mb-0
                                     input.form-control#signupLastName(type="text" name="last_name" required placeholder="Enter your last name")
+                                    .invalid-feedback#signupLastNameError
 
                         // Email
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="email") Email
-                        .form-group.mb-2.mb-sm-4
+                            label(for="signupEmail") Email
+                        .form-group.mb-2.mb-sm-3
                             input.form-control#signupEmail(type="email" name="email" required placeholder="Enter your email")
+                            .invalid-feedback#signupEmailError
 
                         // Password
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="password") Password
-                        .form-group.mb-2.mb-sm-4
+                            label(for="signupPassword") Password
+                        .form-group.mb-2.mb-sm-3
                             input.form-control#signupPassword(type="password" name="password" required placeholder="Enter your password")
+                            .invalid-feedback#signupPasswordError
 
                         // Confirm password
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="confirm_password") Confirm Password
-                        .form-group.mb-2.mb-sm-4
+                            label(for="signupConfirmPassword") Confirm Password
+                        .form-group.mb-2.mb-sm-3
                             input.form-control#signupConfirmPassword(type="password" name="confirm_password" required placeholder="Confirm your password")
+                            .invalid-feedback#signupConfirmPasswordError
 
-                        // Create account button
+                        // Create account button (disabled initially)
                         .d-grid.m-auto.p-auto.mt-2.mt-sm-5
-                            button.btn.btn-secondary.btn-block(type="submit") Create my account
+                            button.btn.btn-secondary.btn-block(type="submit" disabled) Create my account
+
                         // Toggle link
                         p.mt-2
                             span.text-muted
                                 | Already a member? &nbsp;
-                            a#showLogin(href='#') Sign in
+                            a#showLogin(href="#login") Sign in
 
-    // Keep your existing toggle script
+    // Toggle and reset script
     script.
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const showSignup = document.getElementById("showSignup");
             const showLogin = document.getElementById("showLogin");
             const loginForm = document.getElementById("loginForm");
             const signupForm = document.getElementById("signupForm");
 
-            if (showSignup && showLogin && loginForm && signupForm) {
-                showSignup.addEventListener("click", function(event) {
-                    event.preventDefault();
-                    loginForm.style.display = "none";
-                    signupForm.style.display = "block";
+            // Function to reset form fields, errors, and touched state
+            function resetForm(form) {
+                form.reset();
+                // Remove error classes and clear error messages
+                form.querySelectorAll('.is-invalid').forEach(input => input.classList.remove('is-invalid'));
+                form.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = "");
+                // Clear the "touched" flag on all inputs
+                form.querySelectorAll('input').forEach(input => {
+                    delete input.dataset.touched;
                 });
-                showLogin.addEventListener("click", function(event) {
-                    event.preventDefault();
+                // Disable submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    // submitBtn.disabled = true;
+                    submitBtn.classList.add('disabled');
+                }
+            }
+
+            // Function to display the proper form based on the URL hash
+            function showFormFromHash() {
+                if (window.location.hash === '#signup') {
+                    loginForm.style.display = "none";
+                    resetForm(loginForm);
+                    signupForm.style.display = "block";
+                    resetForm(signupForm);
+                } else {
                     signupForm.style.display = "none";
+                    resetForm(signupForm);
                     loginForm.style.display = "block";
+                    resetForm(loginForm);
+                }
+            }
+
+            // Toggle links update the hash, which triggers the proper form display
+            if (showSignup && showLogin && loginForm && signupForm) {
+                showSignup.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    window.location.hash = "#signup";
+                    showFormFromHash();
+                });
+                showLogin.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    window.location.hash = "#login";
+                    showFormFromHash();
                 });
             }
+
+            // Listen for hash changes (e.g., when the user navigates with browser buttons)
+            window.addEventListener("hashchange", showFormFromHash);
+
+            // On initial load, display the form based on the current URL hash
+            showFormFromHash();
+        });
+
+    // Client-side lazy validation script
+    script.
+        document.addEventListener("DOMContentLoaded", function () {
+            // -------------------------
+            // Helpers
+            // -------------------------
+            function showError(inputEl, errorEl, message) {
+                inputEl.classList.add("is-invalid");
+                errorEl.textContent = message;
+            }
+
+            function clearError(inputEl, errorEl) {
+                inputEl.classList.remove("is-invalid");
+                errorEl.textContent = "";
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            // -------------------------
+            // LOGIN FORM VALIDATION
+            // -------------------------
+            const loginForm = document.getElementById("loginForm");
+            const loginEmail = document.getElementById("loginEmail");
+            const loginEmailError = document.getElementById("loginEmailError");
+            const loginPassword = document.getElementById("loginPassword");
+            const loginPasswordError = document.getElementById("loginPasswordError");
+            const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
+
+            function validateLoginEmail() {
+                const value = loginEmail.value.trim();
+                const valid = isValidEmail(value);
+                if (!valid && loginEmail.dataset.touched === "true") {
+                    showError(loginEmail, loginEmailError, "Please enter a valid email.");
+                } else {
+                    clearError(loginEmail, loginEmailError);
+                }
+                return valid;
+            }
+
+            function validateLoginPassword() {
+                const value = loginPassword.value.trim();
+                const valid = value.length >= 6;
+                if (!valid && loginPassword.dataset.touched === "true") {
+                    showError(loginPassword, loginPasswordError, "Password must be at least 6 characters.");
+                } else {
+                    clearError(loginPassword, loginPasswordError);
+                }
+                return valid;
+            }
+
+            function validateLoginForm() {
+                const emailValid = validateLoginEmail();
+                const passwordValid = validateLoginPassword();
+                const formValid = emailValid && passwordValid;
+                loginSubmitBtn.disabled = !formValid;
+                formValid ? loginSubmitBtn.classList.remove('disabled') : loginSubmitBtn.classList.add('disabled');
+                formValid ? loginSubmitBtn.classList.add('active') : loginSubmitBtn.classList.remove('active');
+                return formValid;
+            }
+
+            // Add lazy validation on blur and input events for login fields
+            [loginEmail, loginPassword].forEach(field => {
+                field.addEventListener("blur", function () {
+                    field.dataset.touched = "true";
+                    validateLoginForm();
+                });
+                field.addEventListener("input", function () {
+                    if (field.dataset.touched === "true") {
+                        validateLoginForm();
+                    }
+                });
+            });
+
+            // On submit, mark fields as touched and validate
+            loginForm.addEventListener("submit", function (event) {
+                loginEmail.dataset.touched = "true";
+                loginPassword.dataset.touched = "true";
+                if (!validateLoginForm()) {
+                    event.preventDefault();
+                }
+            });
+
+            // -------------------------
+            // SIGNUP FORM VALIDATION
+            // -------------------------
+            const signupForm = document.getElementById("signupForm");
+            const signupFirstName = document.getElementById("signupFirstName");
+            const signupFirstNameError = document.getElementById("signupFirstNameError");
+            const signupLastName = document.getElementById("signupLastName");
+            const signupLastNameError = document.getElementById("signupLastNameError");
+            const signupEmail = document.getElementById("signupEmail");
+            const signupEmailError = document.getElementById("signupEmailError");
+            const signupPassword = document.getElementById("signupPassword");
+            const signupPasswordError = document.getElementById("signupPasswordError");
+            const signupConfirmPassword = document.getElementById("signupConfirmPassword");
+            const signupConfirmPasswordError = document.getElementById("signupConfirmPasswordError");
+            const signupSubmitBtn = signupForm.querySelector('button[type="submit"]');
+
+            function validateSignupFirstName() {
+                const valid = signupFirstName.value.trim().length > 0;
+                if (!valid && signupFirstName.dataset.touched === "true") {
+                    showError(signupFirstName, signupFirstNameError, "First name is required.");
+                } else {
+                    clearError(signupFirstName, signupFirstNameError);
+                }
+                return valid;
+            }
+
+            function validateSignupLastName() {
+                const valid = signupLastName.value.trim().length > 0;
+                if (!valid && signupLastName.dataset.touched === "true") {
+                    showError(signupLastName, signupLastNameError, "Last name is required.");
+                } else {
+                    clearError(signupLastName, signupLastNameError);
+                }
+                return valid;
+            }
+
+            function validateSignupEmail() {
+                const value = signupEmail.value.trim();
+                const valid = isValidEmail(value);
+                if (!valid && signupEmail.dataset.touched === "true") {
+                    showError(signupEmail, signupEmailError, "Please enter a valid email.");
+                } else {
+                    clearError(signupEmail, signupEmailError);
+                }
+                return valid;
+            }
+
+            function validateSignupPassword() {
+                const value = signupPassword.value.trim();
+                const valid = value.length >= 6;
+                if (!valid && signupPassword.dataset.touched === "true") {
+                    showError(signupPassword, signupPasswordError, "Password must be at least 6 characters.");
+                } else {
+                    clearError(signupPassword, signupPasswordError);
+                }
+                return valid;
+            }
+
+            function validateSignupConfirmPassword() {
+                const valid = signupConfirmPassword.value.trim() === signupPassword.value.trim();
+                if (!valid && signupConfirmPassword.dataset.touched === "true") {
+                    showError(signupConfirmPassword, signupConfirmPasswordError, "Passwords do not match.");
+                } else {
+                    clearError(signupConfirmPassword, signupConfirmPasswordError);
+                }
+                return valid;
+            }
+
+            function validateSignupForm() {
+                const firstNameValid = validateSignupFirstName();
+                const lastNameValid = validateSignupLastName();
+                const emailValid = validateSignupEmail();
+                const passwordValid = validateSignupPassword();
+                const confirmValid = validateSignupConfirmPassword();
+                const formValid = firstNameValid && lastNameValid && emailValid && passwordValid && confirmValid;
+                signupSubmitBtn.disabled = !formValid;
+                formValid ? signupSubmitBtn.classList.remove('disabled') : signupSubmitBtn.classList.add('disabled');
+                formValid ? signupSubmitBtn.classList.add('active') : signupSubmitBtn.classList.remove('active');
+                return formValid;
+            }
+
+            // Add lazy validation on blur and input events for signup fields
+            [
+                {field: signupFirstName, validator: validateSignupFirstName},
+                {field: signupLastName, validator: validateSignupLastName},
+                {field: signupEmail, validator: validateSignupEmail},
+                {field: signupPassword, validator: validateSignupPassword},
+                {field: signupConfirmPassword, validator: validateSignupConfirmPassword}
+            ].forEach(item => {
+                item.field.addEventListener("blur", function () {
+                    item.field.dataset.touched = "true";
+                    validateSignupForm();
+                });
+                item.field.addEventListener("input", function () {
+                    if (item.field.dataset.touched === "true") {
+                        validateSignupForm();
+                    }
+                });
+            });
+
+            // On submit, mark all signup fields as touched and validate
+            signupForm.addEventListener("submit", function (event) {
+                [signupFirstName, signupLastName, signupEmail, signupPassword, signupConfirmPassword]
+                    .forEach(field => field.dataset.touched = "true");
+                if (!validateSignupForm()) {
+                    event.preventDefault();
+                }
+            });
         });
