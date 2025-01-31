@@ -47,6 +47,12 @@ html(lang=lang)
                                     li
                                         a.dropdown-item.d-flex.justify-content-center(href='?lang=zh-HK')
                                             span 繁體中文
+            // Error messages (if any)
+            if errors
+                div.container.mt-3
+                    ul.error-list
+                        each err in errors
+                            li= err.msg
             // Main content
             block content
             // Centered Footer
