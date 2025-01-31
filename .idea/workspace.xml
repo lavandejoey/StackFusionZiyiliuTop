@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bin/www" beforeDir="false" afterPath="$PROJECT_DIR$/bin/www" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/auth.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/auth.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +56,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
+    "Node.js.app.js.executor": "Run",
     "Node.js.bin/www.executor": "Run",
     "Node.js.parser.js.executor": "Run",
     "Node.js.test.js.executor": "Run",
@@ -67,9 +73,15 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
+    "npm.start:debug.executor": "Run",
     "settings.editor.selected.configurable": "database.data.views.appearance",
     "ts.external.directory.path": "/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -87,15 +99,30 @@
       <recent name="$PROJECT_DIR$/.config" />
     </key>
   </component>
-  <component name="RunManager" selected="Node.js.parser.js">
+  <component name="RunManager" selected="npm.start:debug">
+    <configuration name="app.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/app.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
     <configuration name="parser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/locales/parser.js" working-dir="$PROJECT_DIR$/locales">
       <method v="2" />
     </configuration>
     <configuration name="v2rayLogParser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/script/v2rayLogParser.js" working-dir="$PROJECT_DIR$/script">
       <method v="2" />
     </configuration>
+    <configuration name="start:debug" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start:debug" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.start:debug" />
+        <item itemvalue="Node.js.app.js" />
         <item itemvalue="Node.js.parser.js" />
         <item itemvalue="Node.js.v2rayLogParser.js" />
       </list>

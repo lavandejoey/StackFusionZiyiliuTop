@@ -54,8 +54,9 @@ html(lang=lang)
             footer.w-100.d-flex.justify-content-center.py-3.mt-auto(style='color: gray;')
                 div.text-center
                     p.mb-0
-                        | Copyright &#169; 2021-
-                        span(id='current-year')
+                        a(href=domain + "auth/login", style='text-decoration: none; color: gray;')
+                            | Copyright &#169; 2021-
+                            span(id='current-year')
                         a(href=domain, style='text-decoration: none; color: gray;')
                             |  #{__("Ziyi LIU")}
     script(type='text/javascript').

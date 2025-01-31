@@ -1,60 +1,109 @@
 extends layout
 
 block content
-    .auth-container
-        if error
-            div.error-message.mb-3
-                p= error
+    // If there's an error message, show it
+    if error
+        .error-message.mb-3
+            p= error
 
-    .container.mt-5
+    // If using server-side validation errors (from express-validator)
+    if errors
+        ul.error-list
+            each err in errors
+                li= err.msg
+
+    // Container for both forms
+    .container.mt-5.pt-5
         .row.justify-content-center
+            .col-md-5
             .col-md-6
-                //- Login Form (Shown by default)
-                form#loginForm(action='/auth/login' method="POST")
-                    input(type="hidden" name="_csrf" value=csrfToken)
-                    .card.mb-4
-                        .card-header.text-center
-                            h3.mb-3 Login
-                        .card-body
-                            .form-group.mb-4
-                                label(for="email") Email:
-                                input.form-control#loginEmail(type="email" name="email" required placeholder="Enter your email")
-                            .form-group.mb-4
-                                label(for="password") Password:
-                                input.form-control#loginPassword(type="password" name="password" required placeholder="Enter your password")
-                            button.btn.btn-primary.btn-block(type="submit") Login
-                        .card-footer.text-center
-                            p.mb-0
-                                | Don't have an account?
-                                a#showSignup(href='#') Sign up here
+                //--- LOGIN FORM (shown by default) ---
+                .w-75
+                    form#loginForm(action='/auth/login' method='POST')
+                        input(type='hidden' name='_csrf' value=csrfToken)
+                        // Heading
+                        h2.mb-3 &#x1F44B;
+                        h2.mb-3 Welcome back!
 
-                //- Sign Up Form (Initially hidden)
-                form#signupForm(action='/auth/signup' method="POST" style='display: none;')
-                    input(type="hidden" name="_csrf" value=csrfToken)
-                    .card.mb-4
-                        .card-header.text-center
-                            h3.mb-3 Sign Up
-                        .card-body
-                            .form-group.mb-4
-                                label(for="first_name") First Name:
-                                input.form-control#signupFirstName(type="text" name="first_name" required placeholder="Enter your first name")
-                            .form-group.mb-4
-                                label(for="last_name") Last Name:
-                                input.form-control#signupLastName(type="text" name="last_name" required placeholder="Enter your last name")
-                            .form-group.mb-4
-                                label(for="email") Email:
-                                input.form-control#signupEmail(type="email" name="email" required placeholder="Enter your email")
-                            .form-group.mb-4
-                                label(for="password") Password:
-                                input.form-control#signupPassword(type="password" name="password" required placeholder="Enter your password")
-                            button.btn.btn-success.btn-block(type="submit") Sign Up
-                        .card-footer.text-center
-                            p.mb-0
-                                | Already have an account?
-                                a#showLogin(href='#') Log in here
+                        // Email field
+                        .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                            label(for="email") Email
+                        .form-group.m-auto.p-auto.mb-4
+                            input.form-control#loginEmail(type="email" name="email" required placeholder="Enter your email")
 
+                        // Password + "forgot password?" link on same row
+                        .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                            label(for="password") Password
+                            a.forgot-password(href="#") Forgot password?
+                        .form-group.m-auto.p-auto.mb-4
+                            input.form-control#loginPassword(type="password" name="password" required placeholder="Enter your password")
+
+                        // Keep me logged in checkbox
+                        .form-check.m-auto.p-auto.mb-4
+                            input.form-check-input(type="checkbox" id="keepLoggedIn" name="keepLoggedIn")
+                            label.form-check-label(for="keepLoggedIn") Keep me logged in
+
+                        // Sign In button
+                        .d-grid.m-auto.p-auto.mt-5
+                            button.btn.btn-primary.btn-block(type="submit") Sign in
+                        // Toggle link
+                        p.mt-2
+                            span.text-muted
+                                | Don’t have an account?&nbsp;
+                            a#showSignup(href='#') Sign up
+
+                .w-100
+                    //--- SIGNUP FORM (hidden by default) ---
+                    form#signupForm(action='/auth/signup' method='POST' style='display:none;')
+                        input(type='hidden' name='_csrf' value=csrfToken)
+                        // Heading
+                        h2.mb-3 Let's get started...
+
+                        // Name row, large screen in one row, small screen in two rows
+                        .row.mb-0
+                            // First name
+                            .m-auto.p-auto.mb-4.col-md-6
+                                .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                                    label(for="first_name") First Name
+                                .form-group.m-auto.p-auto.mb-0
+                                    input.form-control#signupFirstName(type="text" name="first_name" required placeholder="Enter your first name")
+
+                            // Last name
+                            .m-auto.p-auto.mb-4.col-md-6
+                                .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                                    label(for="last_name") Last Name
+                                .form-group.m-auto.p-auto.mb-0
+                                    input.form-control#signupLastName(type="text" name="last_name" required placeholder="Enter your last name")
+
+                        // Email
+                        .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                            label(for="email") Email
+                        .form-group.m-auto.p-auto.mb-4
+                            input.form-control#signupEmail(type="email" name="email" required placeholder="Enter your email")
+
+                        // Password
+                        .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                            label(for="password") Password
+                        .form-group.m-auto.p-auto.mb-4
+                            input.form-control#signupPassword(type="password" name="password" required placeholder="Enter your password")
+
+                        // Confirm password
+                        .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
+                            label(for="confirm_password") Confirm Password
+                        .form-group.m-auto.p-auto.mb-4
+                            input.form-control#signupConfirmPassword(type="password" name="confirm_password" required placeholder="Confirm your password")
+
+                        // Create account button
+                        .d-grid.m-auto.p-auto.mt-5
+                            button.btn.btn-secondary.btn-block(type="submit") Create my account
+                        // Toggle link
+                        p.mt-2
+                            span.text-muted
+                                | Already a member?&nbsp;
+                            a#showLogin(href='#') Sign in
+
+    // Keep your existing toggle script
     script.
-        // Toggle between login and signup forms
         document.addEventListener("DOMContentLoaded", function() {
             const showSignup = document.getElementById("showSignup");
             const showLogin = document.getElementById("showLogin");
@@ -67,7 +116,6 @@ block content
                     loginForm.style.display = "none";
                     signupForm.style.display = "block";
                 });
-
                 showLogin.addEventListener("click", function(event) {
                     event.preventDefault();
                     signupForm.style.display = "none";

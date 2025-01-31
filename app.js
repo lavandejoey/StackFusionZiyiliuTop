@@ -122,7 +122,8 @@ app.use((req, res, next) => {
 
 // Middleware: Rate limiting
 app.use(rateLimit({
-    windowMs: 10 * 60 * 1000, // 15 minutes
+    // 15 minutes for prod, 10s for dev (NODE_ENV=development)
+    windowMs: (process.env.NODE_ENV === "production") ? 15 * 60 * 1000 : 10 * 1000,
     limit: (req, res) => {
         return (req.session.isLoggedIn) ? 500 : 100; // Limit to 30 requests per 15 minutes for non-logged in users
     },
