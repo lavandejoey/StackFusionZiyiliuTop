@@ -13,3 +13,5 @@ async function sendEmail(emailOptions) {
         "MessageStream": "outbound"
     });
 }
+
+module.exports = {sendEmail};
