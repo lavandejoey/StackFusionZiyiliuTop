@@ -1,3 +1,21 @@
+//- Define a mixin for displaying alerts
+mixin alertMessage(type, message)
+    if message
+        .container.my-auto
+            .alert.alert-dismissible.fade.show(class="alert-" + type, role="alert")
+                //- Display an icon depending on the alert type
+                if type === 'info'
+                    i.fas.fa-info-circle.me-2(aria-hidden="true")
+                else if type === 'danger'
+                    i.fas.fa-exclamation-triangle.me-2(aria-hidden="true")
+                else if type === 'success'
+                    i.fas.fa-check-circle.me-2(aria-hidden="true")
+                else if type === 'warning'
+                    i.fas.fa-exclamation-circle.me-2(aria-hidden="true")
+                span= message
+                //- Use Bootstrap 5 dismiss button markup
+                button.btn-close(type="button", data-bs-dismiss="alert", aria-label="Close")
+
 doctype html
 html(lang=lang)
     head
@@ -47,12 +65,14 @@ html(lang=lang)
                                     li
                                         a.dropdown-item.d-flex.justify-content-center(href='?lang=zh-HK')
                                             span 繁體中文
-            // Error messages (if any)
-            if errors
-                div.container.mt-3
-                    ul.error-list
-                        each err in errors
-                            li= err.msg
+            if info
+                +alertMessage('info', info)
+            if error
+                +alertMessage('danger', error)
+            if success
+                +alertMessage('success', success)
+            if warning
+                +alertMessage('warning', warning)
             // Main content
             block content
             // Centered Footer

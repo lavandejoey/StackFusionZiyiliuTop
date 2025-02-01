@@ -61,7 +61,7 @@ router.post('/signup', [
             activePage: "Signup",
             pageTitle: res.__("Signup"),
             domain: req.app.locals.domain,
-            errors: errors.array()
+            error: errors.array()
         });
     }
 
