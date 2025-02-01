@@ -13,94 +13,125 @@ block content
                         input(type='hidden' name='_csrf' value=csrfToken)
                         // Heading
                         h2.mb-3 &#x1F44B;
-                        h2.mb-3 Welcome back!
+                        h2.mb-3 #{__("Welcome back!")}
 
                         // Email field
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="loginEmail") Email
+                            label(for="loginEmail") #{__("Email")}
                         .form-group.mb-2.mb-sm-3
-                            input.form-control#loginEmail(type="email" name="email" required placeholder="Enter your email")
-                            // Field error container
+                            input.form-control#loginEmail(
+                                type="email"
+                                name="email"
+                                required
+                                placeholder=__("Enter your email")
+                            )
                             .invalid-feedback#loginEmailError
 
-                        // Password + "forgot password?" link on same row
+                        // Password + "forgot password?" link
                         .d-flex.flex-wrap.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="loginPassword") Password
-                            a.forgot-password(href="#") Forgot password?
+                            label(for="loginPassword") #{__("Password")}
+                            a.forgot-password(href="#") #{__("Forgot password?")}
                         .form-group.mb-2.mb-sm-3
-                            input.form-control#loginPassword(type="password" name="password" required placeholder="Enter your password")
-                            // Field error container
+                            input.form-control#loginPassword(
+                                type="password"
+                                name="password"
+                                required
+                                placeholder=__("Enter your password")
+                            )
                             .invalid-feedback#loginPasswordError
 
                         // Keep me logged in checkbox
                         .form-check.mb-2.mb-sm-4
                             input.form-check-input(type="checkbox" id="keepLoggedIn" name="keepLoggedIn")
-                            label.form-check-label(for="keepLoggedIn") Keep me logged in
+                            label.form-check-label(for="keepLoggedIn") #{__("Keep me logged in")}
 
-                        // Sign In button (disabled initially)
+                        // Sign In button
                         .d-grid.m-auto.p-auto.mt-2.mt-sm-5
-                            button.btn.btn-primary.btn-block(type="submit" disabled) Sign in
+                            button.btn.btn-primary.btn-block(type="submit" disabled) #{__("Log in")}
 
                         // Toggle link
                         p.mt-2
                             span.text-muted
-                                | Don’t have an account? &nbsp;
-                            a#showSignup(href="#signup") Sign up
+                                | #{__("Don’t have an account?")} &nbsp;
+                            a#showSignup(href="#signup") #{__("Sign up")}
 
                 .w-100
                     //--- SIGNUP FORM (hidden by default) ---
                     form#signupForm(action='/auth/signup' method='POST' style='display:none;')
                         input(type='hidden' name='_csrf' value=csrfToken)
                         // Heading
-                        h2.mb-3 Let's get started...
+                        h2.mb-3 #{__("Let's get started...")}
 
-                        // Name row, large screen in one row, small screen in two rows
+                        // Name row
                         .row.mb-0
-                            // First name
                             .mb-2.mb-sm-4.col-md-6
                                 .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                                    label(for="signupFirstName") First Name
+                                    label(for="signupFirstName") #{__("First Name")}
                                 .form-group.m-auto.p-auto.mb-0
-                                    input.form-control#signupFirstName(type="text" name="first_name" required placeholder="Enter your first name")
+                                    input.form-control#signupFirstName(
+                                        type="text"
+                                        name="first_name"
+                                        required
+                                        placeholder=__("Enter your first name")
+                                    )
                                     .invalid-feedback#signupFirstNameError
-                            // Last name
                             .mb-2.mb-sm-4.col-md-6
                                 .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                                    label(for="signupLastName") Last Name
+                                    label(for="signupLastName") #{__("Last Name")}
                                 .form-group.m-auto.p-auto.mb-0
-                                    input.form-control#signupLastName(type="text" name="last_name" required placeholder="Enter your last name")
+                                    input.form-control#signupLastName(
+                                        type="text"
+                                        name="last_name"
+                                        required
+                                        placeholder=__("Enter your last name")
+                                    )
                                     .invalid-feedback#signupLastNameError
 
                         // Email
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="signupEmail") Email
+                            label(for="signupEmail") #{__("Email")}
                         .form-group.mb-2.mb-sm-3
-                            input.form-control#signupEmail(type="email" name="email" required placeholder="Enter your email")
+                            input.form-control#signupEmail(
+                                type="email"
+                                name="email"
+                                required
+                                placeholder=__("Enter your email")
+                            )
                             .invalid-feedback#signupEmailError
 
                         // Password
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="signupPassword") Password
+                            label(for="signupPassword") #{__("Password")}
                         .form-group.mb-2.mb-sm-3
-                            input.form-control#signupPassword(type="password" name="password" required placeholder="Enter your password")
+                            input.form-control#signupPassword(
+                                type="password"
+                                name="password"
+                                required
+                                placeholder=__("Enter your password")
+                            )
                             .invalid-feedback#signupPasswordError
 
                         // Confirm password
                         .d-flex.justify-content-between.align-items-center.m-auto.p-auto.mb-2
-                            label(for="signupConfirmPassword") Confirm Password
+                            label(for="signupConfirmPassword") #{__("Confirm Password")}
                         .form-group.mb-2.mb-sm-3
-                            input.form-control#signupConfirmPassword(type="password" name="confirm_password" required placeholder="Confirm your password")
+                            input.form-control#signupConfirmPassword(
+                                type="password"
+                                name="confirm_password"
+                                required
+                                placeholder=__("Confirm your password")
+                            )
                             .invalid-feedback#signupConfirmPasswordError
 
-                        // Create account button (disabled initially)
+                        // Create account button
                         .d-grid.m-auto.p-auto.mt-2.mt-sm-5
-                            button.btn.btn-secondary.btn-block(type="submit" disabled) Create my account
+                            button.btn.btn-secondary.btn-block(type="submit" disabled) #{__("Create my account")}
 
                         // Toggle link
                         p.mt-2
                             span.text-muted
-                                | Already a member? &nbsp;
-                            a#showLogin(href="#login") Sign in
+                                | #{__("Already a member?")} &nbsp;
+                            a#showLogin(href="#login") #{__("Log in")}
 
     // Toggle and reset script
     script.

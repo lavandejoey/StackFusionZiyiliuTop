@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="" />
+    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-HK.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/auth.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/auth.pug" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,9 +101,6 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.start:debug">
-    <configuration name="app.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/app.js" working-dir="$PROJECT_DIR$">
-      <method v="2" />
-    </configuration>
     <configuration name="parser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/locales/parser.js" working-dir="$PROJECT_DIR$/locales">
       <method v="2" />
     </configuration>
@@ -115,7 +120,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.start:debug" />
-        <item itemvalue="Node.js.app.js" />
         <item itemvalue="Node.js.parser.js" />
         <item itemvalue="Node.js.v2rayLogParser.js" />
       </list>

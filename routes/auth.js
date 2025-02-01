@@ -14,7 +14,7 @@ function getCommonViewOptions(req, res, activePage) {
     return {
         lang: req.getLocale(),
         activePage: activePage,
-        pageTitle: res.__(activePage),
+        pageTitle: activePage,
         domain: req.app.locals.domain
     };
 }
@@ -72,7 +72,7 @@ router.post('/login', loginValidations, async (req, res) => {
             return res.redirect(redirectTo);
         } else {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, "Login"),
+                ...getCommonViewOptions(req, res, __("Login")),
                 error: res.__("Invalid email or password")
             });
         }
@@ -96,7 +96,7 @@ router.post('/signup', signupValidations, async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).render("auth", {
-                ...getCommonViewOptions(req, res, "Signup"),
+                ...getCommonViewOptions(req, res, __("Signup")),
                 error: errors.array()
             });
         }
@@ -107,7 +107,7 @@ router.post('/signup', signupValidations, async (req, res) => {
 
         if (user.uuid) {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, "Signup"),
+                ...getCommonViewOptions(req, res, __("Signup")),
                 error: res.__("User with this email already exists")
             });
         }
