@@ -1,7 +1,7 @@
 //- Define a mixin for displaying alerts
 mixin alertMessage(type, message)
     if message
-        .container.my-auto
+        .container.my-0
             .alert.alert-dismissible.fade.show(class="alert-" + type, role="alert")
                 //- Display an icon depending on the alert type
                 if type === 'info'
