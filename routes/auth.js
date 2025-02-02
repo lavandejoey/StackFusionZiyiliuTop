@@ -1,15 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { User, UserRole } = require("../models/authentication");
-const { check, validationResult } = require('express-validator');
+const {User, UserRole} = require("../models/authentication");
+const {check, validationResult} = require('express-validator');
 
-/**
- * Helper: Returns common view options for rendering the auth page.
- * @param {Object} req Express request
- * @param {Object} res Express response
- * @param {String} activePage The active page (e.g., "Login" or "Signup")
- * @returns {Object} Common view options
- */
 function getCommonViewOptions(req, res, activePage) {
     return {
         lang: req.getLocale(),
@@ -19,21 +12,11 @@ function getCommonViewOptions(req, res, activePage) {
     };
 }
 
-/**
- * Helper: Renders the auth page with provided additional options.
- * @param {Object} req Express request
- * @param {Object} res Express response
- * @param {Object} options Additional view options (e.g., error messages)
- */
 function renderAuthPage(req, res, options = {}) {
-    res.render("auth", { ...getCommonViewOptions(req, res, "Login"), ...options });
+    // Using res.__ to localize the "Login" page title
+    res.render("auth", {...getCommonViewOptions(req, res, res.__("Login")), ...options});
 }
 
-/**
- * Helper: Wraps session regeneration in a promise for async/await.
- * @param {Object} req Express request
- * @returns {Promise}
- */
 function regenerateSession(req) {
     return new Promise((resolve, reject) => {
         req.session.regenerate((err) => {
@@ -50,15 +33,15 @@ router.get(['/', '/login', '/logout'], (req, res) => {
 });
 
 // ----- POST /auth/login -----
-// Validation rules for login
+// Validation rules for login (using plain strings for error messages)
 const loginValidations = [
     check("email").isEmail().withMessage("Invalid email address"),
-    check("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters long")
+    check("password").isLength({min: 6}).withMessage("Password must be at least 6 characters long")
 ];
 
 router.post('/login', loginValidations, async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const {email, password} = req.body;
         const user = new User(null, email);
         await user.fetchUser();
 
@@ -72,7 +55,7 @@ router.post('/login', loginValidations, async (req, res) => {
             return res.redirect(redirectTo);
         } else {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, __("Login")),
+                ...getCommonViewOptions(req, res, res.__("Login")),
                 error: res.__("Invalid email or password")
             });
         }
@@ -83,10 +66,10 @@ router.post('/login', loginValidations, async (req, res) => {
 });
 
 // ----- POST /auth/signup -----
-// Validation rules for signup
+// Validation rules for signup (using plain strings for error messages)
 const signupValidations = [
     check("email").isEmail().withMessage("Invalid email address"),
-    check("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),
+    check("password").isLength({min: 6}).withMessage("Password must be at least 6 characters long"),
     check("first_name").notEmpty().withMessage("First name is required"),
     check("last_name").notEmpty().withMessage("Last name is required")
 ];
@@ -96,18 +79,18 @@ router.post('/signup', signupValidations, async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).render("auth", {
-                ...getCommonViewOptions(req, res, __("Signup")),
+                ...getCommonViewOptions(req, res, res.__("Signup")),
                 error: errors.array()
             });
         }
 
-        const { email, password, first_name, last_name } = req.body;
+        const {email, password, first_name, last_name} = req.body;
         const user = new User(null, email);
         await user.fetchUser();
 
         if (user.uuid) {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, __("Signup")),
+                ...getCommonViewOptions(req, res, res.__("Signup")),
                 error: res.__("User with this email already exists")
             });
         }
@@ -128,7 +111,7 @@ router.post('/signup', signupValidations, async (req, res) => {
 
 // ----- GET /auth/logout -----
 router.get('/logout', (req, res) => {
-    // Store redirect target, then destroy session
+    // Save redirect target before destroying the session
     const redirectTo = req.session.redirectTo || "/";
     delete req.session.redirectTo;
 

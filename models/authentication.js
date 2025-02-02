@@ -81,7 +81,7 @@ class User {
             return false;
         }
 
-        if (password.length < 8) {
+        if (password.length < 6) {
             console.error("Password is too short");
             return false;
         }
@@ -177,7 +177,7 @@ class User {
                 params.push(email);
             }
             if (new_password) {
-                if (new_password.length < 8) {
+                if (new_password.length < 6) {
                     console.error("Password is too short");
                     return false;
                 }

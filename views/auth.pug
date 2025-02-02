@@ -3,10 +3,13 @@ extends layout
 block content
     // Container for both forms
     .container.mt-3.mt-sm-5.pt-sm-5
-        .row.justify-content-center
+        .row.justify-content-between
             // Hide when smaller than md
-            .col-md-5.d-none.d-md-block
-            .col-md-6
+            .col-md-6.d-none.d-md-block.px-5
+                .d-flex.flex-column.justify-content-center.align-items-center.h-100(style='background-color: rgba(0, 0, 0, 0.5);')
+                    h1.text-white.display-4.mb-3 #{__("Welcome to Ziyi LIU")}
+                    p.text-white.lead #{__("Experience creativity and innovation in every click.")}
+            .col-md-5
                 //--- LOGIN FORM (shown by default) ---
                 .w-100.w-sm-75
                     form#loginForm(action='/auth/login' method='POST')
@@ -145,6 +148,7 @@ block content
             function resetForm(form) {
                 form.reset();
                 // Remove error classes and clear error messages
+                form.querySelectorAll('.is-valid').forEach(input => input.classList.remove('is-valid'));
                 form.querySelectorAll('.is-invalid').forEach(input => input.classList.remove('is-invalid'));
                 form.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = "");
                 // Clear the "touched" flag on all inputs
@@ -199,18 +203,29 @@ block content
     script.
         document.addEventListener("DOMContentLoaded", function () {
             // -------------------------
-            // Helpers
+            // Helper functions
             // -------------------------
+            function markAsValid(inputEl) {
+                inputEl.classList.remove("is-invalid");
+                inputEl.classList.add("is-valid");
+            }
+            function removeValidationClasses(inputEl) {
+                inputEl.classList.remove("is-invalid", "is-valid");
+            }
             function showError(inputEl, errorEl, message) {
                 inputEl.classList.add("is-invalid");
+                inputEl.classList.remove("is-valid");
                 errorEl.textContent = message;
             }
-
             function clearError(inputEl, errorEl) {
-                inputEl.classList.remove("is-invalid");
+                // Only mark as valid if the field has text and has been touched
+                if (inputEl.dataset.touched === "true" && inputEl.value.trim() !== "") {
+                    markAsValid(inputEl);
+                } else {
+                    removeValidationClasses(inputEl);
+                }
                 errorEl.textContent = "";
             }
-
             function isValidEmail(email) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             }
@@ -227,11 +242,16 @@ block content
 
             function validateLoginEmail() {
                 const value = loginEmail.value.trim();
-                const valid = isValidEmail(value);
-                if (!valid && loginEmail.dataset.touched === "true") {
-                    showError(loginEmail, loginEmailError, "Please enter a valid email.");
+                const valid = isValidEmail(value) && value !== "";
+                if (loginEmail.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(loginEmail, loginEmailError, "Please enter a valid email.");
+                    } else {
+                        clearError(loginEmail, loginEmailError);
+                    }
                 } else {
-                    clearError(loginEmail, loginEmailError);
+                    removeValidationClasses(loginEmail);
+                    loginEmailError.textContent = "";
                 }
                 return valid;
             }
@@ -239,10 +259,15 @@ block content
             function validateLoginPassword() {
                 const value = loginPassword.value.trim();
                 const valid = value.length >= 6;
-                if (!valid && loginPassword.dataset.touched === "true") {
-                    showError(loginPassword, loginPasswordError, "Password must be at least 6 characters.");
+                if (loginPassword.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(loginPassword, loginPasswordError, "Password must be at least 6 characters.");
+                    } else {
+                        clearError(loginPassword, loginPasswordError);
+                    }
                 } else {
-                    clearError(loginPassword, loginPasswordError);
+                    removeValidationClasses(loginPassword);
+                    loginPasswordError.textContent = "";
                 }
                 return valid;
             }
@@ -252,12 +277,16 @@ block content
                 const passwordValid = validateLoginPassword();
                 const formValid = emailValid && passwordValid;
                 loginSubmitBtn.disabled = !formValid;
-                formValid ? loginSubmitBtn.classList.remove('disabled') : loginSubmitBtn.classList.add('disabled');
-                formValid ? loginSubmitBtn.classList.add('active') : loginSubmitBtn.classList.remove('active');
+                if (formValid) {
+                    loginSubmitBtn.classList.remove('disabled');
+                    loginSubmitBtn.classList.add('active');
+                } else {
+                    loginSubmitBtn.classList.add('disabled');
+                    loginSubmitBtn.classList.remove('active');
+                }
                 return formValid;
             }
 
-            // Add lazy validation on blur and input events for login fields
             [loginEmail, loginPassword].forEach(field => {
                 field.addEventListener("blur", function () {
                     field.dataset.touched = "true";
@@ -270,7 +299,6 @@ block content
                 });
             });
 
-            // On submit, mark fields as touched and validate
             loginForm.addEventListener("submit", function (event) {
                 loginEmail.dataset.touched = "true";
                 loginPassword.dataset.touched = "true";
@@ -297,31 +325,46 @@ block content
 
             function validateSignupFirstName() {
                 const valid = signupFirstName.value.trim().length > 0;
-                if (!valid && signupFirstName.dataset.touched === "true") {
-                    showError(signupFirstName, signupFirstNameError, "First name is required.");
+                if (signupFirstName.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(signupFirstName, signupFirstNameError, "First name is required.");
+                    } else {
+                        clearError(signupFirstName, signupFirstNameError);
+                    }
                 } else {
-                    clearError(signupFirstName, signupFirstNameError);
+                    removeValidationClasses(signupFirstName);
+                    signupFirstNameError.textContent = "";
                 }
                 return valid;
             }
 
             function validateSignupLastName() {
                 const valid = signupLastName.value.trim().length > 0;
-                if (!valid && signupLastName.dataset.touched === "true") {
-                    showError(signupLastName, signupLastNameError, "Last name is required.");
+                if (signupLastName.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(signupLastName, signupLastNameError, "Last name is required.");
+                    } else {
+                        clearError(signupLastName, signupLastNameError);
+                    }
                 } else {
-                    clearError(signupLastName, signupLastNameError);
+                    removeValidationClasses(signupLastName);
+                    signupLastNameError.textContent = "";
                 }
                 return valid;
             }
 
             function validateSignupEmail() {
                 const value = signupEmail.value.trim();
-                const valid = isValidEmail(value);
-                if (!valid && signupEmail.dataset.touched === "true") {
-                    showError(signupEmail, signupEmailError, "Please enter a valid email.");
+                const valid = isValidEmail(value) && value !== "";
+                if (signupEmail.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(signupEmail, signupEmailError, "Please enter a valid email.");
+                    } else {
+                        clearError(signupEmail, signupEmailError);
+                    }
                 } else {
-                    clearError(signupEmail, signupEmailError);
+                    removeValidationClasses(signupEmail);
+                    signupEmailError.textContent = "";
                 }
                 return valid;
             }
@@ -329,20 +372,30 @@ block content
             function validateSignupPassword() {
                 const value = signupPassword.value.trim();
                 const valid = value.length >= 6;
-                if (!valid && signupPassword.dataset.touched === "true") {
-                    showError(signupPassword, signupPasswordError, "Password must be at least 6 characters.");
+                if (signupPassword.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(signupPassword, signupPasswordError, "Password must be at least 6 characters.");
+                    } else {
+                        clearError(signupPassword, signupPasswordError);
+                    }
                 } else {
-                    clearError(signupPassword, signupPasswordError);
+                    removeValidationClasses(signupPassword);
+                    signupPasswordError.textContent = "";
                 }
                 return valid;
             }
 
             function validateSignupConfirmPassword() {
-                const valid = signupConfirmPassword.value.trim() === signupPassword.value.trim();
-                if (!valid && signupConfirmPassword.dataset.touched === "true") {
-                    showError(signupConfirmPassword, signupConfirmPasswordError, "Passwords do not match.");
+                const valid = signupConfirmPassword.value.trim() === signupPassword.value.trim() && signupConfirmPassword.value.trim() !== "";
+                if (signupConfirmPassword.dataset.touched === "true") {
+                    if (!valid) {
+                        showError(signupConfirmPassword, signupConfirmPasswordError, "Passwords do not match.");
+                    } else {
+                        clearError(signupConfirmPassword, signupConfirmPasswordError);
+                    }
                 } else {
-                    clearError(signupConfirmPassword, signupConfirmPasswordError);
+                    removeValidationClasses(signupConfirmPassword);
+                    signupConfirmPasswordError.textContent = "";
                 }
                 return valid;
             }
@@ -355,18 +408,22 @@ block content
                 const confirmValid = validateSignupConfirmPassword();
                 const formValid = firstNameValid && lastNameValid && emailValid && passwordValid && confirmValid;
                 signupSubmitBtn.disabled = !formValid;
-                formValid ? signupSubmitBtn.classList.remove('disabled') : signupSubmitBtn.classList.add('disabled');
-                formValid ? signupSubmitBtn.classList.add('active') : signupSubmitBtn.classList.remove('active');
+                if (formValid) {
+                    signupSubmitBtn.classList.remove('disabled');
+                    signupSubmitBtn.classList.add('active');
+                } else {
+                    signupSubmitBtn.classList.add('disabled');
+                    signupSubmitBtn.classList.remove('active');
+                }
                 return formValid;
             }
 
-            // Add lazy validation on blur and input events for signup fields
             [
-                {field: signupFirstName, validator: validateSignupFirstName},
-                {field: signupLastName, validator: validateSignupLastName},
-                {field: signupEmail, validator: validateSignupEmail},
-                {field: signupPassword, validator: validateSignupPassword},
-                {field: signupConfirmPassword, validator: validateSignupConfirmPassword}
+                { field: signupFirstName, validator: validateSignupFirstName },
+                { field: signupLastName, validator: validateSignupLastName },
+                { field: signupEmail, validator: validateSignupEmail },
+                { field: signupPassword, validator: validateSignupPassword },
+                { field: signupConfirmPassword, validator: validateSignupConfirmPassword }
             ].forEach(item => {
                 item.field.addEventListener("blur", function () {
                     item.field.dataset.touched = "true";
@@ -379,7 +436,6 @@ block content
                 });
             });
 
-            // On submit, mark all signup fields as touched and validate
             signupForm.addEventListener("submit", function (event) {
                 [signupFirstName, signupLastName, signupEmail, signupPassword, signupConfirmPassword]
                     .forEach(field => field.dataset.touched = "true");
