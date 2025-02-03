@@ -4,16 +4,14 @@ block content
     // Main container that fills available space
     div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center
         .container.mt-3.px-3
-            .row.justify-content-center.align-items-center
+            .row.d-flex.justify-content-evenly
                 // Left Column: Greetings, context text, social icons
-                .col-md-5.my-auto
+                .col-md-5.my-auto.d-flex.flex-column.align-items-stretch
                     // Greeting heading
                     h1.mb-2.text-center #{__("Hiiiiiiiii!")}
-                    h2.mb-3.text-center #{__("I'm glad you're here!")}
+                    h2.mb-3.mb-md-5.text-center #{__("I'm glad you're here!")}
                     // Unified context message: responsive font size and margin
-                    p.text-center.text-muted.mb-4(
-                        class="fs-6 fs-md-5"
-                    )
+                    p.text-center.text-muted.mb-4.fs-6.fs-md-5
                         | #{__("Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!")}
                     // Social icons container: ensure even spacing and adjust margin for mobile
                     .d-flex.justify-content-evenly.my-3
@@ -26,12 +24,11 @@ block content
                         a(href='https://www.instagram.com/lavandecn/', target="_blank")
                             i.fab.fa-instagram.fa-2x(style='color: #E4405F')
                 // Separator for md and larger screens
-                .d-none.d-md-flex.col-md-1.justify-content-center.align-items-center
-                    hr.bg-secondary.my-0(style='width: 1px; height: 80%;')
-                // For small screens, add a simple horizontal rule with light margins
-                .d-md-none.col-12.mb-3
+                .d-none.d-md-flex.justify-content-center.align-items-center.col-md-2
+                    hr.bg-secondary.my-0(style='width: 2px; height: 80%;')
+                // Separator for smaller screens
+                .d-block.d-md-none.col-12
                     hr.bg-secondary
-
                 // Right Column: Chat form
                 .col-md-5.my-auto
                     // Heading for md and smaller screens (centered)

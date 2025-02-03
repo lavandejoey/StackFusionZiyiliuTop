@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="WS-243.23654.157">
-    <data-source name="ziyiliu@87.106.39.207" uuid="3ae36e1f-1930-43e4-8447-c3ef2ca2dddf">
-      <database-info product="MySQL" version="8.0.39-0ubuntu0.22.04.1" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.39" exact-driver-version="8.2">
-        <extra-name-characters>#@</extra-name-characters>
-        <identifier-quote-string>`</identifier-quote-string>
-      </database-info>
-      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
-      <secret-storage>master_key</secret-storage>
-      <user-name>zliu</user-name>
-      <schema-mapping>
-        <introspection-scope>
-          <node kind="schema" qname="@" />
-        </introspection-scope>
-      </schema-mapping>
-      <ssh-properties>
-        <enabled>false</enabled>
-        <ssh-config-id>6d55cc5e-1885-4c6b-b56c-482db4361c3a</ssh-config-id>
-        <local-port>3306</local-port>
-      </ssh-properties>
-    </data-source>
     <data-source name="ziyiliu@localhost" uuid="d62dd4c8-904d-493b-b850-285eabcdf1b2">
       <database-info product="MySQL" version="8.0.40-0ubuntu0.22.04.1" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.40" exact-driver-version="8.2">
         <extra-name-characters>#@</extra-name-characters>
