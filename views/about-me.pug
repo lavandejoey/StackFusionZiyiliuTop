@@ -25,17 +25,17 @@ block content
                                     p.my-0.text-start(class=contactField[0] === 'location' ? '' : 'text-truncate')
                                         if contactField[2]
                                             a.contact-link(href=contactField[2] style='text-decoration: none;')= pageData.contact[contactField[0]]
-                                        
+
                                             = pageData.contact[contactField[0]]
 
             // About Me and Sections
-            .container.rounded-5.bg-white.bg-opacity-0.border.border-primary.px-3.py-4.mt-4(style="z-index: -2;")
+            .container.rounded-5.bg-white.bg-opacity-0.border.border-primary.px-3.py-4.mt-4(style="z-index: -9;")
                 .container
                     h2.mb-3= __("About Me")
                     p(style='text-align: justify;')= pageData.aboutMe1
                     p(style='text-align: justify;')= pageData.aboutMe2
                 // SVG Container for the line
-                svg.d-none.d-sm-block#timeline-line-sm(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
+                svg.d-none.d-sm-block#timeline-line-sm(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 9;")
                 // Education Section
                 .container
                     // Short thick line
@@ -121,14 +121,13 @@ block content
                                         = pageData.contact[contactField[0]]
 
         // Right content
-        //.container.col-lg-8.offset-lg-4.col-xl-9.offset-xl-3.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
-        .container.dynamic-content-container.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
+        .container.dynamic-content-container.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -9;")
             .container
                 h2.mb-3= __("About Me")
                 p(style='text-align: justify;')= pageData.aboutMe1
                 p(style='text-align: justify;')= pageData.aboutMe2
             // SVG Container for the line
-            svg#timeline-line-lg(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
+            svg#timeline-line-lg(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 9;")
             // Education Section
             .container
                 // Short thick line
@@ -140,12 +139,12 @@ block content
                 each education in pageData.educations
                     .container.mb-3
                         .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
                                 img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
                             .col-auto.m-0.p-0
                                 strong.m-0= education.institution
                         .row
-                            .col-1.d-flex.justify-content-start.align-items-center
+                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
                                 i.fas.fa-solid.fa-circle.fa-2xs.education-circle-lg(style='z-index: 99;')
                             .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
                                 p.m-0.text-muted= education.start + ' – ' + education.end
@@ -168,12 +167,12 @@ block content
                 each internship in pageData.internships
                     .container.mb-3
                         .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center
+                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
                                 img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
                             .col-auto.m-0.p-0
                                 strong.m-0= internship.institution
                         .row
-                            .col-1.d-flex.justify-content-start.align-items-center
+                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
                                 i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-lg(style='z-index: 99;')
                             .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
                                 p.m-0.text-muted= internship.start + ' – ' + internship.end
@@ -200,7 +199,7 @@ block content
                 // Available width inside the parent container
                 const availableWidth = parentWidth - padding;
 
-                let sidebarWidth = Math.min(400, Math.max(300, availableWidth * 0.2)); // Between 300px and 400px
+                let sidebarWidth = Math.min(400, Math.max(250, availableWidth * 0.2)); // Between 300px and 400px
                 const gap = Math.min(50, availableWidth * 0.05); // Dynamic gap, capped at 50px
                 const rightWidth = availableWidth - sidebarWidth - gap;
 
@@ -252,10 +251,8 @@ block content
             svgElement.appendChild(line);
         }
 
+        adjustFixedContainerWidth();
         document.addEventListener("DOMContentLoaded", function () {
-            // Adjust the width of the fixed container
-            adjustFixedContainerWidth();
-
             // Process for large screens
             processTimeline({
                 bookIcon: document.querySelector("#book-icon-lg"),
@@ -280,7 +277,7 @@ block content
             // Adjust the width of the fixed container
             adjustFixedContainerWidth();
 
-            const svg = document.querySelector("#timeline-line-lg");
+            const svg = document.querySelector("#timeline-line-lg") || document.querySelector("#timeline-line-sm");
             if (svg) {
                 // Remove all lines
                 while (svg.lastChild) {
