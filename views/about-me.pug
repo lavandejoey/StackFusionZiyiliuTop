@@ -25,7 +25,7 @@ block content
                                     p.my-0.text-start(class=contactField[0] === 'location' ? '' : 'text-truncate')
                                         if contactField[2]
                                             a.contact-link(href=contactField[2] style='text-decoration: none;')= pageData.contact[contactField[0]]
-                                        else
+                                        
                                             = pageData.contact[contactField[0]]
 
             // About Me and Sections
@@ -48,7 +48,7 @@ block content
                         .container.mb-3
                             .row.mb-2
                                 .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                    img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title=education.logoTitle)
+                                    img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
                                 .col-auto.m-0.p-0
                                     strong.m-0= education.institution
                             .row
@@ -76,7 +76,7 @@ block content
                         .container.mb-3
                             .row.mb-2
                                 .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                    img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title=internship.logoTitle)
+                                    img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
                                 .col-auto.m-0.p-0
                                     strong.m-0= internship.institution
                             .row
@@ -141,7 +141,7 @@ block content
                     .container.mb-3
                         .row.mb-2
                             .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title=education.logoTitle)
+                                img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
                             .col-auto.m-0.p-0
                                 strong.m-0= education.institution
                         .row
@@ -169,7 +169,7 @@ block content
                     .container.mb-3
                         .row.mb-2
                             .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title=internship.logoTitle)
+                                img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
                             .col-auto.m-0.p-0
                                 strong.m-0= internship.institution
                         .row
