@@ -13,6 +13,8 @@ module.exports.cv = function (res) {
 
     const contact = {
         name: res.__("Ziyi Liu"),
+        portraitSrc: "/images/6702323f5tc220c8b48779336a48bb54.jpg",
+        portraitAlt: "Ziyi Liu Portrait",
         title: res.__("AI Engineer"),
         email: "ziyi.ipparis@outlook.com",
         phone: res.__("+33 7 49 97 62 42"),
@@ -35,8 +37,8 @@ module.exports.cv = function (res) {
         },
         {
             institution: res.__("East China University of Science and Technology"),
-            start: "2019",
-            end: "2023",
+            start: "2020",
+            end: "2024",
             location: res.__("Shanghai, China"),
             titles: [
                 res.__("Bachelor of Engineering, Intelligence and Robotics"),

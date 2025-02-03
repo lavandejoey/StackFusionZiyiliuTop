@@ -8,7 +8,7 @@ block content
             .container.rounded-5.bg-white.bg-opacity-0.border.border-primary.px-3.py-4.mt-4
                 .row.my-2.mx-3
                     .col-4.d-flex.justify-content-center.align-items-center
-                        img.rounded-4(src='/images/6702323f5tc220c8b48779336a48bb54.jpg', alt='Ziyi Liu Portrait', style='scale: 1.2; object-fit: cover;' width='80px' height='80px')
+                        img.rounded-4(src=pageData.contact.photoSrc, alt=pageData.contact.portraitAlt, style='scale: 1.2; object-fit: cover;' width='80px' height='80px')
                     .col-8.d-flex.flex-column.justify-content-center.align-items-center
                         h1(title=pageData.contact.name)= pageData.contact.name
                         p.my-0.py-0.title= pageData.contact.title
