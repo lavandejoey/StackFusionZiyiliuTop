@@ -17,15 +17,15 @@ block content
 
                         .row.mb-3
                             .col-md-4.text-right
-                                strong First Name:
+                                strong Username:
                             .col-md-8
-                                p= user.firstName
+                                p= user.username
 
                         .row.mb-3
                             .col-md-4.text-right
-                                strong Last Name:
+                                strong UUID:
                             .col-md-8
-                                p= user.lastName
+                                p= user.userId
 
                     .card-footer.text-right
                         a.btn.btn-secondary(href="/user/edit/" + user.uuid) Edit Profile

@@ -1,3 +1,4 @@
+// models/authentication.js
 const db = require("../packages/mysql2Config");
 const {hashPassword, verifyPassword} = require("../packages/argon2");
 const {v4: uuidv4, validate: uuidValidate} = require("uuid");

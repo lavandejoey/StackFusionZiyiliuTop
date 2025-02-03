@@ -1,3 +1,4 @@
+// app.js
 // Load environment variables
 require("dotenv").config();
 
@@ -14,6 +15,7 @@ const sassMiddleware = require("sass-middleware");
 const rateLimit = require("express-rate-limit");
 const Redis = require("ioredis");
 const RedisStore = require('connect-redis').default;
+const createError = require("http-errors");
 
 // Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
@@ -131,6 +133,24 @@ app.use(rateLimit({
     },
     message: "Too many requests from this IP, please try again after 15 minutes"
 }));
+
+// Middleware to set user info if logged in
+app.use((req, res, next) => {
+    if (req.session.isLoggedIn) {
+        res.locals.user = {
+            isLoggedIn: true,
+            userId: req.session.userId,
+            email: req.session.email,
+            username: req.session.username,
+            isAdmin: req.session.isAdmin,
+            isUserManager: req.session.isUserManager,
+        };
+    } else {
+        res.locals.user = null;
+        res.locals.user = {isLoggedIn: false};
+    }
+    next();
+});
 
 // Global variables accessible in templates
 app.locals.domain = (process.env.NODE_ENV === "production") ? process.env.DOMAIN_PROD : process.env.DOMAIN_DEV;

@@ -1,34 +1,28 @@
+// routes/user.js
 const express = require("express");
 const router = express.Router();
 const {User, UserRole} = require("../models/authentication");
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
-    if (req.session.isLoggedIn) {
+    if (req.session && req.session.isLoggedIn) {
         return next();
     }
-    res.redirect('/auth');
+    req.session.redirectTo = req.originalUrl;  // Save URL for redirect after login
+    return res.redirect('/auth/login');
 }
 
-// Middleware to check if the user has permission to view the profile
-function canViewProfile(req, res, next) {
+// Middleware to check if user has permission
+async function canViewProfile(req, res, next) {
     const {uuid} = req.params;
     const user = new User(req.session.userId);
+    await user.fetchUser();
 
-    // Allow ADMIN and USER_MANAGER to access any profile
-    if (user.isAdmin() || user.isUserManager()) {
+    if (await user.isAdmin() || await user.isUserManager() || user.uuid === uuid) {
         return next();
     }
-
-    // Check if the logged-in user is trying to access their own profile
-    if (user.uuid === uuid) {
-        return next();
-    }
-
-    // If the user doesn't have permission, redirect them
     return res.status(403).render('error', {
-        message: res.__('Access Denied'),
-        error: {status: 403}
+        message: res.__('Access Denied'), error: {status: 403},
     });
 }
 
@@ -43,21 +37,13 @@ router.get('/:uuid', isAuthenticated, canViewProfile, async (req, res) => {
     // Check if the user exists
     if (!user.uuid) {
         return res.status(404).render('error', {
-            message: res.__('User not found'),
-            error: {status: 404}
+            message: res.__('User not found'), error: {status: 404}
         });
     }
 
     // Render user-specific page with fetched data
     res.render('user-profile', {
-        lang: req.getLocale(),
-        pageTitle: `${user.first_name} ${user.last_name}`,
-        domain: req.app.locals.domain,
-        user: {
-            email: user.email,
-            firstName: user.first_name,
-            lastName: user.last_name
-        }
+        lang: req.getLocale(), pageTitle: `${user.first_name} ${user.last_name}`, domain: req.app.locals.domain
     });
 });
 

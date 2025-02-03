@@ -4,13 +4,13 @@ mixin alertMessage(type, message)
         .container.my-0
             .alert.alert-dismissible.fade.show(class="alert-" + type, role="alert")
                 //- Display an icon depending on the alert type
-                if type === 'info'
+                if type === "info"
                     i.fas.fa-info-circle.me-2(aria-hidden="true")
-                else if type === 'danger'
+                else if type === "danger"
                     i.fas.fa-exclamation-triangle.me-2(aria-hidden="true")
-                else if type === 'success'
+                else if type === "success"
                     i.fas.fa-check-circle.me-2(aria-hidden="true")
-                else if type === 'warning'
+                else if type === "warning"
                     i.fas.fa-exclamation-circle.me-2(aria-hidden="true")
                 span= message
                 //- Use Bootstrap 5 dismiss button markup
@@ -21,18 +21,18 @@ html(lang=lang)
     head
         meta(charset='UTF-8')
         title=pageTitle
-        link(rel="icon", href='/images/favicon.ico', type='image/x-icon')
-        meta(name="viewport", content='width=device-width, initial-scale=1.0')
+        link(rel="icon", href="/images/favicon.ico", type="image/x-icon")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(rel="preconnect" href="https://fonts.googleapis.com")
-        link(rel="preconnect", href='https://fonts.gstatic.com', crossorigin)
-        link(rel="stylesheet", href='https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap')
-        link(rel="stylesheet", href='/stylesheets/ziyiliu.css')
-        link(rel="stylesheet", href='/modules/@fortawesome/fontawesome-free/css/all.min.css')
+        link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+        link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap")
+        link(rel="stylesheet", href="/stylesheets/ziyiliu.css")
+        link(rel="stylesheet", href="/modules/@fortawesome/fontawesome-free/css/all.min.css")
     body.bg-light.min-vh-100.d-flex.flex-column.p-4.m-sm-auto.p-sm-auto
         div.phoframe
-        div.container-fluid.flex-grow-1(style='min-height: 100%; position: relative;display: flex; flex-direction: column;')
+        div.container-fluid.flex-grow-1(style="min-height: 100%; position: relative;display: flex; flex-direction: column;")
             // Navbar
-            nav.navbar.navbar-expand-sm.navbar-light.bg-light
+            nav.navbar.navbar-expand-sm.navbar-light.bg-light(style='z-index: 100;')
                 div.container
                     button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target='#mainNavbarNav', aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
                         span.navbar-toggler-icon
@@ -49,7 +49,13 @@ html(lang=lang)
                                     span(class=(activePage === "Contact" ? "underline" : '')) #{__("Contact")}
                         // Empty space to push language switcher to the right
                         div.ms-auto.d-flex.justify-content-center
-                            div.dropdown.d-flex.justify-content-center.align-items-center(style='width: 100px')
+                            if user && user.userId && user.userId !== ""
+                                // profile button domain + "user/" + user.userId, method="get"
+                                a.btn.btn-outline-primary.mx-auto.me-md-4(href=domain + "user/" + user.userId)
+                                    i.fas.fa-user
+                                a.btn.btn-outline-danger.mx-auto.me-md-4(href=domain + "auth/logout")
+                                    i.fas.fa-sign-out-alt
+                            div.dropdown.d-flex.justify-content-center.align-items-center.mx-auto(style='width: 100px')
                                 button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle="dropdown" style='width: 100%; height: 100%;')
                                     i.fas.fa-language.fa-xl
                                 ul.dropdown-menu(style='min-width: 0; width: auto; white-space: nowrap;')
@@ -77,7 +83,7 @@ html(lang=lang)
             block content
             // Centered Footer
             //footer.w-100.d-flex.justify-content-center.py-3(style='position: absolute; bottom: 0; color: gray;')
-            footer.w-100.d-flex.justify-content-center.py-3.mt-auto(style='color: gray;')
+            footer.w-100.d-flex.justify-content-center.py-3.mt-auto(style="color: gray; z-index: 100")
                 div.text-center
                     p.mb-0
                         a(href=domain + "auth/login", style='text-decoration: none; color: gray;')

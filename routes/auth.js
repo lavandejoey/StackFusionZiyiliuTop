@@ -1,3 +1,4 @@
+// routes/auth.js
 const express = require("express");
 const router = express.Router();
 const {User, UserRole} = require("../models/authentication");
@@ -28,7 +29,7 @@ function regenerateSession(req) {
 
 // ----- GET Routes -----
 // Handle GET requests for '/', '/login', and '/logout'
-router.get(['/', '/login', '/logout'], (req, res) => {
+router.get(['/', '/login'], (req, res) => {
     renderAuthPage(req, res);
 });
 
@@ -50,6 +51,10 @@ router.post('/login', loginValidations, async (req, res) => {
             await regenerateSession(req);
             req.session.isLoggedIn = true;
             req.session.userId = user.uuid;
+            req.session.email = user.email;
+            req.session.username = user.first_name;
+            req.session.isAdmin = await user.isAdmin();
+            req.session.isUserManager = await user.isUserManager();
             const redirectTo = req.session.redirectTo || `/user/${user.uuid}`;
             delete req.session.redirectTo;
             return res.redirect(redirectTo);
@@ -111,18 +116,27 @@ router.post('/signup', signupValidations, async (req, res) => {
 
 // ----- GET /auth/logout -----
 router.get('/logout', (req, res) => {
-    // Save redirect target before destroying the session
-    const redirectTo = req.session.redirectTo || "/";
-    delete req.session.redirectTo;
-
     req.session.destroy((err) => {
         if (err) {
             console.error("Error destroying session:", err);
             return res.status(500).send("Internal Server Error");
         }
         res.clearCookie('connect.sid');
-        return res.redirect(redirectTo);
+        return res.redirect('/');
     });
 });
+
+// ----- POST /auth/logout -----
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+            return res.status(500).send("Internal Server Error");
+        }
+        res.clearCookie('connect.sid');
+        return res.send("Logged out successfully");
+    });
+});
+
 
 module.exports = router;
