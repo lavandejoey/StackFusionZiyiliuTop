@@ -1,8 +1,7 @@
 extends layout
 
 block content
-    //.container.mt-5
-    // For small to medium screens (d-lg-none)
+    // Mobile view
     .d-lg-none.my-4.mx-3
         .row
             // Upper content
@@ -11,165 +10,90 @@ block content
                     .col-4.d-flex.justify-content-center.align-items-center
                         img.rounded-4(src='/images/6702323f5tc220c8b48779336a48bb54.jpg', alt='Ziyi Liu Portrait', style='scale: 1.2; object-fit: cover;' width='80px' height='80px')
                     .col-8.d-flex.flex-column.justify-content-center.align-items-center
-                        h1(title='Ziyi Liu') #{__("Ziyi Liu")}
-                        p.my-0.py-0.title #{__("AI Engineer")}
+                        h1(title=pageData.contact.name)= pageData.contact.name
+                        p.my-0.py-0.title= pageData.contact.title
                 .container.d-flex.justify-content-center.align-items-center
                     hr.w-75
                 ul.row.d-flex.justify-content-between.align-items-center.m-0.p-0
-                    .li.col-12.col-sm-6.my-1
-                        .row
-                            .col-2.d-flex.justify-content-center.align-items-center
-                                i.fas.fa-envelope.shadow
-                            .col-10
-                                p.my-0.text-start.text-muted #{__("Email")}
-                                p.my-0.text-start.text-truncate
-                                    a.contact-link(href='mailto:ziyi.ipparis@outlook.com' style='text-decoration: none;')
-                                        | ziyi.ipparis@outlook.com
-                    .li.col-12.col-sm-6.my-1
-                        .row
-                            .col-2.d-flex.justify-content-center.align-items-center
-                                i.fas.fa-phone
-                            .col-10
-                                p.my-0.text-start.text-muted #{__("Phone")}
-                                p.my-0.text-start.text-truncate
-                                    a.contact-link(href='tel:+33749976242' style='text-decoration: none;')
-                                        | +33&nbsp;7&nbsp;49&nbsp;97&nbsp;62&nbsp;42
-                    .li.col-12.col-sm-6.my-1
-                        .row
-                            .col-2.d-flex.justify-content-center.align-items-center
-                                i.fas.fa-calendar-alt
-                            .col-10
-                                p.my-0.text-start.text-muted #{__("Birthday")}
-                                p.my-0.text-start.text-truncate #{__("December 11, 2001")}
-                    .li.col-12.col-sm-6.my-1
-                        .row
-                            .col-2.d-flex.justify-content-center.align-items-center
-                                i.fas.fa-map-marker-alt
-                            .col-10
-                                p.my-0.text-start.text-muted #{__("Location")}
-                                p.my-0.text-start #{__("Rte de Saclay, 91120 Palaiseau, France")}
+                    each contactField in [['email', 'fa-envelope', 'mailto:' + pageData.contact.email], ['phone', 'fa-phone', 'tel:' + pageData.contact.phone.replaceAll("&nbsp;","")], ['birthday', 'fa-calendar-alt'], ['location', 'fa-map-marker-alt']]
+                        .li.col-12.col-sm-6.my-1
+                            .row
+                                .col-2.d-flex.justify-content-center.align-items-center
+                                    i.fas(class=contactField[1])
+                                .col-10
+                                    //p.my-0.text-start.text-muted= __(contactField[0])
+                                    p.my-0.text-start(class=contactField[0] === 'location' ? '' : 'text-truncate')
+                                        if contactField[2]
+                                            a.contact-link(href=contactField[2] style='text-decoration: none;')= pageData.contact[contactField[0]]
+                                        else
+                                            = pageData.contact[contactField[0]]
+
+            // About Me and Sections
             .container.rounded-5.bg-white.bg-opacity-0.border.border-primary.px-3.py-4.mt-4(style="z-index: -2;")
-                // About me
                 .container
-                    h2.mb-3 #{__("About Me")}
-                    // Use pageData.aboutMe to display the about me content
-                    p(style='text-align: justify;') #{pageData.aboutMe1}
-                    p(style='text-align: justify;') #{pageData.aboutMe2}
+                    h2.mb-3= __("About Me")
+                    p(style='text-align: justify;')= pageData.aboutMe1
+                    p(style='text-align: justify;')= pageData.aboutMe2
                 // SVG Container for the line
                 svg.d-none.d-sm-block#timeline-line-sm(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
-                // Education
+                // Education Section
                 .container
                     // Short thick line
                     hr.w-25.bg-primary
-                    // Education header
                     .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
                         .d-flex.justify-content-center.align-items-center
                             i.fas.fa-solid.fa-book.fa-2x#book-icon-sm(style='z-index: 99;')
-                        h2.mb-1.mx-3.p-0.text-nowrap #{__("Education")}
-                    // Vertical timeline of education
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src="/images/logos/Institut_polytechnique_de_Paris_logo.svg",
-                                    alt="Institut Polytechnique de Paris logo", class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title="Institut Polytechnique de Paris")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Institut Polytechnique de Paris")} / #{__("Télécom Paris")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
-                                i.fas.fa-solid.fa-circle.fa-2xs.education-circle-sm(style='z-index: 99;')
-                            .col-12.col-sm-8.d-sm-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("2024")} &ndash; #{__("2026")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Paris, France")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Master of Computer Science, Data and Artificial Intelligence")}
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src="/images/logos/ECUST_university_logo.png",
-                                    alt="ECUST logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title="East China University of Science and Technology")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("East China University of Science and Technology")} (ECUST)
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
-                                i.fas.fa-solid.fa-circle.fa-2xs.education-circle-sm(style='z-index: 99;')
-                            .col-12.col-sm-8.d-sm-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("2020")} &ndash; #{__("2024")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Bachelor of Engineering, Intelligence and Robotics")}
-                                p.m-0 #{__("Mini-major Diploma, Computer Science (2021 - 2024)")}
-                // Internships
+                        h2.mb-1.mx-3.p-0.text-nowrap= __("Education")
+                    each education in pageData.educations
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                    img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title=education.logoTitle)
+                                .col-auto.m-0.p-0
+                                    strong.m-0= education.institution
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
+                                    i.fas.fa-solid.fa-circle.fa-2xs.education-circle-sm(style='z-index: 99;')
+                                .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted= education.start + ' – ' + education.end
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{education.location}
+                            .row
+                                .col-12.col-sm-10.offset-sm-1
+                                    each title in education.titles
+                                        p.m-0= title
+
+                // Internships Section
                 .container
                     // Short thick line
                     hr.w-25.bg-primary
-                    // Internships header
                     .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
                         .d-flex.justify-content-center.align-items-center
                             i.fas.fa-briefcase.fa-2x#briefcase-icon-sm(style='z-index: 99;')
-                        h2.mb-1.mx-3.p-0.text-nowrap #{__("Internships")}
-                    // Vertical timeline of internships
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src="/images/logos/porsche_logo.svg",
-                                    alt="Porsche Financial Leasing Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Porsche Financial Leasing Ltd.")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Porsche Financial Leasing Ltd.")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
-                                i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-sm(style='z-index: 99;')
-                            .col-12.col-sm-8.d-sm-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Jan 2024")} &ndash; #{__("Jul 2024")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("PFS Residual Value Assistant")}
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src="/images/logos/boc_logo.svg",
-                                    alt="Bank of Communication Financial Technology Co, Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Bank of Communication Financial Technology Co, Ltd.")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Bank of Communication Financial Technology Co, Ltd.")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
-                                i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-sm(style='z-index: 99;')
-                            .col-12.col-sm-8.d-sm-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Dec 2022")} &ndash; #{__("Feb 2023")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Full-stack Developer")}
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src="/images/logos/iscas_logo.png",
-                                    alt="Institute of Software, Chinese Academy of Sciences (ISCAS) logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Institute of Software, Chinese Academy of Sciences (ISCAS)")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Institute of Software, Chinese Academy of Sciences (ISCAS)")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
-                                i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-sm(style='z-index: 99;')
-                            .col-12.col-sm-8.d-sm-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Apr 2022")} &ndash; #{__("Sept 2022")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")} #{__("(Remote)")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Development and Testing")}
+                        h2.mb-1.mx-3.p-0.text-nowrap= __("Internships")
+                    each internship in pageData.internships
+                        .container.mb-3
+                            .row.mb-2
+                                .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                    img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title=internship.logoTitle)
+                                .col-auto.m-0.p-0
+                                    strong.m-0= internship.institution
+                            .row
+                                .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
+                                    i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-sm(style='z-index: 99;')
+                                .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
+                                    p.m-0.text-muted= internship.start + ' – ' + internship.end
+                                    p.m-0.text-muted
+                                        i.fa.fa-map-marker-alt
+                                        | &nbsp; #{internship.location}
+                            .row
+                                .col-12.col-sm-10.offset-sm-1
+                                    each title in internship.titles
+                                        p.m-0= title
 
-    // For large screens (d-none.d-lg-block)
+
+    // Desktop view
     .d-none.d-lg-block.m-5.px-5
         // Left sidebar
         .container.py-3.position-fixed.fixed-container.rounded-5.bg-white.bg-opacity-0.border.border-primary
@@ -177,205 +101,124 @@ block content
                 .container.my-5.d-flex.justify-content-center.align-items-center
                     img.rounded-4(src='/images/6702323f5tc220c8b48779336a48bb54.jpg', alt='Ziyi Liu Portrait', style='scale: 1.5; object-fit: cover;' width='80' height='80')
                 .container.d-flex.flex-column.justify-content-center.align-items-center
-                    h1(title='Ziyi Liu') #{__("Ziyi Liu")}
-                    p.my-0.py-0.title #{__("AI Engineer")}
+                    h1(title=pageData.contact.name)= pageData.contact.name
+                    p.my-0.py-0.title= pageData.contact.title
             .container.d-flex.justify-content-center.align-items-center
                 hr.w-75
             .container.d-flex.justify-content-center.align-items-center
                 // Contact information, left-aligned text
                 ul.container.m-auto.p-auto
-                    li.row.my-4
-                        .col-3.d-flex.justify-content-center.align-items-center
-                            i.fas.fa-envelope.shadow
-                        .col-9
-                            p.my-0.text-start.text-muted #{__("Email")}
-                            p.my-0.text-start.text-truncate
-                                a.contact-link(href='mailto:ziyi.ipparis@outlook.com' style='text-decoration: none;')
-                                    | ziyi.ipparis@outlook.com
-                    li.row.my-4
-                        .col-3.d-flex.justify-content-center.align-items-center
-                            i.fas.fa-phone
-                        .col-9
-                            p.my-0.text-start.text-muted #{__("Phone")}
-                            p.my-0.text-start.text-truncate
-                                a.contact-link(href='tel:+33749976242' style='text-decoration: none;')
-                                    | +33&nbsp;7&nbsp;49&nbsp;97&nbsp;62&nbsp;42
-                    li.row.my-4
-                        .col-3.d-flex.justify-content-center.align-items-center
-                            i.fas.fa-calendar-alt
-                        .col-9
-                            p.my-0.text-start.text-muted #{__("Birthday")}
-                            p.my-0.text-start.text-truncate #{__("December 11, 2001")}
-                    li.row.my-4
-                        .col-3.d-flex.justify-content-center.align-items-center
-                            i.fas.fa-map-marker-alt
-                        .col-9
-                            p.my-0.text-start.text-muted #{__("Location")}
-                            p.my-0.text-start #{__("Rte de Saclay, 91120 Palaiseau, France")}
-        .row
-            .col-lg-4
-            // Right content
-            .col-lg-8.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
-                // About me
-                .container
-                    h2.mb-3 #{__("About Me")}
-                    // Use pageData.aboutMe to display the about me content
-                    p(style='text-align: justify;') #{pageData.aboutMe1}
-                    p(style='text-align: justify;') #{pageData.aboutMe2}
-                // SVG Container for the line
-                svg#timeline-line-lg(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
-                // Education
-                .container
-                    // Short thick line
-                    hr.w-25.bg-primary
-                    // Education header (note the mx-3 for consistency)
-                    .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
-                        .d-flex.justify-content-center.align-items-center
-                            i.fas.fa-solid.fa-book.fa-2x#book-icon-lg(style='z-index: 99;')
-                        h2.mb-1.mx-3.p-0.text-nowrap #{__("Education")}
-                    // Vertical timeline of education
+                    each contactField in [['email', 'fas fa-envelope', 'mailto:' + pageData.contact.email], ['phone', 'fas fa-phone', 'tel:' + pageData.contact.phone], ['birthday', 'fas fa-calendar-alt'], ['location', 'fas fa-map-marker-alt']]
+                        li.row.my-4
+                            .col-3.d-flex.justify-content-center.align-items-center
+                                i(class=contactField[1])
+                            .col-9
+                                //p.my-0.text-start.text-muted= __(contactField[0])
+                                p.my-0.text-start(class=contactField[0] === 'location' ? '' : 'text-truncate')
+                                    if contactField[2]
+                                        a.contact-link(href=contactField[2] style='text-decoration: none;') #{pageData.contact[contactField[0]]}
+                                    else
+                                        = pageData.contact[contactField[0]]
+
+        // Right content
+        //.container.col-lg-8.offset-lg-4.col-xl-9.offset-xl-3.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
+        .container.dynamic-content-container.px-5.py-4.rounded-5.bg-white.bg-opacity-0.border.border-primary(style="z-index: -2;")
+            .container
+                h2.mb-3= __("About Me")
+                p(style='text-align: justify;')= pageData.aboutMe1
+                p(style='text-align: justify;')= pageData.aboutMe2
+            // SVG Container for the line
+            svg#timeline-line-lg(style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;")
+            // Education Section
+            .container
+                // Short thick line
+                hr.w-25.bg-primary
+                .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
+                    .d-flex.justify-content-center.align-items-center
+                        i.fas.fa-solid.fa-book.fa-2x#book-icon-lg(style='z-index: 99;')
+                    h2.mb-1.mx-3.p-0.text-nowrap= __("Education")
+                each education in pageData.educations
                     .container.mb-3
                         .row.mb-2
                             .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src="/images/logos/Institut_polytechnique_de_Paris_logo.svg",
-                                    alt="Institut Polytechnique de Paris logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title="Institut Polytechnique de Paris")
+                                img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title=education.logoTitle)
                             .col-auto.m-0.p-0
-                                strong.m-0 #{__("Institut Polytechnique de Paris")} / #{__("Télécom Paris")}
+                                strong.m-0= education.institution
                         .row
                             .col-1.d-flex.justify-content-start.align-items-center
                                 i.fas.fa-solid.fa-circle.fa-2xs.education-circle-lg(style='z-index: 99;')
-                            .col-8.d-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("2024")} &ndash; #{__("2026")}
+                            .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
+                                p.m-0.text-muted= education.start + ' – ' + education.end
                                 p.m-0.text-muted
                                     i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Paris, France")}
+                                    | &nbsp; #{education.location}
                         .row
                             .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Master of Computer Science, Data and Artificial Intelligence")}
+                                each title in education.titles
+                                    p.m-0= title
+
+            // Internships Section
+            .container
+                // Short thick line
+                hr.w-25.bg-primary
+                .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
+                    .d-flex.justify-content-center.align-items-center
+                        i.fas.fa-briefcase.fa-2x#briefcase-icon-lg(style='z-index: 99;')
+                    h2.mb-1.mx-3.p-0.text-nowrap= __("Internships")
+                each internship in pageData.internships
                     .container.mb-3
                         .row.mb-2
                             .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src="/images/logos/ECUST_university_logo.png",
-                                    alt="ECUST logo", class='school-logo', style='width: 30px; height: auto; margin-right: 10px;' title="East China University of Science and Technology")
+                                img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title=internship.logoTitle)
                             .col-auto.m-0.p-0
-                                strong.m-0 #{__("East China University of Science and Technology")} (ECUST)
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center
-                                i.fas.fa-solid.fa-circle.fa-2xs.education-circle-lg(style='z-index: 99;')
-                            .col-8.d-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("2020")} &ndash; #{__("2024")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Bachelor of Engineering, Intelligence and Robotics")}
-                                p.m-0 #{__("Mini-major Diploma, Computer Science (2021 - 2024)")}
-                // Internships
-                .container
-                    // Short thick line
-                    hr.w-25.bg-primary
-                    // Internships header (using mx-3 for consistency)
-                    .container.w-25.mx-0.my-3.p-0.pe-2.d-flex.justify-content-between.align-items-center
-                        .d-flex.justify-content-center.align-items-center
-                            i.fas.fa-briefcase.fa-2x#briefcase-icon-lg(style='z-index: 99;')
-                        h2.mb-1.mx-3.p-0.text-nowrap #{__("Internships")}
-                    // Vertical timeline of internships
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src="/images/logos/porsche_logo.svg",
-                                    alt="Porsche Financial Leasing Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Porsche Financial Leasing Ltd.")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Porsche Financial Leasing Ltd.")}
+                                strong.m-0= internship.institution
                         .row
                             .col-1.d-flex.justify-content-start.align-items-center
                                 i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-lg(style='z-index: 99;')
-                            .col-8.d-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Jan 2024")} &ndash; #{__("Jul 2024")}
+                            .col-12.col-md-10.col-xl-8.d-sm-flex.justify-content-between.align-items-center
+                                p.m-0.text-muted= internship.start + ' – ' + internship.end
                                 p.m-0.text-muted
                                     i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
+                                    | &nbsp; #{internship.location}
                         .row
                             .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("PFS Residual Value Assistant")}
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src="/images/logos/boc_logo.svg",
-                                    alt="Bank of Communication Financial Technology Co, Ltd. logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Bank of Communication Financial Technology Co, Ltd.")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Bank of Communication Financial Technology Co, Ltd.")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center
-                                i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-lg(style='z-index: 99;')
-                            .col-8.d-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Dec 2022")} &ndash; #{__("Feb 2023")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Full-stack Developer")}
-                    .container.mb-3
-                        .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center
-                                img(src="/images/logos/iscas_logo.png",
-                                    alt="Institute of Software, Chinese Academy of Sciences (ISCAS) logo", class="company-logo", style="width: 30px; height: auto; margin-right: 10px;", title="Institute of Software, Chinese Academy of Sciences (ISCAS)")
-                            .col-auto.m-0.p-0
-                                strong.m-0 #{__("Institute of Software, Chinese Academy of Sciences (ISCAS)")}
-                        .row
-                            .col-1.d-flex.justify-content-start.align-items-center
-                                i.fas.fa-solid.fa-circle.fa-2xs.internship-circle-lg(style='z-index: 99;')
-                            .col-8.d-flex.justify-content-between.align-items-center
-                                p.m-0.text-muted #{__("Apr 2022")} &ndash; #{__("Sept 2022")}
-                                p.m-0.text-muted
-                                    i.fa.fa-map-marker-alt
-                                    | &nbsp; #{__("Shanghai, China")} #{__("(Remote)")}
-                        .row
-                            .col-12.col-sm-10.offset-sm-1
-                                p.m-0 #{__("Development and Testing")}
+                                each title in internship.titles
+                                    p.m-0= title
 
     script.
-        window.addEventListener('DOMContentLoaded', function () {
-            adjustFixedContainerWidth();
-        });
-        window.addEventListener('resize', function () {
-            adjustFixedContainerWidth();
-        });
-
         function adjustFixedContainerWidth() {
             const parentElement = document.querySelector('.d-none.d-lg-block');
-            const fixedContainer = document.querySelector('.fixed-container');
-            if (parentElement && fixedContainer) {
-                fixedContainer.style.width = (parentElement.clientWidth * 0.25) + 'px';
+            const leftSidebar = document.querySelector('.fixed-container');
+            const rightContent = document.querySelector('.dynamic-content-container');
+
+            if (parentElement && leftSidebar && rightContent) {
+                // Get parent width and padding
+                const parentWidth = parentElement.clientWidth;
+                const padding = parseFloat(getComputedStyle(parentElement).paddingLeft) +
+                    parseFloat(getComputedStyle(parentElement).paddingRight);
+
+                // Available width inside the parent container
+                const availableWidth = parentWidth - padding;
+
+                let sidebarWidth = Math.min(400, Math.max(300, availableWidth * 0.2)); // Between 300px and 400px
+                const gap = Math.min(50, availableWidth * 0.05); // Dynamic gap, capped at 50px
+                const rightWidth = availableWidth - sidebarWidth - gap;
+
+                // Apply styles
+                rightContent.style.width = `${rightWidth}px`;
+                rightContent.style.marginLeft = `${sidebarWidth + gap}px`;
+                leftSidebar.style.width = `${sidebarWidth}px`;
+
+            } else {
+                console.error("Required elements not found.");
             }
         }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Process for large screens
-            processTimeline({
-                bookIcon: document.querySelector("#book-icon-lg"),
-                internIcon: document.querySelector("#briefcase-icon-lg"),
-                educationCircles: document.querySelectorAll(".education-circle-lg"),
-                internshipCircles: document.querySelectorAll(".internship-circle-lg"),
-                svg: document.querySelector("#timeline-line-lg")
-            });
-
-            // Process for small screens
-            processTimeline({
-                bookIcon: document.querySelector("#book-icon-sm"),
-                internIcon: document.querySelector("#briefcase-icon-sm"),
-                educationCircles: document.querySelectorAll(".education-circle-sm"),
-                internshipCircles: document.querySelectorAll(".internship-circle-sm"),
-                svg: document.querySelector("#timeline-line-sm")
-            });
-        });
 
         function processTimeline(elements) {
             const {bookIcon, internIcon, educationCircles, internshipCircles, svg} = elements;
 
             if (!bookIcon || educationCircles.length === 0 || !internIcon || internshipCircles.length === 0 || !svg) {
+                console.error("Required elements not found.");
                 return; // Exit if the required elements are not found
             }
 
@@ -408,3 +251,60 @@ block content
             // Append the line to the SVG
             svgElement.appendChild(line);
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Adjust the width of the fixed container
+            adjustFixedContainerWidth();
+
+            // Process for large screens
+            processTimeline({
+                bookIcon: document.querySelector("#book-icon-lg"),
+                internIcon: document.querySelector("#briefcase-icon-lg"),
+                educationCircles: document.querySelectorAll(".education-circle-lg"),
+                internshipCircles: document.querySelectorAll(".internship-circle-lg"),
+                svg: document.querySelector("#timeline-line-lg")
+            });
+
+            // Process for small screens
+            processTimeline({
+                bookIcon: document.querySelector("#book-icon-sm"),
+                internIcon: document.querySelector("#briefcase-icon-sm"),
+                educationCircles: document.querySelectorAll(".education-circle-sm"),
+                internshipCircles: document.querySelectorAll(".internship-circle-sm"),
+                svg: document.querySelector("#timeline-line-sm")
+            });
+        });
+
+        // Reload the lines when the window is resized
+        window.addEventListener('resize', function () {
+            // Adjust the width of the fixed container
+            adjustFixedContainerWidth();
+
+            const svg = document.querySelector("#timeline-line-lg");
+            if (svg) {
+                // Remove all lines
+                while (svg.lastChild) {
+                    svg.removeChild(svg.lastChild);
+                }
+
+                // Process for large screens
+                processTimeline({
+                    bookIcon: document.querySelector("#book-icon-lg"),
+                    internIcon: document.querySelector("#briefcase-icon-lg"),
+                    educationCircles: document.querySelectorAll(".education-circle-lg"),
+                    internshipCircles: document.querySelectorAll(".internship-circle-lg"),
+                    svg: svg
+                });
+
+                // Process for small screens
+                processTimeline({
+                    bookIcon: document.querySelector("#book-icon-sm"),
+                    internIcon: document.querySelector("#briefcase-icon-sm"),
+                    educationCircles: document.querySelectorAll(".education-circle-sm"),
+                    internshipCircles: document.querySelectorAll(".internship-circle-sm"),
+                    svg: document.querySelector("#timeline-line-sm")
+                });
+            } else {
+                console.error("SVG element not found.");
+            }
+        });

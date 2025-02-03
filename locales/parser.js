@@ -1,3 +1,4 @@
+// locales/parser.js
 const fs = require('fs');
 const path = require('path');
 
@@ -66,4 +67,77 @@ for (let {file, data} of mapFileJson) {
         }
     }
     fs.writeFileSync(path.join(pathProjectRoot, 'locales', file), JSON.stringify(data, null, 4));
+}
+
+// Smart sorting algorithm
+const customSort = (a, b) => {
+    let order = 0;
+    const priorityGroups = [
+        // Number ^\d+$ or Date \w\s\d{4} or Date-time
+        {test: (k) => /^\d+$/.test(k) || /\w\s\d{4}/.test(k) || /\d{4}-\d{2}-\d{2}/.test(k), order: order++},
+        
+        // Core UI elements
+        {test: (k) => ["Home", "About Me", "Contact", "Education", "Internships"].includes(k), order: order++},
+
+        // User authentication
+        {test: (k) => /(Sign|Log|Passw|User|account)/i.test(k), order: order++},
+
+        // Contact information
+        {test: (k) => ["Email", "Phone", "Birthday", "Location"].includes(k), order: order++},
+
+        // Education-related terms
+        {test: (k) => /(Institut|University|Master|Bachelor|Diploma|Engineer)/i.test(k), order: order++},
+
+        // Internship-related terms
+        {test: (k) => /(Porsche|Bank|Institute|Research|Intern|Assistant|Developer)/i.test(k), order: order++},
+
+        // Long-form content (About Me paragraphs)
+        {test: (k) => k.length > 60, order: order++},
+
+        // Dates and locations
+        {test: (k) => /\d{4}/.test(k) || /(Paris|Shanghai|France|China)/i.test(k), order: order++},
+    ];
+
+    const getOrder = (key) => {
+        const group = priorityGroups.find(g => g.test(key));
+        return group ? group.order : 7; // Default group
+    };
+
+    const aOrder = getOrder(a);
+    const bOrder = getOrder(b);
+
+    return aOrder - bOrder || a.localeCompare(b);
+};
+
+// Modified file processing section
+for (let {file, data} of mapFileJson) {
+    // Create sorted key array
+    const sortedKeys = Array.from(allKeys).sort(customSort);
+
+    // Create new sorted object
+    const sortedData = {};
+    for (const key of sortedKeys) {
+        sortedData[key] = data[key] || '';
+    }
+
+    // Write sorted file
+    fs.writeFileSync(
+        path.join(pathProjectRoot, 'locales', file),
+        JSON.stringify(sortedData, (k, v) => v, 4) // Maintain pretty print
+    );
+}
+
+// Report the missing keys
+const missingKeys = new Set();
+for (let key of allKeys) {
+    if (!existingKeys.has(key)) {
+        missingKeys.add(key);
+    }
+}
+
+if (missingKeys.size > 0) {
+    console.log('The following keys are missing in the default locale:');
+    for (let key of missingKeys) {
+        console.log(key);
+    }
 }
