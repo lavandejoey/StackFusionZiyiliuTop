@@ -1,13 +1,14 @@
-// routes/monitor.js
+// routes/admin.js
 const express = require("express");
 const router = express.Router();
 const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
 const {User} = require("../models/authentication");
+const {getCommonViewOptions} = require("./utils");
 
-// Session auth check for all routes under /monitor
+// Session auth check for all routes under /admin
 // Not logged in -> Redirect to login page
-// Logged in as non-admin -> Redirect to user page TODO
-// Logged in as admin -> Proceed to monitor page
+// Logged in as non-admin -> Redirect to user page
+// Logged in as admin -> Proceed to admin page
 router.use(async (req, res, next) => {
     if (req.session && req.session.isLoggedIn) {
         // Fetch the user from the database to ensure all data is available
@@ -17,7 +18,7 @@ router.use(async (req, res, next) => {
         // Check if the user is an admin
         const isAdmin = await userInstance.isAdmin();
         if (isAdmin) {
-            next(); // Proceed to the /monitor route
+            next(); // Proceed to the /admin route
         } else {
             console.log("User role is " + userInstance.role);
             res.redirect('/console/' + userInstance.uuid); // Redirect to user page if not an admin
@@ -31,11 +32,18 @@ router.use(async (req, res, next) => {
 // Route to display parsed log data
 router.get('/', async (req, res) => {
     try {
+        const userList = await User.getAllUsers();
+
         const logPath = '/var/log/v2ray/access.log'; // Path to your log file
         const visitors = await v2rayLogParser(logPath); // Parse the logs
 
         // Send data to Pug template
-        res.render("monitor", {visitors});
+        res.render("admin", {
+            ...getCommonViewOptions(req, res, res.__("Admin")),
+            userList,
+            visitors
+
+        });
     } catch (error) {
         console.error('Error parsing logs:', error);
         res.status(500).send("Internal Server Error");

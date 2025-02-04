@@ -6,16 +6,20 @@ require("dotenv").config();
 const path = require("path");
 
 // Third-Party Libraries
-const express = require("express");
 const cookieParser = require("cookie-parser");
+const createError = require("http-errors");
+const csurf = require("csurf");
+const express = require("express");
 const logger = require("morgan");
 const session = require("express-session");
-const csurf = require("csurf");
 const sassMiddleware = require("sass-middleware");
 const rateLimit = require("express-rate-limit");
 const Redis = require("ioredis");
 const RedisStore = require('connect-redis').default;
-const createError = require("http-errors");
+const {NodeSSH} = require('node-ssh');
+const ssh = new NodeSSH();
+const fs = require('fs-extra');
+const cron = require('node-cron');
 
 // Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
@@ -26,7 +30,7 @@ const aboutMeRouter = require('./routes/about-me');
 const contactRouter = require('./routes/contact');
 const authRouter = require('./routes/auth');
 const consoleRouter = require('./routes/console');
-const monitorRouter = require('./routes/monitor');
+const adminRouter = require('./routes/admin');
 const v2rayRouter = require('./routes/v2ray');
 
 // Create express app
@@ -92,7 +96,6 @@ app.use(sassMiddleware({
     outputStyle: "nested", // Options: "nested", "expanded", "compact", "compressed"
     prefix: '/stylesheets', // Where prefix is at <link rel="stylesheet" href="prefix/style.css"/>
 }));
-app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware: Internationalization (i18n)
 app.use(i18n.init);
@@ -156,13 +159,15 @@ app.use((req, res, next) => {
 app.locals.domain = (process.env.NODE_ENV === "production") ? process.env.DOMAIN_PROD : process.env.DOMAIN_DEV;
 
 // Routes
-app.use('/modules', express.static(path.join(__dirname, "node_modules")));
+app.use(express.static(path.join(__dirname, "public")));
+app.use('/chartjs', express.static(path.join(__dirname, 'node_modules/chart.js/dist')));
+app.use(express.static(path.join(__dirname, "node_modules")));
 app.use('/', indexRouter);
 app.use('/about-me', aboutMeRouter);
 app.use('/contact', contactRouter);
 app.use('/auth', authRouter);
 app.use('/console', consoleRouter);
-app.use('/monitor', monitorRouter);
+app.use('/admin', adminRouter);
 app.use('/v2ray', v2rayRouter);
 
 // Catch 404 and forward to error handler
@@ -187,6 +192,86 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render("error");
 });
+
+// V2ray log sync cron job
+// Function to perform the sync
+async function syncV2rayLogs() {
+    try {
+        console.log('Connecting to remote server...');
+        await ssh.connect({
+            host: process.env.SSH_HOST,
+            username: process.env.SSH_USER,
+            privateKey: process.env.SSH_PRIVATE_KEY
+        });
+
+        console.log('Starting file transfer...');
+
+        // Ensure the local directory exists
+        await fs.ensureDir(process.env.US_V2RAY_LOGS_PATH);
+        // Sync logs from US server to local directory
+        const resultUs = await ssh.getDirectory(
+            // Local path, Remote path
+            process.env.US_V2RAY_LOGS_PATH, process.env.V2RAY_LOGS_PATH, {
+                recursive: true,
+                concurrency: 10,
+                validate: (itemPath) => true,  // Sync all files
+                tick: (localFile, remoteFile, error) => {
+                    if (error) {
+                        console.error(`Failed to copy ${remoteFile}:`, error);
+                    } else {
+                        console.log(`Successfully copied ${remoteFile}`);
+                    }
+                }
+            });
+
+        if (resultUs) {
+            console.log('File transfer complete. Setting permissions...');
+            fs.chmodSync(process.env.US_V2RAY_LOGS_PATH, 0o755);
+            fs.readdirSync(process.env.US_V2RAY_LOGS_PATH).forEach(file => {
+                const filePath = path.join(process.env.US_V2RAY_LOGS_PATH, file);
+                fs.chmodSync(filePath, 0o755);
+            });
+
+            console.log('Permissions set to 755 for all files and directories.');
+        } else {
+            console.error('File transfer failed.');
+        }
+
+        // copy paste local path and remote path: V2RAY_LOGS_PATH -> DE_V2RAY_LOGS_PATH, no ssh is needed
+        await fs.ensureDir(process.env.DE_V2RAY_LOGS_PATH);
+        const resultDe = await fs.copy(process.env.V2RAY_LOGS_PATH, process.env.DE_V2RAY_LOGS_PATH);
+
+        if (resultDe) {
+            console.log('File transfer complete. Setting permissions...');
+            fs.chmodSync(process.env.DE_V2RAY_LOGS_PATH, 0o755);
+            fs.readdirSync(process.env.DE_V2RAY_LOGS_PATH).forEach(file => {
+                const filePath = path.join(process.env.DE_V2RAY_LOGS_PATH, file);
+                fs.chmodSync(filePath, 0o755);
+            });
+
+            console.log('Permissions set to 755 for all files and directories.');
+        } else {
+            console.error('File transfer failed.');
+        }
+    } catch (error) {
+        console.error('Error during log sync:', error);
+    } finally {
+        ssh.dispose();
+    }
+}
+
+// Schedule cron job to run at 01:00 UTC daily
+cron.schedule('0 1 * * *', () => {
+    console.log('Running daily sync for V2Ray logs...');
+    syncV2rayLogs().then(r => console.debug('Sync complete'));
+});
+
+// Express route to trigger manual sync
+app.get('/sync-logs', async (req, res) => {
+    await syncV2rayLogs();
+    res.send('Manual sync initiated');
+});
+
 
 module.exports = app;
 

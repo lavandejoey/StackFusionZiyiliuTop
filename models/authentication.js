@@ -225,6 +225,16 @@ class User {
             return false;
         }
     }
+
+    static async getAllUsers() {
+        const sql_select = "SELECT * FROM user";
+        try {
+            return await db.query(sql_select);
+        } catch (error) {
+            console.error("Error fetching all users:", error);
+            return [];
+        }
+    }
 }
 
 module.exports = {User, UserRole, UserStatus};

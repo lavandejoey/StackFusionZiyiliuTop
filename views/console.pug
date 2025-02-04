@@ -10,6 +10,10 @@ block content
                 a.nav-link(href="#panel", data-bs-toggle="tab") Panel
             li.nav-item
                 a.nav-link(href="#dashboard", data-bs-toggle="tab") Dashboard
+            if user.isAdmin
+                // button for new page
+                li.nav-item
+                    a.nav-link(href=domain + "admin") Admin
 
         //- Tab Panes Content
         .tab-content.mt-3

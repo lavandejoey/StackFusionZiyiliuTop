@@ -5,20 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
-      <change afterPath="$PROJECT_DIR$/routes/utils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/authentication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/monitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/monitor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/auth.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/auth.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/monitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/console.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/console.pug" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/user-profile.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/user-profile.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/monitor.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,9 +24,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Pug File" />
-        <option value="HTML File" />
         <option value="JSX File" />
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -54,7 +49,7 @@
     <setting file="file://$PROJECT_DIR$/public/stylesheets/style.sass" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -71,6 +66,7 @@
     "Node.js.bin/www.executor": "Run",
     "Node.js.parser.js.executor": "Run",
     "Node.js.test.js.executor": "Run",
+    "Node.js.v2rayLogParser.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
@@ -144,9 +140,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.start:debug" />
+        <item itemvalue="Node.js.v2rayLogParser.js" />
         <item itemvalue="npm.watch-css" />
         <item itemvalue="Node.js.parser.js" />
-        <item itemvalue="Node.js.v2rayLogParser.js" />
       </list>
     </recent_temporary>
   </component>
