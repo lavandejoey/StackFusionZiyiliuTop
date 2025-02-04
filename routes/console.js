@@ -1,4 +1,4 @@
-// routes/user.js
+// routes/console.js
 const express = require("express");
 const router = express.Router();
 const {User, UserRole} = require("../models/authentication");
@@ -26,7 +26,7 @@ async function canViewProfile(req, res, next) {
     });
 }
 
-// GET /user/:uuid - Protected Route
+// GET /console/:uuid - Protected Route
 router.get('/:uuid', isAuthenticated, canViewProfile, async (req, res) => {
     const {uuid} = req.params;
 
@@ -42,8 +42,9 @@ router.get('/:uuid', isAuthenticated, canViewProfile, async (req, res) => {
     }
 
     // Render user-specific page with fetched data
-    res.render('user-profile', {
-        lang: req.getLocale(), pageTitle: `${user.first_name} ${user.last_name}`, domain: req.app.locals.domain
+    res.render('console', {
+        lang: req.getLocale(),
+        pageTitle: `${user.first_name} ${user.last_name}`,
     });
 });
 

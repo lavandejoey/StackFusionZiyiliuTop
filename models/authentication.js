@@ -20,6 +20,7 @@ class User {
     constructor(uuid = null, email = null) {
         this.uuid = uuid;
         this.email = email;
+        this.roles = [];
     }
 
     // Fetch user data from database with case-insensitive email query
@@ -58,6 +59,13 @@ class User {
                 this.status = result[0].status;
                 this.created_at = result[0].created_at;
                 this.updated_at = result[0].updated_at;
+                this.roles = [];
+                const sql_select_roles = "SELECT role_id FROM user_role_mapping WHERE user_uuid = ?";
+                const params_roles = [this.uuid];
+                const result_roles = await db.query(sql_select_roles, params_roles);
+                for (let role of result_roles) {
+                    this.roles.push(role.role_id);
+                }
             } else {
                 console.log("User not found for email:", this.email);
                 return false;
@@ -114,28 +122,26 @@ class User {
         }
     }
 
-    // Check if user is an admin
-    async isAdmin() {
-        try {
-            const sql_select = "SELECT * FROM user_role_mapping WHERE user_uuid = ? AND role_id = ?";
-            const params = [this.uuid, UserRole.ADMIN.id];
-            const result = await db.query(sql_select, params);
-            return result.length > 0;  // Simply return boolean
-        } catch (error) {
-            console.error("Error checking user role:", error);
-            return false;
-        }
+    // Check if user is locked
+    isLocked() {
+        return this.status === UserStatus.INACTIVE;
     }
-    async isUserManager() {
-        try {
-            const sql_select = "SELECT * FROM user_role_mapping WHERE user_uuid = ? AND role_id = ?";
-            const params = [this.uuid, UserRole.USER_MANAGER.id];
-            const result = await db.query(sql_select, params);
-            return result.length > 0;  // Simply return boolean
-        } catch (error) {
-            console.error("Error checking user role:", error);
-            return false;
-        }
+
+    // Check if user is an admin
+    isAdmin() {
+        return this.roles.includes(UserRole.ADMIN.id);
+    }
+
+    isUserManager() {
+        return this.roles.includes(UserRole.USER_MANAGER.id);
+    }
+
+    isUserFriend() {
+        return this.roles.includes(UserRole.USER_FRIEND.id);
+    }
+
+    isUserGuest() {
+        return this.roles.includes(UserRole.USER_GUEST.id);
     }
 
     // Update user status

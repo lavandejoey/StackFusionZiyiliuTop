@@ -55,8 +55,7 @@ a {
 }
 
 // Custom styles to the active navbar item
-.nav-link {
-  color: $tertiary;
+.main-navbar-item.nav-link {
   font-weight: normal;
   width: 120px;
   // center the element in side

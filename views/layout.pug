@@ -32,26 +32,26 @@ html(lang=lang)
         div.phoframe
         div.container-fluid.flex-grow-1(style="min-height: 100%; position: relative;display: flex; flex-direction: column;")
             // Navbar
-            nav.navbar.navbar-expand-sm.navbar-light.bg-light(style='z-index: 100;')
+            nav.navbar.navbar-expand-sm.navbar-light.bg-light#mainNavbar(style='z-index: 100;')
                 div.container
                     button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target='#mainNavbarNav', aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
                         span.navbar-toggler-icon
                     #mainNavbarNav.collapse.navbar-collapse
                         ul.navbar-nav
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link(href=domain, class=(activePage === "Home" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href=domain, class=(activePage === "Home" ? "active" : ''))
                                     span(class=(activePage === "Home" ? "underline" : '')) ZLiu's
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link(href=domain + "about-me", class=(activePage === "About Me" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href=domain + "about-me", class=(activePage === "About Me" ? "active" : ''))
                                     span(class=(activePage === "About Me" ? "underline" : '')) #{__("About Me")}
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link(href=domain + "contact", class=(activePage === "Contact" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href=domain + "contact", class=(activePage === "Contact" ? "active" : ''))
                                     span(class=(activePage === "Contact" ? "underline" : '')) #{__("Contact")}
                         // Empty space to push language switcher to the right
                         div.ms-auto.d-flex.justify-content-center
                             if user && user.userId && user.userId !== ""
-                                // profile button domain + "user/" + user.userId, method="get"
-                                a.btn.btn-outline-primary.mx-auto.me-md-4(href=domain + "user/" + user.userId)
+                                // profile button domain + "console/" + user.userId, method="get"
+                                a.btn.btn-outline-primary.mx-auto.me-md-4(href=domain + "console/" + user.userId)
                                     i.fas.fa-user
                                 a.btn.btn-outline-danger.mx-auto.me-md-4(href=domain + "auth/logout")
                                     i.fas.fa-sign-out-alt

@@ -1,0 +1,82 @@
+extends layout
+
+block content
+    .container.mt-5
+        //- Navigation Tabs
+        ul.nav.nav-tabs(role='tablist')
+            li.nav-item
+                a.nav-link(href="#profile", data-bs-toggle="tab") Profile
+            li.nav-item
+                a.nav-link(href="#panel", data-bs-toggle="tab") Panel
+            li.nav-item
+                a.nav-link(href="#dashboard", data-bs-toggle="tab") Dashboard
+
+        //- Tab Panes Content
+        .tab-content.mt-3
+            //- Profile Tab Content
+            .tab-pane.fade#profile
+                p.lead Welcome #{user.username}!
+                p Email: #{user.email}
+                p Role: #{user.roles.join(', ')}
+                //- You can add more profile details or even forms here
+
+            //- Panel Tab Content
+            .tab-pane.fade#panel
+                h3.mb-3 Panel Settings
+                p Use this panel to adjust your settings.
+                //- Example of a Bootstrap form
+                form
+                    .mb-3
+                        label.form-label(for="username") Username
+                        input#username.form-control(type="text", placeholder="Enter username", value=user.username)
+                    .mb-3
+                        label.form-label(for="email") Email address
+                        input#email.form-control(type="email", placeholder="Enter email", value=user.email)
+                    button.btn.btn-primary(type="submit") Save Changes
+
+            //- Dashboard Tab Content
+            .tab-pane.fade#dashboard
+                h3.mb-3 Dashboard Metrics
+                //- You might include cards or charts here
+                .row
+                    .col-md-6
+                        .card.mb-3
+                            .card-body
+                                h5.card-title Visits
+                                p.card-text xxx
+                    .col-md-6
+                        .card.mb-3
+                            .card-body
+                                h5.card-title Revenue
+                                p.card-text xxx
+
+    //- JavaScript to handle tab interactivity and URL hash management.
+    //- Make sure Bootstrap’s JS is loaded (it is included in your layout)
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all tab links with data-bs-toggle attribute
+            const triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'));
+            triggerTabList.forEach(function (triggerEl) {
+                triggerEl.addEventListener('shown.bs.tab', function (event) {
+                    // Update the URL hash without reloading the page
+                    history.replaceState(null, null, event.target.getAttribute('href'));
+                });
+            });
+
+            // On page load, check if there's a hash in the URL
+            const hash = window.location.hash;
+            if (hash) {
+                const tabTrigger = document.querySelector('a[href="' + hash + '"]');
+                if (tabTrigger) {
+                    // Use Bootstrap’s Tab API to show the proper tab
+                    const tab = new bootstrap.Tab(tabTrigger);
+                    tab.show();
+                }
+            } else {
+                // Optionally, if no hash is found, show the first tab by default
+                const firstTab = document.querySelector('a[data-bs-toggle="tab"]');
+                if (firstTab) {
+                    new bootstrap.Tab(firstTab).show();
+                }
+            }
+        });

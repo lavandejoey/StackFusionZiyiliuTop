@@ -3,41 +3,27 @@ const express = require("express");
 const router = express.Router();
 const {User, UserRole} = require("../models/authentication");
 const {check, validationResult} = require('express-validator');
+const {getCommonViewOptions, regenerateSession, updateSession} = require("./utils");
 
-function getCommonViewOptions(req, res, activePage) {
-    return {
-        lang: req.getLocale(),
-        activePage: activePage,
-        pageTitle: activePage,
-        domain: req.app.locals.domain
-    };
-}
-
-function renderAuthPage(req, res, options = {}) {
-    // Using res.__ to localize the "Login" page title
-    res.render("auth", {...getCommonViewOptions(req, res, res.__("Login")), ...options});
-}
-
-function regenerateSession(req) {
-    return new Promise((resolve, reject) => {
-        req.session.regenerate((err) => {
-            if (err) return reject(err);
-            resolve();
-        });
-    });
-}
 
 // ----- GET Routes -----
 // Handle GET requests for '/', '/login', and '/logout'
 router.get(['/', '/login'], (req, res) => {
-    renderAuthPage(req, res);
+    // If logged in, redirect to user page
+    if (req.session && req.session.isLoggedIn) {
+        return res.redirect(`/console/${req.session.userId}`);
+    }
+
+    return res.render("auth", {...getCommonViewOptions(req, res, res.__("Login"))});
 });
 
 // ----- POST /auth/login -----
 // Validation rules for login (using plain strings for error messages)
 const loginValidations = [
+    check("email").notEmpty().withMessage("Email is required"),
     check("email").isEmail().withMessage("Invalid email address"),
-    check("password").isLength({min: 6}).withMessage("Password must be at least 6 characters long")
+    check("password").notEmpty().withMessage("Password is required"),
+    check("password").isLength({min: 6}).withMessage("Password must be at least 6 characters long"),
 ];
 
 router.post('/login', loginValidations, async (req, res) => {
@@ -46,17 +32,28 @@ router.post('/login', loginValidations, async (req, res) => {
         const user = new User(null, email);
         await user.fetchUser();
 
+        if (!user.uuid) {
+            return res.render("auth", {
+                ...getCommonViewOptions(req, res, res.__("Login")),
+                error: res.__("Invalid email or password"),
+            });
+        }
+
+        if (user.isLocked()) {
+            return res.render("auth", {
+                ...getCommonViewOptions(req, res, res.__("Login")),
+                error: res.__("Account is inactive, please contact support"),
+            });
+        }
+
         const authenticated = await user.authenticateUser(password);
         if (authenticated) {
-            await regenerateSession(req);
-            req.session.isLoggedIn = true;
-            req.session.userId = user.uuid;
-            req.session.email = user.email;
-            req.session.username = user.first_name;
-            req.session.isAdmin = await user.isAdmin();
-            req.session.isUserManager = await user.isUserManager();
-            const redirectTo = req.session.redirectTo || `/user/${user.uuid}`;
+            // Regenerate session to prevent fixation
+            const redirectTo = req.session.redirectTo || `/console/${user.uuid}`;
             delete req.session.redirectTo;
+            await regenerateSession(req);
+            updateSession(req, user);
+
             return res.redirect(redirectTo);
         } else {
             return res.render("auth", {
@@ -103,10 +100,12 @@ router.post('/signup', signupValidations, async (req, res) => {
         const newUser = new User();
         await newUser.createUser(null, email, password, first_name, last_name);
 
-        req.session.isLoggedIn = true;
-        req.session.userId = newUser.uuid;
-        const redirectTo = req.session.redirectTo || `/user/${newUser.uuid}`;
+        // Regenerate session to prevent fixation
+        const redirectTo = req.session.redirectTo || `/console/${newUser.uuid}`;
         delete req.session.redirectTo;
+        await regenerateSession(req);
+        updateSession(req, newUser);
+
         return res.redirect(redirectTo);
     } catch (err) {
         console.error("Error during signup:", err);

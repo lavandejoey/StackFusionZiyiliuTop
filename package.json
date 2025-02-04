@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "start:debug": "npm run build-css && NODE_ENV=development node --inspect ./bin/www --debug",
+    "start:debug": "NODE_ENV=development node --inspect ./bin/www --debug",
     "build-css": "sass public/stylesheets:public/stylesheets --no-source-map --style compressed",
     "watch-css": "sass public/stylesheets:public/stylesheets --watch"
   },

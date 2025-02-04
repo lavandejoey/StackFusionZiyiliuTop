@@ -199,8 +199,7 @@ block content
             showFormFromHash();
         });
 
-    // Client-side lazy validation script
-    script.
+        // Client-side lazy validation script
         document.addEventListener("DOMContentLoaded", function () {
             // -------------------------
             // Helper functions
@@ -209,14 +208,17 @@ block content
                 inputEl.classList.remove("is-invalid");
                 inputEl.classList.add("is-valid");
             }
+
             function removeValidationClasses(inputEl) {
                 inputEl.classList.remove("is-invalid", "is-valid");
             }
+
             function showError(inputEl, errorEl, message) {
                 inputEl.classList.add("is-invalid");
                 inputEl.classList.remove("is-valid");
                 errorEl.textContent = message;
             }
+
             function clearError(inputEl, errorEl) {
                 // Only mark as valid if the field has text and has been touched
                 if (inputEl.dataset.touched === "true" && inputEl.value.trim() !== "") {
@@ -226,6 +228,7 @@ block content
                 }
                 errorEl.textContent = "";
             }
+
             function isValidEmail(email) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             }
@@ -419,11 +422,11 @@ block content
             }
 
             [
-                { field: signupFirstName, validator: validateSignupFirstName },
-                { field: signupLastName, validator: validateSignupLastName },
-                { field: signupEmail, validator: validateSignupEmail },
-                { field: signupPassword, validator: validateSignupPassword },
-                { field: signupConfirmPassword, validator: validateSignupConfirmPassword }
+                {field: signupFirstName, validator: validateSignupFirstName},
+                {field: signupLastName, validator: validateSignupLastName},
+                {field: signupEmail, validator: validateSignupEmail},
+                {field: signupPassword, validator: validateSignupPassword},
+                {field: signupConfirmPassword, validator: validateSignupConfirmPassword}
             ].forEach(item => {
                 item.field.addEventListener("blur", function () {
                     item.field.dataset.touched = "true";

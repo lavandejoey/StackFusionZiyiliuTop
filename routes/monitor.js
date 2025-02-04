@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
-const {User, UserRole} = require("../models/authentication");
+const {User} = require("../models/authentication");
 
 // Session auth check for all routes under /monitor
 // Not logged in -> Redirect to login page
@@ -20,7 +20,7 @@ router.use(async (req, res, next) => {
             next(); // Proceed to the /monitor route
         } else {
             console.log("User role is " + userInstance.role);
-            res.redirect('/user/' + userInstance.uuid); // Redirect to user page if not an admin
+            res.redirect('/console/' + userInstance.uuid); // Redirect to user page if not an admin
         }
     } else {
         req.session.redirectTo = req.originalUrl; // Store the requested URL for redirection after login

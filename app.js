@@ -25,7 +25,7 @@ const indexRouter = require('./routes/index');
 const aboutMeRouter = require('./routes/about-me');
 const contactRouter = require('./routes/contact');
 const authRouter = require('./routes/auth');
-const userRouter = require('./routes/user');
+const consoleRouter = require('./routes/console');
 const monitorRouter = require('./routes/monitor');
 const v2rayRouter = require('./routes/v2ray');
 
@@ -63,7 +63,7 @@ app.use(session({
         secure: process.env.NODE_ENV === "production",
         httpOnly: true, // Helps prevent XSS attacks by disallowing JavaScript access to cookies
         sameSite: "strict", // Prevents CSRF attacks
-        maxAge: 15 * 24 * 60 * 60 * 1000 // 15 days
+        maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
     }
 }));
 
@@ -144,9 +144,9 @@ app.use((req, res, next) => {
             username: req.session.username,
             isAdmin: req.session.isAdmin,
             isUserManager: req.session.isUserManager,
+            roles: req.session.roles
         };
     } else {
-        res.locals.user = null;
         res.locals.user = {isLoggedIn: false};
     }
     next();
@@ -161,7 +161,7 @@ app.use('/', indexRouter);
 app.use('/about-me', aboutMeRouter);
 app.use('/contact', contactRouter);
 app.use('/auth', authRouter);
-app.use('/user', userRouter);
+app.use('/console', consoleRouter);
 app.use('/monitor', monitorRouter);
 app.use('/v2ray', v2rayRouter);
 
