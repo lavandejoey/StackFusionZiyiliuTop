@@ -1,103 +1,154 @@
 const fs = require("fs");
+const path = require("path");
 const readline = require("readline");
 const geoip = require('geoip-lite');
+const zlib = require("zlib");
 
-// Function to parse log files and extract recent unique visitors and their domain visits
-async function v2rayLogParser(filePath, maxVisitors = 10) {
+async function parseMultipleV2RayLogs(filePaths, serverName, maxVisitors = 50) {
     const visitors = new Map();
 
-    const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-    });
+    for (const filePath of filePaths) {
+        // Skip if file doesn't exist or is not readable
+        if (!fs.existsSync(filePath)) continue;
 
-    for await (const line of rl) {
-        try {
-            // Extract IP address from the log line (handles both IPv4 and IPv6)
-            const ipAddress = extractIpAddress(line);
-            if (!ipAddress) continue;
+        const isGzipped = filePath.endsWith(".gz");
+        const fileStream = isGzipped
+            ? fs.createReadStream(filePath).pipe(zlib.createGunzip())  // Decompress if gzipped
+            : fs.createReadStream(filePath);
 
-            if (!visitors.has(ipAddress)) {
-                const geo = geoip.lookup(ipAddress);
-                visitors.set(ipAddress, {
-                    ip: ipAddress,
-                    location: geo ? `${geo.city}, ${geo.country}` : "Unknown",
-                    requestHourlyCounts: generateHourlyKeys(48), // 2 days * 24 hours
-                    requestDailyCounts: generateDailyKeys(7),    // 7 days
-                    requestHourlyDomains: {} // Initialize domain tracking with an empty object
-                });
-            }
+        const rl = readline.createInterface({
+            input: fileStream,
+            crlfDelay: Infinity
+        });
 
-            // Extract timestamp from log line and update request count
-            const timestamp = extractTimestamp(line);
-            if (timestamp) {
-                const currentTime = Date.now();
-                const hoursAgo = Math.floor((currentTime - timestamp) / (1000 * 60 * 60));
+        for await (const line of rl) {
+            try {
+                // Extract IP and email
+                const ipAddress = extractIpAddress(line);
+                const email = extractEmail(line);
+                if (!ipAddress) continue;
 
-                // Handle domain extraction
-                const domain = extractDomain(line);
-                if (domain) {
-                    const hourlyKey = getHourlyKey(hoursAgo);
-                    const visitorData = visitors.get(ipAddress);
+                // Base key by IP address and serverName (no email yet)
+                const baseKey = `${ipAddress}-${serverName}`;
+                let visitorData = visitors.get(baseKey);
 
-                    // Ensure requestHourlyDomains has the key
-                    if (!visitorData.requestHourlyDomains[hourlyKey]) {
-                        visitorData.requestHourlyDomains[hourlyKey] = {};
-                    }
+                if (!visitorData) {
+                    // Create a new visitor entry
+                    const geo = geoip.lookup(ipAddress);
+                    visitorData = {
+                        ip: ipAddress,
+                        email: email || null,
+                        server: serverName,
+                        location: geo ? `${geo.city || ''}, ${geo.country || ''}`.trim().replace(/^,\s*/, '') : "Unknown",
 
-                    // Increment the count for the domain, or initialize it
-                    if (!visitorData.requestHourlyDomains[hourlyKey][domain]) {
-                        visitorData.requestHourlyDomains[hourlyKey][domain] = 1;
-                    } else {
-                        visitorData.requestHourlyDomains[hourlyKey][domain]++;
-                    }
+                        // For time-based charts:
+                        requestDailyCounts: generateDailyKeys(process.env.MAX_DAYS || 30),
+                        requestHourlyCounts: generateHourlyKeys(process.env.MAX_HOURS || process.env.MAX_DAYS * 24 || 48),
 
-                    // Update request counts
-                    if (hoursAgo >= 0 && hoursAgo < 48) {
-                        visitorData.requestHourlyCounts[hourlyKey]++;
+                        // Domain tracking
+                        domains: {},
+                    };
+                    visitors.set(baseKey, visitorData);
+                } else {
+                    // Check if a valid email is found and update the email if it was null
+                    if (email && !visitorData.email) {
+                        visitorData.email = email;
                     }
                 }
+
+                // Extract timestamp & domain
+                const timestamp = extractTimestamp(line);
+                const domain = extractDomain(line);
+
+                if (timestamp) {
+                    const currentTime = Date.now();
+                    const hoursAgo = Math.floor((currentTime - timestamp) / (1000 * 60 * 60));
+                    const daysAgo = Math.floor(hoursAgo / 24);
+
+                    // Update domain counts
+                    if (domain) {
+                        visitorData.domains[domain] = (visitorData.domains[domain] || 0) + 1;
+                    }
+
+                    // Update hourly counts if within 48 hours
+                    if (hoursAgo >= 0 && hoursAgo < 48) {
+                        const hourlyKey = getHourlyKey(hoursAgo);
+                        visitorData.requestHourlyCounts[hourlyKey]++;
+                    }
+
+                    // Update daily counts if within 7 days
+                    if (daysAgo >= 0 && daysAgo < 7) {
+                        const dailyKey = getDailyKey(daysAgo);
+                        visitorData.requestDailyCounts[dailyKey]++;
+                    }
+                }
+            } catch (error) {
+                console.error("Error parsing line:", error);
             }
-        } catch (error) {
-            console.error('Error parsing line:', error);
+
+            // Optional: If we only care about the first X unique visitors across all files
+            if (visitors.size >= maxVisitors) {
+                break;
+            }
         }
 
-        // Stop if we have collected enough unique visitors
-        if (visitors.size >= maxVisitors) {
-            break;
-        }
+        // Close the file reader
+        rl.close();
+        await new Promise(resolve => fileStream.close(resolve));
     }
 
     return Array.from(visitors.values());
 }
 
-// Helper function to extract IP address from log line (updated for IPv6 support)
+function getAllLogPaths(logDir) {
+    if (!fs.existsSync(logDir)) {
+        console.warn(`Log directory ${logDir} does not exist.`);
+        return [];
+    }
+    return fs.readdirSync(logDir)
+        .filter(fn => fn.startsWith('access.log'))
+        .map(fn => path.join(logDir, fn));
+}
+
+// ------------- Helper Extractors ------------- //
+
 function extractIpAddress(line) {
-    const regex = /\b(?:\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]+\]/;
+    // Matches IPv4 or bracketed IPv6 with port
+    const regex = /\b(?:\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]+\](?::\d{1,5})?\b/;
     const match = line.match(regex);
-    return match ? match[0] : null;
+    if (!match) return null;
+    // For IPv6 remove brackets if present
+    return match[0].replace(/^\[|\]$/g, '');
 }
 
-// Helper function to extract domain from log line
-function extractDomain(line) {
-    const regex = /tcp:([a-zA-Z0-9.-]+)/; // Adjust to match domain portion in log line
-    const match = line.match(regex);
-    return match ? match[1] : null;
-}
-
-// Helper function to extract timestamp from log line (updated for yyyy/mm/dd format)
 function extractTimestamp(line) {
+    // 2025/02/04 16:19:44 => convert to standard JS date
     const regex = /(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})/;
     const match = line.match(regex);
     if (match) {
-        const dateStr = match[1];
-        return new Date(dateStr.replace(/\//g, '-')).getTime();
+        return new Date(match[1].replace(/\//g, '-')).getTime();
     }
     return null;
 }
 
-// Helper function to generate hourly keys for requestHourlyCounts and requestHourlyDomains
+function extractDomain(line) {
+    const regexTcp = /tcp:([a-zA-Z0-9.-]+)/;
+    const regexUdp = /udp:([a-zA-Z0-9.-]+)/;
+    const matchTcp = line.match(regexTcp);
+    const matchUdp = line.match(regexUdp);
+    return matchTcp ? matchTcp[1] : matchUdp ? matchUdp[1] : null;
+}
+
+function extractEmail(line) {
+    // format email:(letters, numbers, punctuation, etc.)@domainname.domainsuffix
+    // ((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])
+    const regex = /email:((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])/;
+    const match = line.match(regex);
+    return match ? match[1] + match[2] + match[3] : null;
+}
+
+// ------------- Helper Key Generators ------------- //
+
 function generateHourlyKeys(hours) {
     const now = new Date();
     const requestCounts = {};
@@ -109,7 +160,6 @@ function generateHourlyKeys(hours) {
     return requestCounts;
 }
 
-// Helper function to generate daily keys for requestDailyCounts
 function generateDailyKeys(days) {
     const now = new Date();
     const requestCounts = {};
@@ -121,18 +171,26 @@ function generateDailyKeys(days) {
     return requestCounts;
 }
 
-// Helper function to get the hourly key based on hours ago
 function getHourlyKey(hoursAgo) {
     const date = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
     return date.toISOString().slice(0, 13); // YYYY-MM-DDTHH
 }
 
-// Exporting the function for use in other files
-module.exports = {v2rayLogParser};
+function getDailyKey(daysAgo) {
+    const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+    return date.toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+// ----------------------------------------------- //
+
+module.exports = {
+    parseMultipleV2RayLogs,
+    getAllLogPaths
+};
 
 // // Usage example:
 // const logPath = '/var/log/v2ray/access.log'; // Path to your log file
-// v2rayLogParser(logPath, 10).then(visitors => {
+// parseMultipleV2RayLogs([logPath], 'DE').then(visitors => {
 //     console.log('Recent unique visitors:', visitors);
 // }).catch(error => {
 //     console.error('Error parsing logs:', error);

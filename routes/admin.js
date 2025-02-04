@@ -1,7 +1,8 @@
 // routes/admin.js
 const express = require("express");
 const router = express.Router();
-const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
+// const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
+const {parseMultipleV2RayLogs, getAllLogPaths} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
 const {User} = require("../models/authentication");
 const {getCommonViewOptions} = require("./utils");
 
@@ -29,24 +30,76 @@ router.use(async (req, res, next) => {
     }
 });
 
+function mergeVisitorData(existing, newVisitor) {
+    // Merge hourly counts
+    for (const hour in newVisitor.requestHourlyCounts) {
+        if (existing.requestHourlyCounts[hour]) {
+            existing.requestHourlyCounts[hour] += newVisitor.requestHourlyCounts[hour];
+        } else {
+            existing.requestHourlyCounts[hour] = newVisitor.requestHourlyCounts[hour];
+        }
+    }
+
+    // Merge daily counts
+    for (const day in newVisitor.requestDailyCounts) {
+        if (existing.requestDailyCounts[day]) {
+            existing.requestDailyCounts[day] += newVisitor.requestDailyCounts[day];
+        } else {
+            existing.requestDailyCounts[day] = newVisitor.requestDailyCounts[day];
+        }
+    }
+
+    // Merge domain counts
+    for (const domain in newVisitor.domains) {
+        if (existing.domains[domain]) {
+            existing.domains[domain] += newVisitor.domains[domain];
+        } else {
+            existing.domains[domain] = newVisitor.domains[domain];
+        }
+    }
+}
+
 // Route to display parsed log data
 router.get('/', async (req, res) => {
     try {
+        // Fetch all users
         const userList = await User.getAllUsers();
 
-        const logPath = '/var/log/v2ray/access.log'; // Path to your log file
-        const visitors = await v2rayLogParser(logPath); // Parse the logs
+        // 1) Gather DE logs
+        const deLogDir = '/var/log/v2ray';
+        const deLogPaths = getAllLogPaths(deLogDir);
+        const deVisitors = await parseMultipleV2RayLogs(deLogPaths, 'DE');
 
-        // Send data to Pug template
+        // 2) Gather US logs (assuming you have them synced/mounted in /var/log/v2ray_us, etc.)
+        const usLogDir = '/var/log/v2ray';
+        const usLogPaths = getAllLogPaths(usLogDir);
+        const usVisitors = await parseMultipleV2RayLogs(usLogPaths, 'US');
+
+        // 3) Combine for aggregated data for same ip and email, merge requestHourlyCounts, requestDailyCounts by date(time); merge domains' count by domain
+        const allVisitors = {};
+        // Aggregation logic with merging
+        deVisitors.forEach(visitor => {
+            allVisitors[visitor.ip] = visitor;
+        });
+        usVisitors.forEach(visitor => {
+            if (allVisitors[visitor.ip]) {
+                mergeVisitorData(allVisitors[visitor.ip], visitor);
+            } else {
+                allVisitors[visitor.ip] = visitor;
+            }
+        });
+
+        // Pass each dataset separately and a combined version
         res.render("admin", {
             ...getCommonViewOptions(req, res, res.__("Admin")),
             userList,
-            visitors
-
+            deVisitorsData: deVisitors,
+            usVisitorsData: usVisitors,
+            allVisitorsData: Object.values(allVisitors),
         });
-    } catch (error) {
-        console.error('Error parsing logs:', error);
-        res.status(500).send("Internal Server Error");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error");
     }
 });
 

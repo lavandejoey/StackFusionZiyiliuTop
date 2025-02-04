@@ -2,7 +2,9 @@ extends layout
 
 block content
     .container-fluid.py-4
-        //- Users Table Section
+        //- =====================
+        //- 1) Users Table
+        //- =====================
         .row.mb-4
             .col
                 .card.shadow-lg
@@ -32,29 +34,93 @@ block content
                                             td= new Date(user.created_at).toLocaleDateString()
                                             td= new Date(user.updated_at).toLocaleDateString()
 
-        //- Visitors Analytics Section
+
+        //- =====================
+        //- 2) Visitors Analytics
+        //- =====================
         .row
             .col
                 .card.shadow-lg
                     .card-header.bg-gradient-info.text-secondary
                         .d-flex.justify-content-between.align-items-center
                             h5.mb-0 Visitor Analytics
+                            // Nav pills for different data sets
                             .nav-pills
-                                button.btn.btn-sm.btn-outline-light.mx-1(data-bs-toggle="tab" data-bs-target="#hourly-tab") Hourly
-                                button.btn.btn-sm.btn-outline-light.mx-1(data-bs-toggle="tab" data-bs-target="#daily-tab") Daily
-                                button.btn.btn-sm.btn-outline-light.mx-1(data-bs-toggle="tab" data-bs-target="#geo-tab") Geographic
+                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#all-tab") All
+                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#de-tab") DE
+                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#us-tab") US
+                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#domains-tab") Domains
+
                     .card-body
                         .tab-content
-                            #hourly-tab.tab-pane.fade.show.active
-                                canvas#hourly-chart
-                            #daily-tab.tab-pane.fade
-                                canvas#daily-chart
-                            #geo-tab.tab-pane.fade
+                            //- All Servers
+                            #all-tab.tab-pane.fade.show.active
+                                .row.mb-3
+                                    .col
+                                        h6.text-muted All servers combined
                                 .row
-                                    .col-md-8
-                                        canvas#geo-chart
+                                    .col-md-6
+                                        canvas#all-hourly-chart.chart-container
+                                    .col-md-6
+                                        canvas#all-daily-chart.chart-container
+                                .row.mt-3
+                                    .col-md-6
+                                        canvas#all-geo-chart.chart-container
+                                    .col-md-6
+                                        ul.list-group#all-geo-list(style="max-height: 300px; overflow-y: auto;")
+
+                            //- DE
+                            #de-tab.tab-pane.fade
+                                .row.mb-3
+                                    .col
+                                        h6.text-muted DE server data
+                                .row
+                                    .col-md-6
+                                        canvas#de-hourly-chart.chart-container
+                                    .col-md-6
+                                        canvas#de-daily-chart.chart-container
+                                .row.mt-3
+                                    .col-md-6
+                                        canvas#de-geo-chart.chart-container
+                                    .col-md-6
+                                        ul.list-group#de-geo-list(style="max-height: 300px; overflow-y: auto;")
+
+                            //- US
+                            #us-tab.tab-pane.fade
+                                .row.mb-3
+                                    .col
+                                        h6.text-muted US server data
+                                .row
+                                    .col-md-6
+                                        canvas#us-hourly-chart.chart-container
+                                    .col-md-6
+                                        canvas#us-daily-chart.chart-container
+                                .row.mt-3
+                                    .col-md-6
+                                        canvas#us-geo-chart.chart-container
+                                    .col-md-6
+                                        ul.list-group#us-geo-list(style="max-height: 300px; overflow-y: auto;")
+
+                            //- Domains
+                            #domains-tab.tab-pane.fade
+                                .row.mb-3
                                     .col-md-4
-                                        .list-group#geo-list(style="max-height: 400px; overflow-y: auto;")
+                                        input.form-control(type="search", placeholder="Filter domain...", id="domainSearchInput")
+                                    .col-md-4
+                                        select.form-select#serverFilter
+                                            option(value="all" selected) All servers
+                                            option(value="DE") DE
+                                            option(value="US") US
+                                    .col-md-4.text-end
+                                        button.btn.btn-sm.btn-outline-secondary#sortDomainBtn Sort by Count
+                                .table-responsive
+                                    table.table.table-bordered.table-hover#domains-table
+                                        thead
+                                            tr
+                                                th Domain
+                                                th Server
+                                                th Count
+                                        tbody
 
     style.
         .card {
@@ -64,7 +130,7 @@ block content
 
         .chart-container {
             position: relative;
-            height: 60vh;
+            height: 300px;
             width: 100%;
         }
 
@@ -74,11 +140,28 @@ block content
         }
 
     script.
-        const visitors = !{JSON.stringify(visitors)};
+        const deVisitorsData = !{JSON.stringify(deVisitorsData)}
+        const usVisitorsData = !{JSON.stringify(usVisitorsData)}
+        const allVisitorsData = !{JSON.stringify(allVisitorsData)}
+
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(button => {
+            button.addEventListener('click', event => {
+                const target = event.target.getAttribute('data-bs-target');
+                document.querySelector(target).classList.add('show', 'active');
+                document.querySelectorAll('.tab-pane').forEach(tab => {
+                    if (tab.id !== target.slice(1)) {
+                        tab.classList.remove('show', 'active');
+                    }
+                });
+            });
+        });
 
         document.addEventListener('DOMContentLoaded', function () {
-            //- Chart configuration
-            const chartConfig = {
+            // -----------
+            // CHART SETUP
+            // -----------
+            // Reusable chart config
+            const baseChartOptions = {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {display: false},
@@ -96,71 +179,44 @@ block content
                 }
             };
 
-            const hourlyChart = new Chart(document.getElementById('hourly-chart'), {
-                type: 'line',
-                data: formatHourlyData(),
-                options: {
-                    ...chartConfig,
-                    responsive: true,
-                    interaction: {mode: 'index'}
+            // Helper to build data sets for hourly line chart
+            function buildHourlyChartData(visitors) {
+                if (!visitors || !visitors.length) {
+                    return {labels: [], datasets: []};
                 }
-            });
+                const labels = Object.keys(visitors[0].requestHourlyCounts)
+                    .sort()  // ensure chronological
+                    .map(t => new Date(t).getHours() + ':00'); // just show hour
 
-            const dailyChart = new Chart(document.getElementById('daily-chart'), {
-                type: 'bar',
-                data: formatDailyData(),
-                options: {
-                    ...chartConfig,
-                    responsive: true,
-                    scales: {y: {ticks: {stepSize: 1}}}
-                }
-            });
-
-            const geoChart = new Chart(document.getElementById('geo-chart'), {
-                type: 'doughnut',
-                data: formatGeoData(),
-                options: {
-                    ...chartConfig,
-                    cutout: '60%',
-                    plugins: {legend: {position: 'right'}}
-                }
-            });
-
-            //- Update geo list
-            const geoList = document.getElementById('geo-list');
-            visitors.forEach(visitor => {
-                const item = document.createElement('a');
-                item.className = 'list-group-item list-group-item-action d-flex justify-content-between';
-                item.innerHTML = `
-                    ${visitor.location}
-                    <span class="badge bg-primary rounded-pill">${Object.values(visitor.requestHourlyCounts).reduce((a, b) => a + b, 0)}</span>
-                `;
-                geoList.appendChild(item);
-            });
-
-            function formatHourlyData() {
-                const datasets = visitors.map(visitor => ({
-                    label: `${visitor.ip} (${visitor.location})`,
-                    data: Object.values(visitor.requestHourlyCounts),
-                    borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-                    tension: 0.3,
-                    fill: false
-                }));
-
-                return {
-                    labels: Object.keys(visitors[0].requestHourlyCounts).map(t =>
-                        new Date(t).toLocaleTimeString([], {hour: '2-digit'})),
-                    datasets
-                };
+                // Each visitor => line
+                const datasets = visitors.map(visitor => {
+                    const sortedKeys = Object.keys(visitor.requestHourlyCounts).sort();
+                    const data = sortedKeys.map(k => visitor.requestHourlyCounts[k]);
+                    return {
+                        label: `${visitor.ip} (${visitor.email || 'no email'})`,
+                        data,
+                        borderColor: randomColor(),
+                        tension: 0.3,
+                        fill: false
+                    };
+                });
+                return {labels, datasets};
             }
 
-            function formatDailyData() {
-                const labels = Object.keys(visitors[0].requestDailyCounts);
-                const data = labels.map(date =>
-                    visitors.reduce((sum, visitor) => sum + (visitor.requestDailyCounts[date] || 0), 0));
+            // Helper to build data sets for daily bar chart
+            function buildDailyChartData(visitors) {
+                if (!visitors || !visitors.length) {
+                    return {labels: [], datasets: []};
+                }
+                const allDailyKeys = Object.keys(visitors[0].requestDailyCounts).sort();
+                const labels = allDailyKeys.map(d => new Date(d).toLocaleDateString());
+                // sum across all visitors
+                const data = allDailyKeys.map(dKey => {
+                    return visitors.reduce((sum, v) => sum + (v.requestDailyCounts[dKey] || 0), 0);
+                });
 
                 return {
-                    labels: labels.map(d => new Date(d).toLocaleDateString()),
+                    labels,
                     datasets: [{
                         label: 'Daily Requests',
                         data,
@@ -169,24 +225,186 @@ block content
                 };
             }
 
-            function formatGeoData() {
-                const locations = {};
-                visitors.forEach(visitor => {
-                    locations[visitor.location] = (locations[visitor.location] || 0) + 1;
+            // Helper to build geo chart (doughnut)
+            function buildGeoChartData(visitors) {
+                const counts = {};
+                visitors.forEach(v => {
+                    const loc = v.location || 'Unknown';
+                    counts[loc] = (counts[loc] || 0) + totalRequests(v);
                 });
-
+                const labels = Object.keys(counts);
+                const data = Object.values(counts);
+                const bgColors = labels.map(() => randomColor());
                 return {
-                    labels: Object.keys(locations),
+                    labels,
                     datasets: [{
-                        data: Object.values(locations),
-                        backgroundColor: Object.keys(locations).map(() =>
-                            `hsl(${Math.random() * 360}, 70%, 50%)`)
+                        data,
+                        backgroundColor: bgColors
                     }]
                 };
             }
 
-            //- Handle window resize
-            window.addEventListener('resize', () => {
-                [hourlyChart, dailyChart, geoChart].forEach(chart => chart.resize());
+            // Helper to populate geo list
+            function populateGeoList(visitors, listElementId) {
+                const container = document.getElementById(listElementId);
+                if (!container) return;
+                container.innerHTML = ''; // clear old
+                // group by location => sum requests
+                const locationMap = {};
+                visitors.forEach(v => {
+                    const loc = v.location || 'Unknown';
+                    locationMap[loc] = (locationMap[loc] || 0) + totalRequests(v);
+                });
+                // Convert to array
+                const sortedLocations = Object.entries(locationMap).sort((a, b) => b[1] - a[1]);
+                // Populate
+                sortedLocations.forEach(([loc, count]) => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.innerHTML = `${loc}<span class="badge bg-primary rounded-pill">${count}</span>`;
+                    container.appendChild(li);
+                });
+            }
+
+            function randomColor() {
+                return `hsl(${Math.random() * 360}, 70%, 50%)`;
+            }
+
+            function totalRequests(visitor) {
+                return Object.values(visitor.requestHourlyCounts).reduce((a, b) => a + b, 0);
+            }
+
+            // Create the charts for each tab set
+            // --- ALL
+            createLineChart('all-hourly-chart', buildHourlyChartData(allVisitorsData));
+            createBarChart('all-daily-chart', buildDailyChartData(allVisitorsData));
+            createDoughnut('all-geo-chart', buildGeoChartData(allVisitorsData));
+            populateGeoList(allVisitorsData, 'all-geo-list');
+
+            // --- DE
+            createLineChart('de-hourly-chart', buildHourlyChartData(deVisitorsData));
+            createBarChart('de-daily-chart', buildDailyChartData(deVisitorsData));
+            createDoughnut('de-geo-chart', buildGeoChartData(deVisitorsData));
+            populateGeoList(deVisitorsData, 'de-geo-list');
+
+            // --- US
+            createLineChart('us-hourly-chart', buildHourlyChartData(usVisitorsData));
+            createBarChart('us-daily-chart', buildDailyChartData(usVisitorsData));
+            createDoughnut('us-geo-chart', buildGeoChartData(usVisitorsData));
+            populateGeoList(usVisitorsData, 'us-geo-list');
+
+            // -----------
+            // DOMAINS TAB
+            // -----------
+            // Build single domain table for all visitors, or
+            // if you want separate, you could do multiple.
+            const domainTableBody = document.querySelector('#domains-table tbody');
+            const all = [...allVisitorsData]; // array of visitors
+            // Flatten out: each domain in each visitor => row
+            let domainRows = [];
+            all.forEach(visitor => {
+                Object.entries(visitor.domains).forEach(([domain, count]) => {
+                    domainRows.push({
+                        domain,
+                        server: visitor.server,
+                        count
+                    });
+                });
             });
+
+            // function to re-render domain table
+            function renderDomainRows(rows) {
+                domainTableBody.innerHTML = '';
+                rows.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+            <td>${r.domain}</td>
+            <td>${r.server}</td>
+            <td>${r.count}</td>
+          `;
+                    domainTableBody.appendChild(tr);
+                });
+            }
+
+            renderDomainRows(domainRows);
+
+            // ---- Filter / Sort
+            const domainSearchInput = document.getElementById('domainSearchInput');
+            const serverFilter = document.getElementById('serverFilter');
+            const sortBtn = document.getElementById('sortDomainBtn');
+            let sortDesc = false;
+
+            function applyDomainFilters() {
+                const searchVal = domainSearchInput.value.toLowerCase();
+                const selectedServer = serverFilter.value; // 'all', 'DE', 'US'
+                let filtered = domainRows.filter(r => {
+                    const matchesSearch = r.domain.toLowerCase().includes(searchVal);
+                    const matchesServer = (selectedServer === 'all') || (r.server === selectedServer);
+                    return matchesSearch && matchesServer;
+                });
+                // sort
+                if (sortDesc) {
+                    filtered.sort((a, b) => b.count - a.count);
+                } else {
+                    filtered.sort((a, b) => a.count - b.count);
+                }
+                renderDomainRows(filtered);
+            }
+
+            // Hook up event listeners
+            domainSearchInput.addEventListener('input', applyDomainFilters);
+            serverFilter.addEventListener('change', applyDomainFilters);
+            sortBtn.addEventListener('click', () => {
+                sortDesc = !sortDesc;
+                applyDomainFilters();
+            });
+
+            // -----------
+            // Chart helpers
+            // -----------
+            function createLineChart(canvasId, data) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        ...baseChartOptions,
+                        responsive: true,
+                        interaction: {mode: 'index'}
+                    }
+                });
+            }
+
+            function createBarChart(canvasId, data) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        ...baseChartOptions,
+                        responsive: true,
+                        scales: {
+                            y: {ticks: {stepSize: 1, beginAtZero: true}}
+                        }
+                    }
+                });
+            }
+
+            function createDoughnut(canvasId, data) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        ...baseChartOptions,
+                        cutout: '60%',
+                        plugins: {
+                            legend: {position: 'right'}
+                        }
+                    }
+                });
+            }
         });
