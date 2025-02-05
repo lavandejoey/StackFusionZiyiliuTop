@@ -42,8 +42,8 @@ async function parseMultipleV2RayLogs(filePaths, serverName, maxVisitors = 50) {
                         location: geo ? `${geo.city || ''}, ${geo.country || ''}`.trim().replace(/^,\s*/, '') : "Unknown",
 
                         // For time-based charts:
-                        requestDailyCounts: generateDailyKeys(process.env.MAX_DAYS || 30),
-                        requestHourlyCounts: generateHourlyKeys(process.env.MAX_HOURS || process.env.MAX_DAYS * 24 || 48),
+                        requestDailyCounts: generateDailyKeys(process.env.LOG_DISPLAY_MAX_DAYS || 30),
+                        requestHourlyCounts: generateHourlyKeys(process.env.LOG_DISPLAY_MAX_HOURS || process.env.LOG_DISPLAY_MAX_DAYS * 24 || 48),
 
                         // Domain tracking
                         domains: {},

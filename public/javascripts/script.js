@@ -32,3 +32,16 @@ applyAnnotation(highlight, "highlight", quaternary);
 // Bracket
 const bracket = document.querySelector('.bracket');
 applyAnnotation(bracket, "bracket", quaternary);
+
+// copy to clipboard for class .user-select-all
+const copyToClipboard = document.querySelectorAll('.user-select-all');
+copyToClipboard.forEach((element) => {
+    element.addEventListener('click', () => {
+        const text = element.innerText;
+        navigator.clipboard.writeText(text).then(r =>
+            console.log('Copied to clipboard:', text)
+        ).catch(err =>
+            console.error('Error copying to clipboard:', err)
+        );
+    });
+});

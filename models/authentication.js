@@ -115,7 +115,12 @@ class User {
     // Authenticate user
     async authenticateUser(password) {
         try {
-            return await verifyPassword(password, this.password_hash);
+            const authenticated = await verifyPassword(password, this.password_hash);
+            // update last login time
+            const sql_update = "UPDATE user SET updated_at = NOW() WHERE uuid = ?";
+            const params = [this.uuid];
+            db.query(sql_update, params).catch(error => console.error("Error updating last login time:", error));
+            return authenticated;
         } catch (error) {
             console.error("Error authenticating user:", error);
             return false;

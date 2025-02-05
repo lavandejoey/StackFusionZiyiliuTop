@@ -1,11 +1,11 @@
 extends layout
 
 block content
-    .container-fluid.py-4
+    .container
         //- =====================
         //- 1) Users Table
         //- =====================
-        .row.mb-4
+        .row.my-5
             .col
                 .card.shadow-lg
                     .card-header.bg-gradient-primary.text-primary
@@ -26,30 +26,29 @@ block content
                                     each user in userList
                                         tr
                                             td.text-monospace= user.uuid.substring(0, 8) + '...'
-                                            td= user.email
-                                            td= `${user.first_name} ${user.last_name}`
+                                            td.user-select-all= user.email
+                                            td= user.first_name + ' ' + user.last_name
                                             td= user.v2_iter_id
                                             td
                                                 span.badge(class=(user.status === 'active' ? `bg-success` : 'bg-danger'))= user.status
                                             td= new Date(user.created_at).toLocaleDateString()
                                             td= new Date(user.updated_at).toLocaleDateString()
 
-
         //- =====================
         //- 2) Visitors Analytics
         //- =====================
-        .row
+        .row.my-5
             .col
                 .card.shadow-lg
                     .card-header.bg-gradient-info.text-secondary
                         .d-flex.justify-content-between.align-items-center
                             h5.mb-0 Visitor Analytics
                             // Nav pills for different data sets
-                            .nav-pills
-                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#all-tab") All
-                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#de-tab") DE
-                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#us-tab") US
-                                button.btn.btn-sm.btn-outline-dark.mx-1(data-bs-toggle="tab", data-bs-target="#domains-tab") Domains
+                            ul.nav.nav-pills#analyticsTabs
+                                button.btn.btn-sm.btn-outline-dark.mx-2(data-bs-toggle="tab", data-bs-target="#all-tab") All
+                                button.btn.btn-sm.btn-outline-dark.mx-2(data-bs-toggle="tab", data-bs-target="#de-tab") DE
+                                button.btn.btn-sm.btn-outline-dark.mx-2(data-bs-toggle="tab", data-bs-target="#us-tab") US
+                                button.btn.btn-sm.btn-outline-dark.mx-2(data-bs-toggle="tab", data-bs-target="#domains-tab") Domains
 
                     .card-body
                         .tab-content
@@ -106,20 +105,26 @@ block content
                                 .row.mb-3
                                     .col-md-4
                                         input.form-control(type="search", placeholder="Filter domain...", id="domainSearchInput")
-                                    .col-md-4
-                                        select.form-select#serverFilter
+                                    .col-md-2
+                                        select.form-select.text-truncate#emailFilter
+                                            option(value="all" selected) All emails
+                                    .col-md-2
+                                        select.form-select.text-truncate#serverFilter
                                             option(value="all" selected) All servers
                                             option(value="DE") DE
                                             option(value="US") US
-                                    .col-md-4.text-end
-                                        button.btn.btn-sm.btn-outline-secondary#sortDomainBtn Sort by Count
                                 .table-responsive
-                                    table.table.table-bordered.table-hover#domains-table
+                                    table.table.table-bordered.table-hover.table-sm#domains-table
                                         thead
                                             tr
-                                                th Domain
+                                                th.text-center.fw-bold(style="max-width: 20%")
+                                                    a.d-flex.justify-content-center.font-weight-bold#sortDomainBtn Domain
+                                                th
+                                                    a.d-flex.justify-content-center.font-weight-bold#sortEmailBtn Email
                                                 th Server
-                                                th Count
+                                                th
+                                                    a.d-flex.justify-content-center.font-weight-bold#sortCountBtn Count
+                                                th Location
                                         tbody
 
     style.
@@ -128,31 +133,46 @@ block content
             overflow: hidden;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
+        .table th, .table td {
+            vertical-align: middle;
+
+            & a {
+                color: inherit;
+                text-decoration: none;
+
+                &:hover {
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+            }
         }
 
-        .data-point:hover {
-            cursor: pointer;
-            opacity: 0.8;
+        .form-control, .form-select {
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
         }
 
     script.
-        const deVisitorsData = !{JSON.stringify(deVisitorsData)}
-        const usVisitorsData = !{JSON.stringify(usVisitorsData)}
-        const allVisitorsData = !{JSON.stringify(allVisitorsData)}
+        const deVisitorsData = !{JSON.stringify(deVisitorsData)};
+        const usVisitorsData = !{JSON.stringify(usVisitorsData)};
+        const allVisitorsData = !{JSON.stringify(allVisitorsData)};
 
         document.querySelectorAll('[data-bs-toggle="tab"]').forEach(button => {
-            button.addEventListener('click', event => {
-                const target = event.target.getAttribute('data-bs-target');
-                document.querySelector(target).classList.add('show', 'active');
-                document.querySelectorAll('.tab-pane').forEach(tab => {
-                    if (tab.id !== target.slice(1)) {
-                        tab.classList.remove('show', 'active');
-                    }
-                });
+            button.addEventListener('click', function (event) {
+                const target = this.getAttribute('data-bs-target');
+                const tabPane = document.querySelector(target);
+                if (tabPane) {
+                    // Hide all tab panes
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    // Show the target tab pane
+                    tabPane.classList.add('show', 'active');
+                }
             });
         });
 
@@ -160,7 +180,6 @@ block content
             // -----------
             // CHART SETUP
             // -----------
-            // Reusable chart config
             const baseChartOptions = {
                 maintainAspectRatio: false,
                 plugins: {
@@ -179,31 +198,21 @@ block content
                 }
             };
 
-            // Helper to build data sets for hourly line chart
+            // Helper functions for charts
             function buildHourlyChartData(visitors) {
-                if (!visitors || !visitors.length) {
-                    return {labels: [], datasets: []};
-                }
-                const labels = Object.keys(visitors[0].requestHourlyCounts)
-                    .sort()  // ensure chronological
-                    .map(t => new Date(t).getHours() + ':00'); // just show hour
-
-                // Each visitor => line
-                const datasets = visitors.map(visitor => {
-                    const sortedKeys = Object.keys(visitor.requestHourlyCounts).sort();
-                    const data = sortedKeys.map(k => visitor.requestHourlyCounts[k]);
-                    return {
-                        label: `${visitor.ip} (${visitor.email || 'no email'})`,
-                        data,
-                        borderColor: randomColor(),
-                        tension: 0.3,
-                        fill: false
-                    };
-                });
+                if (!visitors || !visitors.length) return {labels: [], datasets: []};
+                // Set of all visitors' requestHourlyCounts keys
+                const labels = Array.from(new Set(visitors.flatMap(v => Object.keys(v.requestHourlyCounts)))).sort();
+                const datasets = visitors.map(visitor => ({
+                    label: `${visitor.ip} (${visitor.email || 'no email'})`,
+                    data: Object.keys(visitor.requestHourlyCounts).sort().map(k => visitor.requestHourlyCounts[k]),
+                    borderColor: randomColor(),
+                    tension: 0.1,
+                    fill: false
+                }));
                 return {labels, datasets};
             }
 
-            // Helper to build data sets for daily bar chart
             function buildDailyChartData(visitors) {
                 if (!visitors || !visitors.length) {
                     return {labels: [], datasets: []};
@@ -225,7 +234,7 @@ block content
                 };
             }
 
-            // Helper to build geo chart (doughnut)
+
             function buildGeoChartData(visitors) {
                 const counts = {};
                 visitors.forEach(v => {
@@ -235,29 +244,19 @@ block content
                 const labels = Object.keys(counts);
                 const data = Object.values(counts);
                 const bgColors = labels.map(() => randomColor());
-                return {
-                    labels,
-                    datasets: [{
-                        data,
-                        backgroundColor: bgColors
-                    }]
-                };
+                return {labels, datasets: [{data, backgroundColor: bgColors}]};
             }
 
-            // Helper to populate geo list
             function populateGeoList(visitors, listElementId) {
                 const container = document.getElementById(listElementId);
                 if (!container) return;
-                container.innerHTML = ''; // clear old
-                // group by location => sum requests
+                container.innerHTML = '';
                 const locationMap = {};
                 visitors.forEach(v => {
                     const loc = v.location || 'Unknown';
                     locationMap[loc] = (locationMap[loc] || 0) + totalRequests(v);
                 });
-                // Convert to array
                 const sortedLocations = Object.entries(locationMap).sort((a, b) => b[1] - a[1]);
-                // Populate
                 sortedLocations.forEach(([loc, count]) => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex justify-content-between align-items-center';
@@ -274,111 +273,25 @@ block content
                 return Object.values(visitor.requestHourlyCounts).reduce((a, b) => a + b, 0);
             }
 
-            // Create the charts for each tab set
-            // --- ALL
-            createLineChart('all-hourly-chart', buildHourlyChartData(allVisitorsData));
-            createBarChart('all-daily-chart', buildDailyChartData(allVisitorsData));
-            createDoughnut('all-geo-chart', buildGeoChartData(allVisitorsData));
-            populateGeoList(allVisitorsData, 'all-geo-list');
-
-            // --- DE
-            createLineChart('de-hourly-chart', buildHourlyChartData(deVisitorsData));
-            createBarChart('de-daily-chart', buildDailyChartData(deVisitorsData));
-            createDoughnut('de-geo-chart', buildGeoChartData(deVisitorsData));
-            populateGeoList(deVisitorsData, 'de-geo-list');
-
-            // --- US
-            createLineChart('us-hourly-chart', buildHourlyChartData(usVisitorsData));
-            createBarChart('us-daily-chart', buildDailyChartData(usVisitorsData));
-            createDoughnut('us-geo-chart', buildGeoChartData(usVisitorsData));
-            populateGeoList(usVisitorsData, 'us-geo-list');
-
-            // -----------
-            // DOMAINS TAB
-            // -----------
-            // Build single domain table for all visitors, or
-            // if you want separate, you could do multiple.
-            const domainTableBody = document.querySelector('#domains-table tbody');
-            const all = [...allVisitorsData]; // array of visitors
-            // Flatten out: each domain in each visitor => row
-            let domainRows = [];
-            all.forEach(visitor => {
-                Object.entries(visitor.domains).forEach(([domain, count]) => {
-                    domainRows.push({
-                        domain,
-                        server: visitor.server,
-                        count
-                    });
-                });
-            });
-
-            // function to re-render domain table
-            function renderDomainRows(rows) {
-                domainTableBody.innerHTML = '';
-                rows.forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-            <td>${r.domain}</td>
-            <td>${r.server}</td>
-            <td>${r.count}</td>
-          `;
-                    domainTableBody.appendChild(tr);
-                });
-            }
-
-            renderDomainRows(domainRows);
-
-            // ---- Filter / Sort
-            const domainSearchInput = document.getElementById('domainSearchInput');
-            const serverFilter = document.getElementById('serverFilter');
-            const sortBtn = document.getElementById('sortDomainBtn');
-            let sortDesc = false;
-
-            function applyDomainFilters() {
-                const searchVal = domainSearchInput.value.toLowerCase();
-                const selectedServer = serverFilter.value; // 'all', 'DE', 'US'
-                let filtered = domainRows.filter(r => {
-                    const matchesSearch = r.domain.toLowerCase().includes(searchVal);
-                    const matchesServer = (selectedServer === 'all') || (r.server === selectedServer);
-                    return matchesSearch && matchesServer;
-                });
-                // sort
-                if (sortDesc) {
-                    filtered.sort((a, b) => b.count - a.count);
-                } else {
-                    filtered.sort((a, b) => a.count - b.count);
-                }
-                renderDomainRows(filtered);
-            }
-
-            // Hook up event listeners
-            domainSearchInput.addEventListener('input', applyDomainFilters);
-            serverFilter.addEventListener('change', applyDomainFilters);
-            sortBtn.addEventListener('click', () => {
-                sortDesc = !sortDesc;
-                applyDomainFilters();
-            });
-
-            // -----------
-            // Chart helpers
-            // -----------
+            // Initialize charts
             function createLineChart(canvasId, data) {
                 const ctx = document.getElementById(canvasId);
                 if (!ctx) return;
                 new Chart(ctx, {
                     type: 'line',
                     data: data,
-                    options: {
-                        ...baseChartOptions,
-                        responsive: true,
-                        interaction: {mode: 'index'}
-                    }
+                    options: {...baseChartOptions, responsive: true, interaction: {mode: 'index'}}
                 });
             }
 
             function createBarChart(canvasId, data) {
                 const ctx = document.getElementById(canvasId);
                 if (!ctx) return;
+
+                // Calculate max value for dynamic step size
+                const maxValue = Math.max(...data.datasets[0].data);
+                const stepSize = Math.ceil(maxValue / 10);
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: data,
@@ -386,7 +299,16 @@ block content
                         ...baseChartOptions,
                         responsive: true,
                         scales: {
-                            y: {ticks: {stepSize: 1, beginAtZero: true}}
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 20,
+                                    stepSize: stepSize > 0 ? stepSize : 1
+                                },
+                                grid: {color: 'rgba(0,0,0,0.05)'}
+                            },
+                            x: {grid: {display: false}}
                         }
                     }
                 });
@@ -398,13 +320,127 @@ block content
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: data,
-                    options: {
-                        ...baseChartOptions,
-                        cutout: '60%',
-                        plugins: {
-                            legend: {position: 'right'}
-                        }
-                    }
+                    options: {...baseChartOptions, cutout: '60%', plugins: {legend: {position: 'right'}}}
                 });
             }
+
+            // Create charts for each tab
+            createLineChart('all-hourly-chart', buildHourlyChartData(allVisitorsData));
+            createBarChart('all-daily-chart', buildDailyChartData(allVisitorsData));
+            createDoughnut('all-geo-chart', buildGeoChartData(allVisitorsData));
+            populateGeoList(allVisitorsData, 'all-geo-list');
+
+            createLineChart('de-hourly-chart', buildHourlyChartData(deVisitorsData));
+            createBarChart('de-daily-chart', buildDailyChartData(deVisitorsData));
+            createDoughnut('de-geo-chart', buildGeoChartData(deVisitorsData));
+            populateGeoList(deVisitorsData, 'de-geo-list');
+
+            createLineChart('us-hourly-chart', buildHourlyChartData(usVisitorsData));
+            createBarChart('us-daily-chart', buildDailyChartData(usVisitorsData));
+            createDoughnut('us-geo-chart', buildGeoChartData(usVisitorsData));
+            populateGeoList(usVisitorsData, 'us-geo-list');
+
+            // -----------
+            // DOMAINS TAB
+            // -----------
+            const all = [...allVisitorsData];
+            const domainTableBody = document.querySelector('#domains-table tbody');
+            let visitRows = [];
+            all.forEach(visitor => {
+                Object.entries(visitor.domains).forEach(([domain, count]) => {
+                    visitRows.push({
+                        domain,
+                        email: visitor.email,
+                        server: visitor.server,
+                        count,
+                        location: visitor.location
+                    });
+                });
+            });
+
+            function renderDomainRows(rows) {
+                domainTableBody.innerHTML = '';
+                rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td class="text-truncate">${row.domain}</td>
+                    <td class="text-truncate">${row.email}</td>
+                    <td class="text-truncate">${row.server}</td>
+                    <td class="text-truncate">${row.count}</td>
+                    <td class="text-truncate">${row.location || 'Unknown'}</td>
+                `;
+                    domainTableBody.appendChild(tr);
+                });
+            }
+
+            // Populate email filter dropdown
+            const emailSet = new Set([]);
+            all.forEach(visitor => emailSet.add(visitor.email));
+            const emailFilter = document.getElementById('emailFilter');
+            emailSet.forEach(email => {
+                const option = document.createElement('option');
+                option.value = email;
+                option.textContent = email;
+                emailFilter.appendChild(option);
+            });
+
+            // Event listeners for filtering and sorting
+            const domainSearchInput = document.getElementById('domainSearchInput');
+            const serverFilter = document.getElementById('serverFilter');
+            const sortCountBtn = document.getElementById('sortCountBtn');
+            const sortEmailBtn = document.getElementById('sortEmailBtn');
+            const sortDomainBtn = document.getElementById('sortDomainBtn');
+
+            let sortBy = 'count';
+            let sortDesc = false;
+
+            function applyFilters() {
+                const searchVal = domainSearchInput.value.toLowerCase();
+                const selectedEmail = emailFilter.value;
+                const selectedServer = serverFilter.value;
+
+                let filtered = visitRows.filter(row => {
+                    const matchesDomain = row.domain.toLowerCase().includes(searchVal);
+                    const matchesEmail = selectedEmail === 'all' || row.email === selectedEmail;
+                    const matchesServer = selectedServer === 'all' || row.server === selectedServer;
+                    return matchesDomain && matchesEmail && matchesServer;
+                });
+
+                // Sort rows
+                if (sortBy === 'count') {
+                    filtered.sort((a, b) => sortDesc ? b.count - a.count : a.count - b.count);
+                } else if (sortBy === 'email') {
+                    filtered.sort((a, b) => sortDesc ? b.email.localeCompare(a.email) : a.email.localeCompare(b.email));
+                } else if (sortBy === 'domain') {
+                    filtered.sort((a, b) => sortDesc ? b.domain.localeCompare(a.domain) : a.domain.localeCompare(b.domain));
+                }
+
+                renderDomainRows(filtered);
+            }
+
+            domainSearchInput.addEventListener('input', applyFilters);
+            emailFilter.addEventListener('change', applyFilters);
+            serverFilter.addEventListener('change', applyFilters);
+
+            sortCountBtn.addEventListener('click', () => {
+                sortBy = 'count';
+                sortDesc = !sortDesc;
+                applyFilters();
+            });
+
+            sortEmailBtn.addEventListener('click', () => {
+                sortBy = 'email';
+                sortDesc = !sortDesc;
+                applyFilters();
+            });
+
+            sortDomainBtn.addEventListener('click', () => {
+                sortBy = 'domain';
+                sortDesc = !sortDesc;
+                applyFilters();
+            });
+
+
+            // Initial render
+            renderDomainRows(visitRows);
         });

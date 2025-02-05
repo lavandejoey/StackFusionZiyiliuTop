@@ -99,5 +99,9 @@ a {
   transform: translateX(-50%)
 }
 
+.user-select-all {
+  cursor: pointer;
+}
+
 // Finally, import Bootstrap's styles
 @import "../../node_modules/bootstrap/scss/bootstrap";
