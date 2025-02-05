@@ -4,7 +4,7 @@ const readline = require("readline");
 const geoip = require('geoip-lite');
 const zlib = require("zlib");
 
-async function parseMultipleV2RayLogs(filePaths, serverName, maxVisitors = 50) {
+async function parseMultipleV2RayLogs(filePaths, serverName) {
     const visitors = new Map();
 
     for (const filePath of filePaths) {
@@ -86,10 +86,6 @@ async function parseMultipleV2RayLogs(filePaths, serverName, maxVisitors = 50) {
                 console.error("Error parsing line:", error);
             }
 
-            // Optional: If we only care about the first X unique visitors across all files
-            if (visitors.size >= maxVisitors) {
-                break;
-            }
         }
 
         // Close the file reader

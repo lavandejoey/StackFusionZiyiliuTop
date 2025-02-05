@@ -6,13 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/authentication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script/v2rayLogParser.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/v2rayLogParser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/admin.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,6 +184,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />

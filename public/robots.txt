@@ -1,0 +1,18 @@
+# robots.txt for ziyiliu.top
+
+User-agent: *
+Disallow: /admin/
+Disallow: /console/
+Disallow: /temp/
+Disallow: /cgi-bin/
+Disallow: /config/
+Disallow: /install/
+Disallow: /maintenance/
+
+# Block sensitive files
+
+# Sitemap location
+Sitemap: https://ziyiliu.top/sitemap.xml
+
+# Crawl delay to prevent server overload
+Crawl-delay: 20

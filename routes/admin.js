@@ -70,8 +70,8 @@ router.get('/', async (req, res) => {
         const deLogPaths = getAllLogPaths(deLogDir);
         const deVisitors = await parseMultipleV2RayLogs(deLogPaths, 'DE');
 
-        // 2) Gather US logs (assuming you have them synced/mounted in /var/log/v2ray_us, etc.)
-        const usLogDir = '/var/log/v2ray';
+        // 2) Gather US logs
+        const usLogDir = '/var/log/v2ray-us';
         const usLogPaths = getAllLogPaths(usLogDir);
         const usVisitors = await parseMultipleV2RayLogs(usLogPaths, 'US');
 

@@ -272,6 +272,15 @@ app.get('/sync-logs', async (req, res) => {
     res.send('Manual sync initiated');
 });
 
+// Set sitemap and robots.txt
+app.get('/sitemap.xml', (req, res) =>
+    res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'))
+);
+
+app.get('/robots.txt', (req, res) =>
+    res.sendFile(path.join(__dirname, 'public', 'robots.txt'))
+);
+
 
 module.exports = app;
 
