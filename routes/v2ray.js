@@ -15,6 +15,7 @@ function generateClashYaml(email, uuid, alterId) {
                 name: server.name + " " + email.slice(0, email.indexOf("@")),
                 type: "vmess",
                 server: server.server,
+                "server-name": server.server,
                 port: 443,
                 uuid: uuid,
                 alterId: alterId,
@@ -36,7 +37,7 @@ function generateClashYaml(email, uuid, alterId) {
         }),
         "proxy-groups": [{
             name: "ZLiu Proxy" + " " + email,
-            type: "select",
+            type: "relay",
             proxies: SERVER_LIST.map((server) => server.name + " " + email.slice(0, email.indexOf("@")))
         }],
         mode: "Rule",
@@ -80,56 +81,56 @@ function generateClashYaml(email, uuid, alterId) {
                 type: "http",
                 behavior: "domain",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
-                path: "./ruleset/direct.yaml",
+                path: "./RULE-SET/direct.yaml",
                 interval: 86400
             },
             private: {
                 type: "http",
                 behavior: "domain",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt",
-                path: "./ruleset/private.yaml",
+                path: "./RULE-SET/private.yaml",
                 interval: 86400
             },
             gfw: {
                 type: "http",
                 behavior: "domain",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt",
-                path: "./ruleset/gfw.yaml",
+                path: "./RULE-SET/gfw.yaml",
                 interval: 86400
             },
             "tld-not-cn": {
                 type: "http",
                 behavior: "domain",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt",
-                path: "./ruleset/tld-not-cn.yaml",
+                path: "./RULE-SET/tld-not-cn.yaml",
                 interval: 86400
             },
             telegramcidr: {
                 type: "http",
                 behavior: "ipcidr",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt",
-                path: "./ruleset/telegramcidr.yaml",
+                path: "./RULE-SET/telegramcidr.yaml",
                 interval: 86400
             },
             cncidr: {
                 type: "http",
                 behavior: "ipcidr",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt",
-                path: "./ruleset/cncidr.yaml",
+                path: "./RULE-SET/cncidr.yaml",
                 interval: 86400
             },
             lancidr: {
                 type: "http",
                 behavior: "ipcidr",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt",
-                path: "./ruleset/lancidr.yaml",
+                path: "./RULE-SET/lancidr.yaml",
                 interval: 86400
             },
             applications: {
                 type: "http",
                 behavior: "classical",
                 url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
-                path: "./ruleset/applications.yaml",
+                path: "./RULE-SET/applications.yaml",
                 interval: 86400
             }
         },
