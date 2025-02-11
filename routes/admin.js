@@ -67,35 +67,22 @@ router.get('/', async (req, res) => {
 
         // 1) Gather DE logs
         const deLogDir = '/var/log/v2ray';
-        const deLogPaths = getAllLogPaths(deLogDir);
-        const deVisitors = await parseMultipleV2RayLogs(deLogPaths, 'DE');
+        const deVisitData = await parseMultipleV2RayLogs(getAllLogPaths(deLogDir), 'DE');
 
         // 2) Gather US logs
         const usLogDir = '/var/log/v2ray-us';
-        const usLogPaths = getAllLogPaths(usLogDir);
-        const usVisitors = await parseMultipleV2RayLogs(usLogPaths, 'US');
+        const usVisitData = await parseMultipleV2RayLogs(getAllLogPaths(usLogDir), 'US');
 
-        // 3) Combine for aggregated data for same ip and email, merge requestHourlyCounts, requestDailyCounts by date(time); merge domains' count by domain
-        const allVisitors = {};
-        // Aggregation logic with merging
-        deVisitors.forEach(visitor => {
-            allVisitors[visitor.ip] = visitor;
-        });
-        usVisitors.forEach(visitor => {
-            if (allVisitors[visitor.ip]) {
-                mergeVisitorData(allVisitors[visitor.ip], visitor);
-            } else {
-                allVisitors[visitor.ip] = visitor;
-            }
-        });
+        // 3) Combine all log lists, they are list of dict
+        const allVisitData = [...deVisitData, ...usVisitData];
 
         // Pass each dataset separately and a combined version
         res.render("admin", {
             ...getCommonViewOptions(req, res, res.__("Admin")),
             userList,
-            deVisitorsData: deVisitors,
-            usVisitorsData: usVisitors,
-            allVisitorsData: Object.values(allVisitors),
+            deVisitLogData: deVisitData,
+            usVisitLogData: usVisitData,
+            allVisitLogData: Object.values(allVisitData),
         });
     } catch (err) {
         console.error(err);

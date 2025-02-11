@@ -27,6 +27,7 @@ html(lang=lang)
         link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
         link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap")
         link(rel="stylesheet", href="/stylesheets/ziyiliu.css")
+        link(rel="stylesheet", href="/bootstrap-icons/font/bootstrap-icons.min.css")
         link(rel="stylesheet", href="/@fortawesome/fontawesome-free/css/all.min.css")
     body.bg-light.min-vh-100.d-flex.flex-column.p-4.m-sm-auto.p-sm-auto
         div.phoframe
@@ -94,7 +95,7 @@ html(lang=lang)
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
     // Include Bootstrap JS (via npm-installed file)
-    script(type="module" src="/javascripts/script.js")
+    script(type="module" src="/js/script.js")
     script(src="/bootstrap/dist/js/bootstrap.bundle.min.js")
     script(src="/jquery/dist/jquery.slim.js")
     script(src="/typewriter-effect/dist/core.js")
