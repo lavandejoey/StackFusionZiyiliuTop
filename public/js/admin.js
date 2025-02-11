@@ -14,47 +14,73 @@
 // Global variable for storing log data progressively
 let allVisitLogData = [];
 
-// Chart canvas and related elements for user stats chart
+// Chart canvas element
 const allDataUser = document.getElementById("all-by-user");
-const allDataUserRange = document.getElementById("all-by-user-range");
-const allDataUserRangeValue = document.getElementById("all-by-user-range-value");
 let allDataChart = null; // Reference to the chart instance
 
-// Initialize range display
-allDataUserRangeValue.textContent = `${allDataUserRange.value} D`;
+// Filter inputs: domain, email, server, and time period (start and end dates)
+const domainSearchInput = document.getElementById("domainSearchInput");
+const emailFilter = document.getElementById("emailFilter");
+const serverFilter = document.getElementById("serverFilter");
+const startDateInput = document.getElementById("startDateFilter");
+const endDateInput = document.getElementById("endDateFilter");
 
-// Range input handler
-allDataUserRange.addEventListener("input", async () => {
-    allDataUserRangeValue.textContent = `${allDataUserRange.value} D`;
-    await drawAllDataDailyUserChart();
-});
+// Sorting configuration for the logs table
+const sortIcons = {
+    neutral: "bi bi-arrow-down-up",
+    ascending: "bi bi-arrow-up",
+    descending: "bi bi-arrow-down"
+};
+const sortKeys = {
+    time: "time",
+    email: "email",
+    domain: "domain"
+};
+let sortKey = sortKeys.time;
+let sortOrder = "desc";
+const sortButtons = [
+    {button: document.getElementById("sortTimeBtn"), key: sortKeys.time},
+    {button: document.getElementById("sortEmailBtn"), key: sortKeys.email},
+    {button: document.getElementById("sortDomainBtn"), key: sortKeys.domain}
+];
 
-// Time aggregation function
-function determineTimeScale(range) {
-    if (range <= 2) return 'hours';
-    if (range <= 180) return 'days';
-    // if (range <= 270) return 'weeks';
+// Determine time scale based on range (in days)
+function determineTimeScale(rangeDays) {
+    if (rangeDays <= 2) return 'hours';
+    if (rangeDays <= 180) return 'days';
     return 'months';
 }
 
-// Main chart drawing function
-async function drawAllDataDailyUserChart() {
-    const range = parseInt(allDataUserRange.value);
-    const timeScale = determineTimeScale(range);
+// Function to generate a consistent color from an email
+function getColorFromEmail(email) {
+    let hash = 0;
+    for (let i = 0; i < email.length; i++) {
+        hash = email.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const r = (hash >> 0) & 0xFF;
+    const g = (hash >> 8) & 0xFF;
+    const b = (hash >> 16) & 0xFF;
+    return `rgb(${r % 200}, ${g % 200}, ${b % 200})`;
+}
 
-    // Filter data for selected time range (86400000 ms = 24 hours)
-    const cutoffTime = Date.now() - range * 86400000;
-    const filteredData = allVisitLogData.filter(log => log.time >= cutoffTime);
+// Main chart drawing function
+function drawAllDataDailyUserChart() {
+    const startDateStr = startDateInput.value;
+    const endDateStr = endDateInput.value;
+    const startTimestamp = new Date(startDateStr).getTime();
+    // Include the entire end date by adding nearly 24 hours (minus 1 ms)
+    const endTimestamp = new Date(endDateStr).getTime() + 86399999;
+    const rangeDays = (endTimestamp - startTimestamp) / 86400000;
+    const timeScale = determineTimeScale(rangeDays);
+
+    // Filter logs based on selected time period
+    const filteredData = allVisitLogData.filter(log => log.time >= startTimestamp && log.time <= endTimestamp);
 
     // Create time buckets for each user
-    // Map<email, Map<bucketKey, visitCount>>
     const userBuckets = new Map();
-
     filteredData.forEach(log => {
         const date = new Date(log.time);
         let bucketKey;
-
-        // Determine bucket key based on time scale
         switch (timeScale) {
             case 'hours':
                 bucketKey = new Date(date).setMinutes(0, 0, 0);
@@ -80,6 +106,8 @@ async function drawAllDataDailyUserChart() {
         }
         userMap.set(bucketKey, userMap.get(bucketKey) + 1);
     });
+
+    // Generate sorted bucket keys and chart labels
     const allBucketKeys = [...new Set([...userBuckets.values()].flatMap(userMap => Array.from(userMap.keys())))].sort((a, b) => a - b);
     const labels = allBucketKeys.map(timestamp => {
         const date = new Date(parseInt(timestamp));
@@ -94,6 +122,8 @@ async function drawAllDataDailyUserChart() {
                 return date.toLocaleDateString([], {month: 'short'});
         }
     });
+
+    // Create datasets for each user
     const datasets = [];
     userBuckets.forEach((userMap, email) => {
         const data = allBucketKeys.map(bucketKey => userMap.get(bucketKey) || 0);
@@ -105,6 +135,7 @@ async function drawAllDataDailyUserChart() {
             fill: false
         });
     });
+
     const config = {
         type: 'line',
         data: {
@@ -118,71 +149,41 @@ async function drawAllDataDailyUserChart() {
                 y: {
                     type: 'linear',
                     display: true,
-                    position: 'left',
+                    position: 'left'
                 }
             }
         }
     };
+
     if (allDataChart) {
         allDataChart.destroy();
     }
     allDataChart = new Chart(allDataUser, config);
 }
 
-// Function to generate a consistent color from email
-function getColorFromEmail(email) {
-    let hash = 0;
-    for (let i = 0; i < email.length; i++) {
-        hash = email.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const r = (hash >> 0) & 0xFF;
-    const g = (hash >> 8) & 0xFF;
-    const b = (hash >> 16) & 0xFF;
-    return `rgb(${r % 200}, ${g % 200}, ${b % 200})`;
-}
-
-// Table and filter elements for logs
-const domainsTable = document.getElementById("logs-table");
-const domainSearchInput = document.getElementById("domainSearchInput");
-const emailFilter = document.getElementById("emailFilter");
-const serverFilter = document.getElementById("serverFilter");
-
-const sortIcons = {
-    neutral: "bi bi-arrow-down-up",
-    ascending: "bi bi-arrow-up",
-    descending: "bi bi-arrow-down"
-};
-
-const sortKeys = {
-    time: "time",
-    email: "email",
-    domain: "domain"
-};
-
-let sortKey = sortKeys.time;
-let sortOrder = "desc";
-const sortButtons = [
-    {button: document.getElementById("sortTimeBtn"), key: sortKeys.time},
-    {button: document.getElementById("sortEmailBtn"), key: sortKeys.email},
-    {button: document.getElementById("sortDomainBtn"), key: sortKeys.domain}
-];
-
 // Function to render the logs table
 function renderLogsTable(data, table) {
     table.querySelector("tbody").innerHTML = "";
-    let [key, order] = [sortKey, sortOrder];
-    data.sort((a, b) => {
-        if (order === "asc") {
-            return a[key] > b[key] ? 1 : -1;
+    const startTimestamp = new Date(startDateInput.value).getTime();
+    const endTimestamp = new Date(endDateInput.value).getTime() + 86399999;
+    let filteredData = data.filter(log => log.time >= startTimestamp && log.time <= endTimestamp);
+    filteredData = filteredData.filter(log => {
+        if (emailFilter.value !== "all" && log.email !== emailFilter.value) return false;
+        if (serverFilter.value !== "all" && log.server !== serverFilter.value) return false;
+        if (domainSearchInput.value !== "" && !log.domain.includes(domainSearchInput.value)) return false;
+        return true;
+    });
+    filteredData.sort((a, b) => {
+        if (sortOrder === "asc") {
+            return a[sortKey] > b[sortKey] ? 1 : -1;
         } else {
-            return a[key] < b[key] ? 1 : -1;
+            return a[sortKey] < b[sortKey] ? 1 : -1;
         }
     });
-    data.forEach(log => {
-        if (emailFilter.value !== "all" && log.email !== emailFilter.value) return;
-        if (serverFilter.value !== "all" && log.server !== serverFilter.value) return;
-        if (domainSearchInput.value !== "" && !log.domain.includes(domainSearchInput.value)) return;
+    filteredData.forEach(log => {
         const row = document.createElement("tr");
+        // Color the entire row's text using the email's color scale.
+        row.style.color = getColorFromEmail(log.email);
         row.innerHTML = `
       <td class="text-nowrap text-truncate">${new Date(log.time).toUTCString().slice(5, 22)}</td>
       <td class="text-nowrap text-truncate">${log.email}</td>
@@ -195,29 +196,21 @@ function renderLogsTable(data, table) {
     });
 }
 
-// Attach listeners to filters and sort buttons once DOM is ready
+// Attach event listeners and initialize after DOM loads
 document.addEventListener("DOMContentLoaded", function () {
-    // Populate the email filter dropdown
-    const emailSet = new Set();
-    allVisitLogData.forEach(log => {
-        emailSet.add(log.email);
-    });
-    emailSet.forEach(email => {
-        const option = document.createElement("option");
-        option.value = email;
-        option.textContent = email;
-        emailFilter.appendChild(option);
-    });
-
-    [domainSearchInput, emailFilter, serverFilter].forEach(filter => {
+    // Attach listeners to filter inputs and date pickers
+    [domainSearchInput, serverFilter, startDateInput, endDateInput].forEach(filter => {
         filter.addEventListener("change", () => {
-            renderLogsTable(allVisitLogData, domainsTable);
+            renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
+            drawAllDataDailyUserChart();
         });
         filter.addEventListener("input", () => {
-            renderLogsTable(allVisitLogData, domainsTable);
+            renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
+            drawAllDataDailyUserChart();
         });
     });
 
+    // Sorting button listeners
     function toggleSortOrder(clickedKey) {
         if (sortKey === clickedKey) {
             sortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -233,18 +226,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon.className = sortIcons.neutral;
             }
         });
-        renderLogsTable(allVisitLogData, domainsTable);
+        renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
     }
 
     sortButtons.forEach(({button, key}) => {
         button.addEventListener("click", () => toggleSortOrder(key));
     });
 
-    // Initial render of table and chart
-    renderLogsTable(allVisitLogData, domainsTable);
+    renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
     drawAllDataDailyUserChart();
 
-    // Set up Server-Sent Events to receive log data progressively.
+    // Set up Server-Sent Events to receive log data progressively
     const eventSource = new EventSource("/admin/logs-stream");
     eventSource.onmessage = function (event) {
         try {
@@ -252,9 +244,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.error) {
                 console.error("Error processing file " + data.file + ": " + data.error);
             } else {
-                // Append new logs and update UI
                 allVisitLogData = allVisitLogData.concat(data.logs);
-                renderLogsTable(allVisitLogData, domainsTable);
+                renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
                 drawAllDataDailyUserChart();
             }
         } catch (err) {
@@ -269,6 +260,19 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("EventSource failed:", err);
         eventSource.close();
     };
+
+    // Floating Back-to-Top button functionality
+    const backToTopBtn = document.getElementById("backToTopBtn");
+    backToTopBtn.addEventListener("click", () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+    window.addEventListener("scroll", () => {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.style.display = "block";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    });
 });
 
 // Define the tab switcher
