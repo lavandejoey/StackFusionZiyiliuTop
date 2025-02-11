@@ -11,11 +11,14 @@
 //  },
 // ......]
 
-// Chart canvas
+// Global variable for storing log data progressively
+let allVisitLogData = [];
+
+// Chart canvas and related elements for user stats chart
 const allDataUser = document.getElementById("all-by-user");
 const allDataUserRange = document.getElementById("all-by-user-range");
 const allDataUserRangeValue = document.getElementById("all-by-user-range-value");
-let allDataChart = null; // Keep reference to chart instance
+let allDataChart = null; // Reference to the chart instance
 
 // Initialize range display
 allDataUserRangeValue.textContent = `${allDataUserRange.value} D`;
@@ -44,7 +47,8 @@ async function drawAllDataDailyUserChart() {
     const filteredData = allVisitLogData.filter(log => log.time >= cutoffTime);
 
     // Create time buckets for each user
-    const userBuckets = new Map(); // Map<email, Map<bucketKey, visitCount>>
+    // Map<email, Map<bucketKey, visitCount>>
+    const userBuckets = new Map();
 
     filteredData.forEach(log => {
         const date = new Date(log.time);
@@ -67,22 +71,15 @@ async function drawAllDataDailyUserChart() {
                 bucketKey = new Date(date.getFullYear(), date.getMonth()).getTime();
                 break;
         }
-
-        // Initialize user data if not exists
         if (!userBuckets.has(log.email)) {
             userBuckets.set(log.email, new Map());
         }
-
         const userMap = userBuckets.get(log.email);
         if (!userMap.has(bucketKey)) {
             userMap.set(bucketKey, 0);
         }
-
-        // Increment visit count for this user's bucket
         userMap.set(bucketKey, userMap.get(bucketKey) + 1);
     });
-
-    // Sort bucket keys and generate chart labels
     const allBucketKeys = [...new Set([...userBuckets.values()].flatMap(userMap => Array.from(userMap.keys())))].sort((a, b) => a - b);
     const labels = allBucketKeys.map(timestamp => {
         const date = new Date(parseInt(timestamp));
@@ -97,22 +94,17 @@ async function drawAllDataDailyUserChart() {
                 return date.toLocaleDateString([], {month: 'short'});
         }
     });
-
-    // Create datasets for each user with consistent colors
     const datasets = [];
     userBuckets.forEach((userMap, email) => {
-        const data = allBucketKeys.map(bucketKey => userMap.get(bucketKey) || 0); // Fill missing buckets with 0
-
+        const data = allBucketKeys.map(bucketKey => userMap.get(bucketKey) || 0);
         datasets.push({
             label: email,
             data: data,
-            borderColor: getColorFromEmail(email), // Consistent color based on email
+            borderColor: getColorFromEmail(email),
             tension: 0.1,
             fill: false
         });
     });
-
-    // Chart configuration
     const config = {
         type: 'line',
         data: {
@@ -131,19 +123,14 @@ async function drawAllDataDailyUserChart() {
             }
         }
     };
-
-    // Destroy previous chart instance if exists
     if (allDataChart) {
         allDataChart.destroy();
     }
-
-    // Create new chart
     allDataChart = new Chart(allDataUser, config);
 }
 
 // Function to generate a consistent color from email
 function getColorFromEmail(email) {
-    // Simple hash function to create a pseudo-random color
     let hash = 0;
     for (let i = 0; i < email.length; i++) {
         hash = email.charCodeAt(i) + ((hash << 5) - hash);
@@ -151,25 +138,15 @@ function getColorFromEmail(email) {
     const r = (hash >> 0) & 0xFF;
     const g = (hash >> 8) & 0xFF;
     const b = (hash >> 16) & 0xFF;
-
-    return `rgb(${r % 200}, ${g % 200}, ${b % 200})`; // Limit to avoid too bright colors
+    return `rgb(${r % 200}, ${g % 200}, ${b % 200})`;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    //=========================
-    // Users Visit Statistics
-    //=========================
-    drawAllDataDailyUserChart()
-});
-
-//================================================================
-// Table
+// Table and filter elements for logs
 const domainsTable = document.getElementById("logs-table");
-// Filters
 const domainSearchInput = document.getElementById("domainSearchInput");
 const emailFilter = document.getElementById("emailFilter");
 const serverFilter = document.getElementById("serverFilter");
-// Sort buttons
+
 const sortIcons = {
     neutral: "bi bi-arrow-down-up",
     ascending: "bi bi-arrow-up",
@@ -190,9 +167,38 @@ const sortButtons = [
     {button: document.getElementById("sortDomainBtn"), key: sortKeys.domain}
 ];
 
+// Function to render the logs table
+function renderLogsTable(data, table) {
+    table.querySelector("tbody").innerHTML = "";
+    let [key, order] = [sortKey, sortOrder];
+    data.sort((a, b) => {
+        if (order === "asc") {
+            return a[key] > b[key] ? 1 : -1;
+        } else {
+            return a[key] < b[key] ? 1 : -1;
+        }
+    });
+    data.forEach(log => {
+        if (emailFilter.value !== "all" && log.email !== emailFilter.value) return;
+        if (serverFilter.value !== "all" && log.server !== serverFilter.value) return;
+        if (domainSearchInput.value !== "" && !log.domain.includes(domainSearchInput.value)) return;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td class="text-nowrap text-truncate">${new Date(log.time).toUTCString().slice(5, 22)}</td>
+      <td class="text-nowrap text-truncate">${log.email}</td>
+      <td class="text-nowrap text-truncate">${log.ip}</td>
+      <td class="text-nowrap text-truncate">${log.location}</td>
+      <td class="text-nowrap text-truncate">${log.domain}</td>
+      <td class="text-nowrap text-truncate">${log.server}</td>
+    `;
+        table.querySelector("tbody").appendChild(row);
+    });
+}
+
+// Attach listeners to filters and sort buttons once DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
-    // Define the email filter dropdown values
-    const emailSet = new Set([]);
+    // Populate the email filter dropdown
+    const emailSet = new Set();
     allVisitLogData.forEach(log => {
         emailSet.add(log.email);
     });
@@ -203,10 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
         emailFilter.appendChild(option);
     });
 
-    //=========================
-    // Logs Table
-    //=========================
-    // Listen to filters
     [domainSearchInput, emailFilter, serverFilter].forEach(filter => {
         filter.addEventListener("change", () => {
             renderLogsTable(allVisitLogData, domainsTable);
@@ -215,18 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
             renderLogsTable(allVisitLogData, domainsTable);
         });
     });
-    // Listen to sort buttons
-    // Function to toggle and update the sort order and icons
+
     function toggleSortOrder(clickedKey) {
-        // Toggle order if the same key is clicked; otherwise reset to ascending
         if (sortKey === clickedKey) {
             sortOrder = sortOrder === "asc" ? "desc" : "asc";
         } else {
             sortKey = clickedKey;
-            sortOrder = "asc"; // Reset to ascending order
+            sortOrder = "asc";
         }
-
-        // Update icons
         sortButtons.forEach(({button, key}) => {
             const icon = button.querySelector("i");
             if (key === sortKey) {
@@ -235,62 +233,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon.className = sortIcons.neutral;
             }
         });
-
-        // Trigger table re-render with new sort order
         renderLogsTable(allVisitLogData, domainsTable);
     }
 
-    // Attach click listeners to sort buttons
     sortButtons.forEach(({button, key}) => {
         button.addEventListener("click", () => toggleSortOrder(key));
     });
 
-    function renderLogsTable(data, table) {
-        // Clear the table
-        table.querySelector("tbody").innerHTML = "";
-        let [key, order] = [sortKey, sortOrder];
-
-        // Sort the data
-        data.sort((a, b) => {
-            if (order === "asc") {
-                return a[key] > b[key] ? 1 : -1;
-            } else {
-                return a[key] < b[key] ? 1 : -1;
-            }
-        });
-
-        // Render the table
-        data.forEach(log => {
-            // Filter by email
-            if (emailFilter.value !== "all" && log.email !== emailFilter.value) {
-                return;
-            }
-            // Filter by server
-            if (serverFilter.value !== "all" && log.server !== serverFilter.value) {
-                return;
-            }
-            // Filter by domain
-            if (domainSearchInput.value !== "" && !log.domain.includes(domainSearchInput.value)) {
-                return;
-            }
-
-            const row = document.createElement("tr");
-            // use utc time in UTC [DD MMM YYYY HH:MM:SS] format
-            row.innerHTML = `
-                        <td class="text-nowrap text-truncate">${new Date(log.time).toUTCString().slice(5, 22)}</td>
-                        <td class="text-nowrap text-truncate">${log.email}</td>
-                        <td class="text-nowrap text-truncate">${log.ip}</td>
-                        <td class="text-nowrap text-truncate">${log.location}</td>
-                        <td class="text-nowrap text-truncate">${log.domain}</td>
-                        <td class="text-nowrap text-truncate">${log.server}</td>
-                    `;
-            table.querySelector("tbody").appendChild(row);
-        });
-
-    }
-
-    // Initial table render
+    // Initial render of table and chart
     renderLogsTable(allVisitLogData, domainsTable);
+    drawAllDataDailyUserChart();
+
+    // Set up Server-Sent Events to receive log data progressively.
+    const eventSource = new EventSource("/admin/logs-stream");
+    eventSource.onmessage = function (event) {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.error) {
+                console.error("Error processing file " + data.file + ": " + data.error);
+            } else {
+                // Append new logs and update UI
+                allVisitLogData = allVisitLogData.concat(data.logs);
+                renderLogsTable(allVisitLogData, domainsTable);
+                drawAllDataDailyUserChart();
+            }
+        } catch (err) {
+            console.error("Error parsing SSE data: ", err);
+        }
+    };
+    eventSource.addEventListener("end", function (event) {
+        console.log("Log streaming completed.");
+        eventSource.close();
+    });
+    eventSource.onerror = function (err) {
+        console.error("EventSource failed:", err);
+        eventSource.close();
+    };
 });
 
 // Define the tab switcher

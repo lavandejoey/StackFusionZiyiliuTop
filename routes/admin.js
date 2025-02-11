@@ -1,93 +1,101 @@
-// routes/admin.js
+// /routes/admin.js
 const express = require("express");
 const router = express.Router();
-// const {v2rayLogParser} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
-const {parseMultipleV2RayLogs, getAllLogPaths} = require('../script/v2rayLogParser'); // Adjust path as per your project structure
+const {parseV2RayLogFile, getAllLogPaths} = require('../script/v2rayLogParser');
 const {User} = require("../models/authentication");
 const {getCommonViewOptions} = require("./utils");
 
 // Session auth check for all routes under /admin
-// Not logged in -> Redirect to login page
-// Logged in as non-admin -> Redirect to user page
-// Logged in as admin -> Proceed to admin page
 router.use(async (req, res, next) => {
     if (req.session && req.session.isLoggedIn) {
-        // Fetch the user from the database to ensure all data is available
         const userInstance = new User(req.session.userId);
-        await userInstance.fetchUser(); // Ensure user data is loaded
-
-        // Check if the user is an admin
+        await userInstance.fetchUser();
         const isAdmin = await userInstance.isAdmin();
         if (isAdmin) {
-            next(); // Proceed to the /admin route
+            next();
         } else {
             console.log("User role is " + userInstance.role);
-            res.redirect('/console/' + userInstance.uuid); // Redirect to user page if not an admin
+            res.redirect('/console/' + userInstance.uuid);
         }
     } else {
-        req.session.redirectTo = req.originalUrl; // Store the requested URL for redirection after login
-        res.redirect('/auth'); // Redirect to login page
+        req.session.redirectTo = req.originalUrl;
+        res.redirect('/auth');
     }
 });
 
-function mergeVisitorData(existing, newVisitor) {
-    // Merge hourly counts
-    for (const hour in newVisitor.requestHourlyCounts) {
-        if (existing.requestHourlyCounts[hour]) {
-            existing.requestHourlyCounts[hour] += newVisitor.requestHourlyCounts[hour];
-        } else {
-            existing.requestHourlyCounts[hour] = newVisitor.requestHourlyCounts[hour];
-        }
-    }
-
-    // Merge daily counts
-    for (const day in newVisitor.requestDailyCounts) {
-        if (existing.requestDailyCounts[day]) {
-            existing.requestDailyCounts[day] += newVisitor.requestDailyCounts[day];
-        } else {
-            existing.requestDailyCounts[day] = newVisitor.requestDailyCounts[day];
-        }
-    }
-
-    // Merge domain counts
-    for (const domain in newVisitor.domains) {
-        if (existing.domains[domain]) {
-            existing.domains[domain] += newVisitor.domains[domain];
-        } else {
-            existing.domains[domain] = newVisitor.domains[domain];
-        }
-    }
-}
-
-// Route to display parsed log data
+// GET admin page – render with empty log arrays (the logs will be loaded progressively)
 router.get('/', async (req, res) => {
     try {
-        // Fetch all users
         const userList = await User.getAllUsers();
-
-        // 1) Gather DE logs
-        const deLogDir = '/var/log/v2ray';
-        const deVisitData = await parseMultipleV2RayLogs(getAllLogPaths(deLogDir), 'DE');
-
-        // 2) Gather US logs
-        const usLogDir = '/var/log/v2ray-us';
-        const usVisitData = await parseMultipleV2RayLogs(getAllLogPaths(usLogDir), 'US');
-
-        // 3) Combine all log lists, they are list of dict
-        const allVisitData = [...deVisitData, ...usVisitData];
-
-        // Pass each dataset separately and a combined version
         res.render("admin", {
             ...getCommonViewOptions(req, res, res.__("Admin")),
             userList,
-            deVisitLogData: deVisitData,
-            usVisitLogData: usVisitData,
-            allVisitLogData: Object.values(allVisitData),
+            deVisitLogData: [],
+            usVisitLogData: [],
+            allVisitLogData: []
         });
     } catch (err) {
         console.error(err);
         res.status(500).send("Server error");
     }
+});
+
+// SSE endpoint for streaming log data progressively.
+router.get('/logs-stream', async (req, res) => {
+    res.set({
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+    res.flushHeaders();
+
+    const deLogDir = '/var/log/v2ray';
+    const usLogDir = '/var/log/v2ray-us';
+    const deFiles = getAllLogPaths(deLogDir);
+    const usFiles = getAllLogPaths(usLogDir);
+
+    const tasks = [];
+    deFiles.forEach(filePath => {
+        tasks.push({server: 'DE', file: filePath});
+    });
+    usFiles.forEach(filePath => {
+        tasks.push({server: 'US', file: filePath});
+    });
+
+    let completed = 0;
+    tasks.forEach(task => {
+        parseV2RayLogFile(task.file, task.server)
+            .then(logs => {
+                completed++;
+                const eventData = {
+                    file: task.file,
+                    server: task.server,
+                    logs: logs,
+                    completed: completed,
+                    total: tasks.length
+                };
+                res.write(`data: ${JSON.stringify(eventData)}\n\n`);
+                if (completed === tasks.length) {
+                    res.write(`event: end\ndata: done\n\n`);
+                    res.end();
+                }
+            })
+            .catch(error => {
+                completed++;
+                const eventData = {
+                    file: task.file,
+                    server: task.server,
+                    error: error.toString(),
+                    completed: completed,
+                    total: tasks.length
+                };
+                res.write(`data: ${JSON.stringify(eventData)}\n\n`);
+                if (completed === tasks.length) {
+                    res.write(`event: end\ndata: done\n\n`);
+                    res.end();
+                }
+            });
+    });
 });
 
 module.exports = router;
