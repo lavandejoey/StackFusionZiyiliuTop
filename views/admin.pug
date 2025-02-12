@@ -22,17 +22,22 @@ block content
                                         th Status
                                         th Created
                                         th Last Active
+                                        th
                                 tbody
                                     each user in userList
                                         tr
-                                            td.text-monospace= user.uuid.substring(0, 8) + "..."
+                                            td.user-select-all.text-monospace.text-truncate-8= user.uuid
                                             td.user-select-all= user.email
-                                            td= user.first_name + " " + user.last_name
-                                            td= user.v2_iter_id
+                                            td.text-monospace= `${user.first_name || ''} ${user.last_name || ''}`.trim()
+                                            td= user.v2_iter_id || 'N/A'
                                             td
                                                 span.badge(class=(user.status === "active" ? 'bg-success' : 'bg-danger'))= user.status
-                                            td= new Date(user.created_at).toLocaleDateString()
-                                            td= new Date(user.updated_at).toLocaleDateString()
+                                            - const formatDate = (date) => date ? new Date(date).toLocaleDateString() : 'N/A'
+                                            td= formatDate(user.created_at)
+                                            td= formatDate(user.updated_at)
+                                            // Add a button for link + /:uuid to view in details
+                                            td
+                                                .btn.btn-primary.btn-sm(href=`/${user.uuid}`) #{__("View")}
 
         //- =====================
         //- 2) Visitors Analytics
@@ -45,35 +50,30 @@ block content
                             h5.mb-0 Visitor Analytics
                     .card-body
                         //- Row for search and select filters
-                        .row.mb-3
+                        .row.mb-3.d-flex.justify-content-evenly
                             .col-md-4
                                 input.form-control(type="search", placeholder="Filter domain...", id="domainSearchInput")
-                            .col-md-3
-                                select.form-select.text-truncate#emailFilter
-                                    option(value="all" selected) All emails
                             .col-md-2
                                 select.form-select.text-truncate#serverFilter
-                                    option(value="all" selected) All servers
+                                    option.text-truncate(value="all" selected) All Servers
                                     option(value="DE") DE
                                     option(value="US") US
-                        //- New row for time period filter (start and end dates)
-                        .row.mb-3
-                            .col-md-3
-                                -
-                                // Compute default start date as 30 days before today
-                                    const today = new Date();
-                                    const todayStr = today.toISOString().split('T')[0];
-                                    const startDate = new Date();
-                                    startDate.setDate(startDate.getDate() - 30);
-                                    const startDateStr = startDate.toISOString().split('T')[0];
+                            // Compute default start date as 30 days before today
+                            - const today = new Date();
+                            - const todayStr = today.toISOString().split('T')[0];
+                            - const startDate = new Date();
+                            - startDate.setDate(startDate.getDate() - 30);
+                            - const startDateStr = startDate.toISOString().split('T')[0];
+                            .col-md-2
                                 input.form-control(type="date", id="startDateFilter", value=startDateStr)
-                            .col-md-3
+                            .col-md-2
                                 input.form-control(type="date", id="endDateFilter", value=todayStr)
                         //- Row for the combined plot (canvas)
                         .row.mb-3
-                            canvas#all-by-user.chart-container
+                            canvas#logs-plot.chart-container
                         //- Logs table
-                        .table-responsive
+                        // forbid horizontal scrolling
+                        .table-responsive(style="max-width: 100%;")
                             table.table.table-bordered.table-hover.table-sm#logs-table
                                 thead
                                     tr
@@ -85,16 +85,16 @@ block content
                                             a.d-flex.justify-content-center.align-items-center#sortEmailBtn(href="javascript:void(0)")
                                                 span Email&nbsp;
                                                 i.bi.bi-arrow-down-up
-                                        th IP Address
-                                        th Location
+                                        th.text-center IP Address
+                                        th.text-center Location
                                         th.text-center
                                             a.d-flex.justify-content-center.align-items-center#sortDomainBtn(href="javascript:void(0)")
                                                 span Domain&nbsp;
                                                 i.bi.bi-arrow-down-up
-                                        th Server
+                                        th.text-center Server
                                 tbody
 
-    //- Floating Back-to-Top button (using Font Awesome icon)
+    // Floating Back-to-Top button (using Font Awesome icon)
     button#backToTopBtn.btn.btn-primary.btn-lg(
         style="position: fixed; bottom: 80px; right: 80px; border-radius: 50%; display: none;")
         i.fas.fa-arrow-up
@@ -103,6 +103,10 @@ block content
         .card {
             border-radius: 1rem;
             overflow: hidden;
+        }
+
+        .table {
+            --bs-table-bg: null;
         }
 
         .table th, .table td {
@@ -129,7 +133,3 @@ block content
         }
 
     script(src="/js/admin.js")
-    script.
-        const deVisitLogData = !{JSON.stringify(deVisitLogData)};
-        const usVisitLogData = !{JSON.stringify(usVisitLogData)};
-        const allVisitLogData = !{JSON.stringify(allVisitLogData)};

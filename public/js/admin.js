@@ -1,26 +1,18 @@
 // /js/admin.js
-// data structure example:[{
-//    email: "wuyuwuyu2020@outlook.com",
-//    ip: "77.204.104.84",
-//    location: "Paris, FR",
-//    time: 1737752079000,
-//    label: "freedom",
-//    protocol: "tcp",
-//    domain: "www.gstatic.com",
-//    server: "DE"
-//  },
-// ......]
-
 // Global variable for storing log data progressively
 let allVisitLogData = [];
 
+// Global variable for tracking which emails are hidden (filtered out)
+// When an email is in this set, its data is hidden from both chart and table.
+let hiddenEmails = new Set();
+
 // Chart canvas element
-const allDataUser = document.getElementById("all-by-user");
+const allDataUser = document.getElementById("logs-plot");
 let allDataChart = null; // Reference to the chart instance
 
-// Filter inputs: domain, email, server, and time period (start and end dates)
+// Filter inputs: domain, server, and time period (start and end dates)
+// NOTE: The email filter has been removed because we will use the chart legend for that.
 const domainSearchInput = document.getElementById("domainSearchInput");
-const emailFilter = document.getElementById("emailFilter");
 const serverFilter = document.getElementById("serverFilter");
 const startDateInput = document.getElementById("startDateFilter");
 const endDateInput = document.getElementById("endDateFilter");
@@ -52,7 +44,7 @@ function determineTimeScale(rangeDays) {
 }
 
 // Function to generate a consistent color from an email
-function getColorFromEmail(email) {
+function getColorFromEmail(email, alpha = 0.8) {
     let hash = 0;
     for (let i = 0; i < email.length; i++) {
         hash = email.charCodeAt(i) + ((hash << 5) - hash);
@@ -60,8 +52,21 @@ function getColorFromEmail(email) {
     const r = (hash >> 0) & 0xFF;
     const g = (hash >> 8) & 0xFF;
     const b = (hash >> 16) & 0xFF;
-    return `rgb(${r % 200}, ${g % 200}, ${b % 200})`;
+    return `rgba(${r % 200}, ${g % 200}, ${b % 200}, ${alpha})`;
 }
+
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+const debouncedUpdate = debounce(() => {
+    renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
+    drawAllDataDailyUserChart();
+}, 500);
 
 // Main chart drawing function
 function drawAllDataDailyUserChart() {
@@ -123,7 +128,8 @@ function drawAllDataDailyUserChart() {
         }
     });
 
-    // Create datasets for each user
+    // Create datasets for each user.
+    // Only include the data, but mark datasets hidden if their email is toggled off.
     const datasets = [];
     userBuckets.forEach((userMap, email) => {
         const data = allBucketKeys.map(bucketKey => userMap.get(bucketKey) || 0);
@@ -132,7 +138,8 @@ function drawAllDataDailyUserChart() {
             data: data,
             borderColor: getColorFromEmail(email),
             tension: 0.1,
-            fill: false
+            fill: false,
+            hidden: hiddenEmails.has(email)  // set dataset hidden if this email is toggled off
         });
     });
 
@@ -145,34 +152,56 @@ function drawAllDataDailyUserChart() {
         options: {
             responsive: true,
             interaction: {mode: 'index'},
+            plugins: {
+                legend: {
+                    // When clicking on a legend item, toggle that email's filter.
+                    onClick: function (e, legendItem, legend) {
+                        const chart = legend.chart;
+                        const email = chart.data.datasets[legendItem.datasetIndex].label;
+                        // Toggle the email in the hiddenEmails set
+                        if (hiddenEmails.has(email)) {
+                            hiddenEmails.delete(email);
+                        } else {
+                            hiddenEmails.add(email);
+                        }
+                        debouncedUpdate();
+                    }
+                }
+            },
             scales: {
                 y: {
                     type: 'linear',
                     display: true,
                     position: 'left'
-                }
+                },
             }
         }
     };
 
+    // If a chart already exists, destroy it before drawing a new one.
     if (allDataChart) {
-        allDataChart.destroy();
+        allDataChart.data.labels = labels;
+        allDataChart.data.datasets = datasets;
+        allDataChart.update();
+    } else {
+        allDataChart = new Chart(allDataUser, config);
     }
-    allDataChart = new Chart(allDataUser, config);
 }
 
 // Function to render the logs table
 function renderLogsTable(data, table) {
-    table.querySelector("tbody").innerHTML = "";
+    const tbody = table.querySelector("tbody");
     const startTimestamp = new Date(startDateInput.value).getTime();
     const endTimestamp = new Date(endDateInput.value).getTime() + 86399999;
-    let filteredData = data.filter(log => log.time >= startTimestamp && log.time <= endTimestamp);
-    filteredData = filteredData.filter(log => {
-        if (emailFilter.value !== "all" && log.email !== emailFilter.value) return false;
+    let filteredData = data.filter(log => {
+        if (log.time < startTimestamp || log.time > endTimestamp) return false;
         if (serverFilter.value !== "all" && log.server !== serverFilter.value) return false;
         if (domainSearchInput.value !== "" && !log.domain.includes(domainSearchInput.value)) return false;
+        if (hiddenEmails.has(log.email)) return false;
         return true;
     });
+
+    // Sort the filtered data
     filteredData.sort((a, b) => {
         if (sortOrder === "asc") {
             return a[sortKey] > b[sortKey] ? 1 : -1;
@@ -180,34 +209,32 @@ function renderLogsTable(data, table) {
             return a[sortKey] < b[sortKey] ? 1 : -1;
         }
     });
+
+    // Build the rows as a single HTML string
+    let rowsHTML = "";
     filteredData.forEach(log => {
-        const row = document.createElement("tr");
-        // Color the entire row's text using the email's color scale.
-        row.style.color = getColorFromEmail(log.email);
-        row.innerHTML = `
-      <td class="text-nowrap text-truncate">${new Date(log.time).toUTCString().slice(5, 22)}</td>
-      <td class="text-nowrap text-truncate">${log.email}</td>
-      <td class="text-nowrap text-truncate">${log.ip}</td>
-      <td class="text-nowrap text-truncate">${log.location}</td>
-      <td class="text-nowrap text-truncate">${log.domain}</td>
-      <td class="text-nowrap text-truncate">${log.server}</td>
-    `;
-        table.querySelector("tbody").appendChild(row);
+        rowsHTML += `
+          <tr>
+            <td class="text-nowrap text-truncate-20 text-center">${new Date(log.time).toUTCString().slice(5, 22)}</td>
+            <td class="text-nowrap text-truncate-20 text-center">
+              <span class="badge" style="background-color: ${getColorFromEmail(log.email, 0.8)}">${log.email}</span>
+            </td>
+            <td class="text-nowrap text-truncate-16 text-center">${log.ip}</td>
+            <td class="text-nowrap text-truncate text-center">${log.location}</td>
+            <td class="text-nowrap text-truncate-30 user-select-all">${log.domain}</td>
+            <td class="text-nowrap text-truncate-6 text-center">${log.server}</td>
+          </tr>
+        `;
     });
+    tbody.innerHTML = rowsHTML;
 }
 
 // Attach event listeners and initialize after DOM loads
 document.addEventListener("DOMContentLoaded", function () {
-    // Attach listeners to filter inputs and date pickers
+    // Attach listeners to filter inputs (except for the removed email filter)
     [domainSearchInput, serverFilter, startDateInput, endDateInput].forEach(filter => {
-        filter.addEventListener("change", () => {
-            renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
-            drawAllDataDailyUserChart();
-        });
-        filter.addEventListener("input", () => {
-            renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
-            drawAllDataDailyUserChart();
-        });
+        filter.addEventListener("change", debouncedUpdate);
+        filter.addEventListener("input", debouncedUpdate);
     });
 
     // Sorting button listeners
@@ -233,8 +260,8 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", () => toggleSortOrder(key));
     });
 
-    renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
-    drawAllDataDailyUserChart();
+    // Initial render of table and chart
+    debouncedUpdate();
 
     // Set up Server-Sent Events to receive log data progressively
     const eventSource = new EventSource("/admin/logs-stream");
@@ -245,8 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error processing file " + data.file + ": " + data.error);
             } else {
                 allVisitLogData = allVisitLogData.concat(data.logs);
-                renderLogsTable(allVisitLogData, document.getElementById("logs-table"));
-                drawAllDataDailyUserChart();
+                debouncedUpdate();
             }
         } catch (err) {
             console.error("Error parsing SSE data: ", err);
@@ -274,19 +300,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-// Define the tab switcher
-// document.querySelectorAll("[data-bs-toggle="tab"]").forEach(button => {
-//     button.addEventListener("click", function (event) {
-//         const target = this.getAttribute("data-bs-target");
-//         const tabPane = document.querySelector(target);
-//         if (tabPane) {
-//             // Hide all tab panes
-//             document.querySelectorAll(".tab-pane").forEach(pane => {
-//                 pane.classList.remove("show", "active");
-//             });
-//             // Show the target tab pane
-//             tabPane.classList.add("show", "active");
-//         }
-//     });
-// });

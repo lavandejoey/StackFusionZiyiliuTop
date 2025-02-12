@@ -30,9 +30,6 @@ router.get('/', async (req, res) => {
         res.render("admin", {
             ...getCommonViewOptions(req, res, res.__("Admin")),
             userList,
-            deVisitLogData: [],
-            usVisitLogData: [],
-            allVisitLogData: []
         });
     } catch (err) {
         console.error(err);

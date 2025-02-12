@@ -42,5 +42,5 @@ function updateSession(req, user) {
 module.exports = {
     getCommonViewOptions,
     regenerateSession,
-    updateSession
+    updateSession,
 };

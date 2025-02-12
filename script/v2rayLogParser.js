@@ -22,18 +22,24 @@ async function parseV2RayLogFile(filePath, serverName) {
     const visitorData = [];
     for await (const line of rl) {
         try {
+            // Skip line that data is not accepted/validation failed
             if (!line || !/ accepted /.test(line)) continue;
             let [date, time, ipPort, status, domainIp, label, email] = line.split(" ");
-            if (!date || !time || !ipPort || !status || !domainIp || !label || !email) {
-                console.error([date, time, ipPort, status, domainIp, label, email].join("\t"));
-                continue;
-            }
+            let invalidFlag = false;
+            [date, time, ipPort, status, domainIp, label, email].forEach(val => {
+                if (!val || val === "-" || val === "null" || val === "undefined" || val === undefined || val === null) {
+                    console.error([date, time, ipPort, status, domainIp, label, email].join("\t"));
+                    invalidFlag = true;
+                }
+            });
+            if (invalidFlag) continue;
+
             const visitTime = new Date(`${date} ${time}`).getTime();
             const userIp = extractIpAddress(ipPort);
             const geo = geoip.lookup(userIp);
             const userLocation = geo ? `${geo.city || ''}, ${geo.country || ''}`.trim().replace(/^,\s*/, '') : "Unknown";
             const visitProtocol = domainIp.split(":")[0];
-            const visitDomain = extractDomain(domainIp);
+            const visitDomain = extractDomain(domainIp) || extractIpAddress(domainIp) || "Unknown";
             const visitLabel = label.replace(/[\[\]]/g, "");
             const userEmail = email.replace("email:", "");
             visitorData.push({
@@ -57,17 +63,6 @@ async function parseV2RayLogFile(filePath, serverName) {
         fileStream.destroy();
     });
     return visitorData;
-}
-
-async function parseMultipleV2RayLogs(filePaths, serverName, progressCallback) {
-    const promises = filePaths.map(async (filePath) => {
-        if (!fs.existsSync(filePath)) return [];
-        const logs = await parseV2RayLogFile(filePath, serverName);
-        if (progressCallback) progressCallback(filePath, logs);
-        return logs;
-    });
-    const results = await Promise.all(promises);
-    return results.flat();
 }
 
 function getAllLogPaths(logDir) {
@@ -99,6 +94,5 @@ function extractDomain(domainIpWithPortProtocol) {
 
 module.exports = {
     parseV2RayLogFile,
-    parseMultipleV2RayLogs,
     getAllLogPaths
 };
