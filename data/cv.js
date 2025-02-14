@@ -51,16 +51,16 @@ module.exports.cv = function (res) {
     ];
 
     const internships = [
-        {
-            institution: res.__("ENSTA Paris, U2IS Laboratory"),
-            start: res.__("Apr 2025"),
-            end: res.__("Aug 2025"),
-            location: res.__("Paris, France"),
-            titles: [res.__("Research Intern in XAI")],
-            logoSrc: "/images/logos/ENSTA_logo.png",
-            logoAlt: "ENSTA Paris Logo",
-            logoTitle: "ENSTA Paris"
-        },
+        // {
+        //     institution: res.__("ENSTA Paris, U2IS Laboratory"),
+        //     start: res.__("Apr 2025"),
+        //     end: res.__("Aug 2025"),
+        //     location: res.__("Paris, France"),
+        //     titles: [res.__("Research Intern in XAI")],
+        //     logoSrc: "/images/logos/ENSTA_logo.png",
+        //     logoAlt: "ENSTA Paris Logo",
+        //     logoTitle: "ENSTA Paris"
+        // },
         {
             institution: res.__("Porsche Financial Leasing Ltd."),
             start: res.__("Jan 2024"),
