@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    style.
+        .masonry {
+            column-count: 3;
+            column-gap: 1rem;
+        }
+
+        .masonry .card {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+
+    .container.mt-5
+        if pages
+            .masonry
+                each page in pages
+                    a.card.mb-3(href=`/blog/?p=${page.id}`)
+                        if page.cover
+                            if page.cover.type === 'external'
+                                img.card-img-top(src=page.cover.external.url, alt="Cover Image", style="max-height: 200px; width: 100%; object-fit: cover;")
+                            else if page.cover.type === 'file'
+                                img.card-img-top(src=page.cover.file.url, alt="Cover Image", style="max-height: 200px; width: 100%; object-fit: cover;")
+                        .card-body.text-decoration-none
+                            h5.card-title.d-flex.align-items-center.text-decoration-none
+                                != page.iconHtml
+                                span.text-decoration-none #{page.title}
+                            p.text-decoration-none #{page.formattedLastEdited}
+        else if pageContentHtml
+            h1 Page Content
+            a.btn.btn-secondary(href="/blog") Back to Topics
+            hr
+            //- Insert the fully rendered HTML snippet.
+            != pageContentHtml

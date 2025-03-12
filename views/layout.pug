@@ -48,6 +48,9 @@ html(lang=lang)
                             li.nav-item.d-flex.justify-content-center
                                 a.nav-link.main-navbar-item(href=domain + "contact", class=(activePage === "Contact" ? "active" : ''))
                                     span(class=(activePage === "Contact" ? "underline" : '')) #{__("Contact")}
+                            li.nav-item.d-flex.justify-content-center
+                                a.nav-link.main-navbar-item(href=domain + "blog", class=(activePage === "Blog" ? "active" : ''))
+                                    span(class=(activePage === "Blog" ? "underline" : '')) #{__("Blog")}
                         // Empty space to push language switcher to the right
                         div.ms-auto.d-flex.justify-content-center
                             if user && user.userId && user.userId !== ""
@@ -108,3 +111,6 @@ html(lang=lang)
     script(src="/typewriter-effect/dist/react.js")
     script(src="/@fortawesome/fontawesome-free/js/all.min.js")
     script(src="/chart.js/dist/chart.umd.js")
+    script(type='module').
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({startOnLoad: true});

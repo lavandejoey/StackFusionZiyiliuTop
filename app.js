@@ -14,7 +14,6 @@ const logger = require("morgan");
 const session = require("express-session");
 const sassMiddleware = require("sass-middleware");
 const rateLimit = require("express-rate-limit");
-const Redis = require("ioredis");
 const RedisStore = require('connect-redis').default;
 const {NodeSSH} = require('node-ssh');
 const ssh = new NodeSSH();
@@ -23,6 +22,7 @@ const cron = require('node-cron');
 
 // Custom modules and configurations
 const i18n = require("./packages/i18nConfig.js");
+const redis = require("./packages/redisClient.js");
 
 // Routes
 const indexRouter = require('./routes/index');
@@ -32,6 +32,7 @@ const authRouter = require('./routes/auth');
 const consoleRouter = require('./routes/console');
 const adminRouter = require('./routes/admin');
 const v2rayRouter = require('./routes/v2ray');
+const blogRouter = require('./routes/blog');
 
 // Create express app
 const app = express();
@@ -47,15 +48,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
-// Initialize Redis client
-const redis = new Redis({
-    port: process.env.REDIS_LOCAL_PORT,
-    host: process.env.REDIS_LOCAL_HOST,
-    username: process.env.REDIS_USER,
-    password: process.env.REDIS_PASSWORD
-}).on("connect", () => {
-    console.log("Connected to Redis");
-});
 
 // Middleware: Session handling (must come before csurf)
 app.use(session({
@@ -169,6 +161,7 @@ app.use('/auth', authRouter);
 app.use('/console', consoleRouter);
 app.use('/admin', adminRouter);
 app.use('/v2ray', v2rayRouter);
+app.use('/blog', blogRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
