@@ -4,15 +4,15 @@
 const express = require("express");
 const router = express.Router();
 const {cv} = require("../data/cv");
+const {getCommonViewOptions} = require("./utils");
 
 // GET contact page
 router.get('/', function (req, res, next) {
     // About me parts
 
     res.render("about-me", {
-        lang: req.getLocale(),
+        ...getCommonViewOptions(req, res, res.__("About Me")),
         activePage: "About Me",
-        pageTitle: res.__("About Me"),
         pageData: cv(res),
     });
 });

@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const {User, UserRole} = require("../models/authentication");
+const {getCommonViewOptions} = require("./utils");
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
@@ -43,8 +44,7 @@ router.get('/:uuid', isAuthenticated, canViewProfile, async (req, res) => {
 
     // Render user-specific page with fetched data
     res.render('console', {
-        lang: req.getLocale(),
-        pageTitle: `${user.first_name} ${user.last_name}`,
+        ...getCommonViewOptions(req, res, `${user.first_name} ${user.last_name}`),
     });
 });
 

@@ -14,7 +14,15 @@ router.get(['/', '/login'], (req, res) => {
         return res.redirect(`/console/${req.session.userId}`);
     }
 
-    return res.render("auth", {...getCommonViewOptions(req, res, res.__("Login"))});
+    return res.render("auth", {
+        ...getCommonViewOptions(req, res, res.__("Login"))
+    });
+});
+
+router.get('/signup', (req, res) => {
+    return res.render("auth", {
+        ...getCommonViewOptions(req, res, res.__("Signup"))
+    });
 });
 
 // ----- POST /auth/login -----

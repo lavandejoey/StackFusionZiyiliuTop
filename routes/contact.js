@@ -4,13 +4,13 @@
 const express = require("express");
 const router = express.Router();
 const {sendEmail} = require("../packages/postmark");
+const {getCommonViewOptions} = require("./utils");
 
 // GET contact page
 router.get('/', function (req, res, next) {
     res.render("contact", {
-        lang: req.getLocale(),
+        ...getCommonViewOptions(req, res, res.__("Contact Me")),
         activePage: "Contact",
-        pageTitle: res.__("Contact Me"),
         csrfToken: req.csrfToken()
     });
 });

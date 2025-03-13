@@ -48,6 +48,45 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
+// Middleware: Internationalization (i18n)
+app.use(i18n.init);
+app.use((req, res, next) => {
+    // Set default language
+    console.log("Cookies Locale: ", req.cookies.locale);
+    let lang = req.cookies.locale || "en"; // Use cookie if available, otherwise default to "en"
+
+    // Get browser/system language
+    const browserLang = req.headers['accept-language']?.split(',')[0];
+
+    // Priority 1: Query parameter (language switcher)
+    if (req.query.lang && i18n.getLocales().includes(req.query.lang)) {
+        lang = req.query.lang;
+        console.log("Set language to", lang);
+    }
+    // Priority 2: Existing cookie value
+    else if (req.cookies.locale && i18n.getLocales().includes(req.cookies.locale)) {
+        lang = req.cookies.locale;
+    }
+    // Priority 3: Browser language fallback
+    else if (browserLang && i18n.getLocales().includes(browserLang)) {
+        lang = browserLang;
+    }
+    // Fallback default
+    else {
+        lang = "en";
+    }
+
+    // Set the language and store in cookie
+    req.setLocale(lang);
+    res.cookie("locale", lang, {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict"
+    });
+
+    next();
+});
 
 // Middleware: Session handling (must come before csurf)
 app.use(session({
@@ -88,36 +127,6 @@ app.use(sassMiddleware({
     outputStyle: "nested", // Options: "nested", "expanded", "compact", "compressed"
     prefix: '/stylesheets', // Where prefix is at <link rel="stylesheet" href="prefix/style.css"/>
 }));
-
-// Middleware: Internationalization (i18n)
-app.use(i18n.init);
-app.use((req, res, next) => {
-    // Set default language
-    let lang = req.cookies.locale || "en"; // Use cookie if available, otherwise default to "en"
-
-    // Get browser/system language
-    const browserLang = req.headers['accept-language']?.split(',')[0];
-
-    // Detect language from query parameter (for language switcher)
-    if (req.query.lang && i18n.getLocales().includes(req.query.lang)) {
-        lang = req.query.lang;
-    }
-    // Fallback to browser language if supported
-    else if (browserLang && i18n.getLocales().includes(browserLang)) {
-        lang = browserLang;
-    }
-
-    // Set the language and store in cookie
-    res.setLocale(lang);
-    res.cookie("locale", lang, {
-        maxAge: 30 * 24 * 60 * 60 * 1000, // Store for 30 days
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict"
-    });
-
-    next(); // Proceed to the next middleware
-});
 
 // Middleware: Rate limiting
 app.use(rateLimit({

@@ -6,15 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Notion.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Notion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-HK.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/about-me.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/about-me.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/blog.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/blog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/console.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/console.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/blog.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/blog.pug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/console.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/console.pug" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/layout.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/about-me.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/about-me.pug" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +196,8 @@
       <workItem from="1739291629187" duration="11913000" />
       <workItem from="1739363034790" duration="3368000" />
       <workItem from="1741777147835" duration="31715000" />
-      <workItem from="1741859411021" duration="10478000" />
+      <workItem from="1741859411021" duration="10797000" />
+      <workItem from="1741874808286" duration="2489000" />
     </task>
     <servers />
   </component>

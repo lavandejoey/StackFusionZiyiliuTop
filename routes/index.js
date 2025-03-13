@@ -1,13 +1,13 @@
 // routes/index.js
 const express = require("express");
+const {getCommonViewOptions} = require("./utils");
 const router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render("index", {
-        lang: req.getLocale(),
+        ...getCommonViewOptions(req, res, res.__("Home")),
         activePage: "Home",
-        pageTitle: res.__("Home"),
     });
 });
 router.get(['/index', '/home'], (req, res, next) => {

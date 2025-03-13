@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const katex = require('katex');
 const Notion = require("../models/Notion");
+const {getCommonViewOptions} = require("./utils");
 
 // Define your root blog page IDs here.
 const blogPageIds = [
@@ -195,9 +196,8 @@ router.get("/", async (req, res, next) => {
             await fetchChildBlocksRecursively(blockData.results);
             const pageContentHtml = await renderBlocks(blockData.results, req);
             res.render("blog", {
-                lang: req.getLocale(),
+                ...getCommonViewOptions(req, res, pageData.title),
                 activePage: pageData.title,
-                pageTitle: pageData.title,
                 pageContentHtml,
                 pageData,
             });
@@ -207,9 +207,8 @@ router.get("/", async (req, res, next) => {
                 blogPageIds.map(pageId => Notion.NotionAPI.retrievePage(pageId))
             );
             res.render("blog", {
-                lang: req.getLocale(),
+                ...getCommonViewOptions(req, res, res.__("Blog")),
                 activePage: "Blog",
-                pageTitle: res.__("Blog"),
                 pages,
             });
         }
