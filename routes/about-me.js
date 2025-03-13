@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
     // About me parts
 
     res.render("about-me", {
-        ...getCommonViewOptions(req, res, res.__("About Me")),
+        ...getCommonViewOptions(req, res, res.__("About Me"), "A brief introduction to the Ziyi LIU"),
         activePage: "About Me",
         pageData: cv(res),
     });

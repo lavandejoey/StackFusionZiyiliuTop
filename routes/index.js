@@ -6,7 +6,7 @@ const router = express.Router();
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render("index", {
-        ...getCommonViewOptions(req, res, res.__("Home")),
+        ...getCommonViewOptions(req, res, res.__("Home"), "Welcome to the Ziyi LIU's personal website"),
         activePage: "Home",
     });
 });

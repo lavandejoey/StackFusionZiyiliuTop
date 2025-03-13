@@ -9,7 +9,7 @@ const {getCommonViewOptions} = require("./utils");
 // GET contact page
 router.get('/', function (req, res, next) {
     res.render("contact", {
-        ...getCommonViewOptions(req, res, res.__("Contact Me")),
+        ...getCommonViewOptions(req, res, res.__("Contact Me"), "Contact Ziyi LIU via email"),
         activePage: "Contact",
         csrfToken: req.csrfToken()
     });

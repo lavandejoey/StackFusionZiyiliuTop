@@ -38,46 +38,48 @@ block content
             // Insert the fully rendered HTML snippet.
             != pageContentHtml
 
-    script.
-        // Create the toc unordered list element and add it to .toc
-        const toc = document.querySelector('.toc');
-        const tocList = document.createElement('ul');
-        toc.appendChild(tocList);
+        script.
+            // Create the toc unordered list element and add it to .toc
+            const toc = document.querySelector('.toc');
+            if (toc) {
+                const tocList = document.createElement('ul');
+                toc.appendChild(tocList);
 
-        // Select all h1, h2, h3 elements
-        const headings = document.querySelectorAll('h1, h2, h3');
-        // Iterate over each heading with link and indent for each level
-        headings.forEach((heading) => {
-            const listItem = document.createElement('li');
-            const link = document.createElement('a');
-            link.textContent = heading.textContent;
-            // keeponly alphanumeric characters and replace spaces with hyphens
-            link.href = `#${heading.innerHTML.replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}`;
-            listItem.appendChild(link);
-            tocList.appendChild(listItem);
-            if (heading.tagName === 'H2') {
-                listItem.style.marginLeft = '1rem';
-            } else if (heading.tagName === 'H3') {
-                listItem.style.marginLeft = '2rem';
-            }
-        });
-        // Add smooth scrolling to all anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const href = this.getAttribute('href');
-                // Remove the leading '#' from the href value if present
-                const id = href.startsWith('#') ? href.slice(1) : href;
-                const target = document.getElementById(id);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
+                // Select all h1, h2, h3 elements
+                const headings = document.querySelectorAll('h1, h2, h3');
+                // Iterate over each heading with link and indent for each level
+                headings.forEach((heading) => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.textContent = heading.textContent;
+                    // keeponly alphanumeric characters and replace spaces with hyphens
+                    link.href = `#${heading.innerHTML.replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}`;
+                    listItem.appendChild(link);
+                    tocList.appendChild(listItem);
+                    if (heading.tagName === 'H2') {
+                        listItem.style.marginLeft = '1rem';
+                    } else if (heading.tagName === 'H3') {
+                        listItem.style.marginLeft = '2rem';
+                    }
+                });
+                // Add smooth scrolling to all anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        // Remove the leading '#' from the href value if present
+                        const id = href.startsWith('#') ? href.slice(1) : href;
+                        const target = document.getElementById(id);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                            // Remove the hash from the URL after scrolling
+                            history.pushState(null, null, window.location.pathname + window.location.search);
+                        } else {
+                            console.error(`Element with id ${href} not found.`);
+                            window.location.href = href;
+                        }
                     });
-                    // Remove the hash from the URL after scrolling
-                    history.pushState(null, null, window.location.pathname + window.location.search);
-                } else {
-                    console.error(`Element with id ${href} not found.`);
-                    window.location.href = href;
-                }
-            });
-        });
+                });
+            }

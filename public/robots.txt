@@ -15,4 +15,4 @@ Disallow: /maintenance/
 Sitemap: https://ziyiliu.top/sitemap.xml
 
 # Crawl delay to prevent server overload
-Crawl-delay: 20
+Crawl-delay: 8

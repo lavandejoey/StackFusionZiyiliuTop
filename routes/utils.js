@@ -1,9 +1,12 @@
 // routes/utils.js
-function getCommonViewOptions(req, res, pageTitle = "Ziyi Liu") {
+function getCommonViewOptions(req, res,
+                              pageTitle = "Ziyi Liu",
+                              pageDescription = "Ziyi Liu's Personal Website") {
     console.log("Current locale:", req.getLocale());
     return {
         lang: req.getLocale() || 'en',
         pageTitle: pageTitle,
+        pageDescription: pageDescription,
     };
 }
 

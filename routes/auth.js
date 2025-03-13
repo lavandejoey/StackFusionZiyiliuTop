@@ -15,13 +15,13 @@ router.get(['/', '/login'], (req, res) => {
     }
 
     return res.render("auth", {
-        ...getCommonViewOptions(req, res, res.__("Login"))
+        ...getCommonViewOptions(req, res, res.__("Login"), "Login to access your account")
     });
 });
 
 router.get('/signup', (req, res) => {
     return res.render("auth", {
-        ...getCommonViewOptions(req, res, res.__("Signup"))
+        ...getCommonViewOptions(req, res, res.__("Signup"), "Create a new account")
     });
 });
 
@@ -42,14 +42,14 @@ router.post('/login', loginValidations, async (req, res) => {
 
         if (!user.uuid) {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, res.__("Login")),
+                ...getCommonViewOptions(req, res, res.__("Login"), "Login to access your account"),
                 error: res.__("Invalid email or password"),
             });
         }
 
         if (user.isLocked()) {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, res.__("Login")),
+                ...getCommonViewOptions(req, res, res.__("Login"), "Login to access your account"),
                 error: res.__("Account is inactive, please contact support"),
             });
         }
@@ -65,7 +65,7 @@ router.post('/login', loginValidations, async (req, res) => {
             return res.redirect(redirectTo);
         } else {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, res.__("Login")),
+                ...getCommonViewOptions(req, res, res.__("Login"), "Login to access your account"),
                 error: res.__("Invalid email or password")
             });
         }
@@ -89,7 +89,7 @@ router.post('/signup', signupValidations, async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).render("auth", {
-                ...getCommonViewOptions(req, res, res.__("Signup")),
+                ...getCommonViewOptions(req, res, res.__("Signup"), "Create a new account"),
                 error: errors.array()
             });
         }
@@ -100,7 +100,7 @@ router.post('/signup', signupValidations, async (req, res) => {
 
         if (user.uuid) {
             return res.render("auth", {
-                ...getCommonViewOptions(req, res, res.__("Signup")),
+                ...getCommonViewOptions(req, res, res.__("Signup"), "Create a new account"),
                 error: res.__("User with this email already exists")
             });
         }
