@@ -11,7 +11,6 @@ router.get('/', function (req, res, next) {
         lang: req.getLocale(),
         activePage: "Contact",
         pageTitle: res.__("Contact Me"),
-        domain: req.app.locals.domain,
         csrfToken: req.csrfToken()
     });
 });

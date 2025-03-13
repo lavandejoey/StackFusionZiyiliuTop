@@ -8,7 +8,6 @@ router.get('/', function (req, res, next) {
         lang: req.getLocale(),
         activePage: "Home",
         pageTitle: res.__("Home"),
-        domain: req.app.locals.domain,
     });
 });
 router.get(['/index', '/home'], (req, res, next) => {

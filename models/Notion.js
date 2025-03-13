@@ -10,7 +10,7 @@ class BaseObject {
         if (!data || data.object !== type) {
             throw new Error(`Invalid ${type} data`);
         }
-        this.object = data.object; // e.g., "block", "page", "database", etc.
+        this.object = data.object;
         this.id = data.id;
         this.created_time = data.created_time;
         this.created_by = data.created_by;
@@ -18,7 +18,6 @@ class BaseObject {
         this.last_edited_by = data.last_edited_by;
         this.archived = data.archived ?? false;
         this.in_trash = data.in_trash ?? false;
-
         this._validateRequiredFields();
     }
 
@@ -60,7 +59,6 @@ class Block extends BaseObject {
     }
 
     static renderText(data) {
-        //TypeError: data.map is not a function
         data = Array.isArray(data) ? data : [data];
         return data.map(rt => {
             let text = rt.plain_text;
@@ -93,7 +91,7 @@ class Block extends BaseObject {
         return `<li class="${colorClass} ${marginClass}">${richTextHtml}</li>`;
     }
 
-    // delete iconHtml in parent class
+    // Override iconHtml for blocks to prevent using the parent's implementation.
     get iconHtml() {
         return '';
     }
@@ -113,14 +111,13 @@ class Page extends BaseObject {
         this.public_url = data.public_url || null;
     }
 
-    // Returns a formatted string for the last edited time
+    // Returns a formatted string for the last edited time.
     get formattedLastEdited() {
         if (!this.last_edited_time) return '';
         return `Updated at ${new Date(this.last_edited_time).toLocaleString()}`;
     }
 
-    // Returns the page title by searching for a property of type "title" in properties.
-    // This works even if the title key is named differently (e.g. "Doc name")
+    // Returns the page title by searching for a property of type "title".
     get title() {
         for (const key in this.properties) {
             const prop = this.properties[key];
@@ -161,15 +158,16 @@ class Parent {
         this.type = data.type;
         switch (data.type) {
             case "database_id":
-                this.database_id = data.database_id;
+                this.id = data.database_id;
                 break;
             case "page_id":
-                this.page_id = data.page_id;
+                this.id = data.page_id;
                 break;
             case "block_id":
-                this.block_id = data.block_id;
+                this.id = data.block_id;
                 break;
             case "workspace":
+                this.id = data.workspace;
                 this.workspace = data.workspace === true;
                 break;
             default:
@@ -196,7 +194,6 @@ class User {
 
 /**
  * NotionAPI class encapsulates static methods to call Notion's REST API.
- * Each method uses process.env.NOTION_API_KEY for authorization.
  */
 class API {
     /**
@@ -212,9 +209,9 @@ class API {
 
     /**
      * Helper method to cache API responses.
-     * @param {string} key - Redis key
-     * @param {Function} fetchFunc - Async function that returns the data
-     * @param {number} expiry - Expiration time in seconds (default 43200 = 12h)
+     * @param {string} key - Redis key.
+     * @param {Function} fetchFunc - Async function that returns the data.
+     * @param {number} expiry - Expiration time in seconds (default 43200 = 12h).
      */
     static async cacheFetch(key, fetchFunc, expiry = 43200) {
         let cache = await redisClient.get(key);
@@ -229,7 +226,6 @@ class API {
 
     /**
      * Retrieves a block by ID.
-     * Endpoint: https://developers.notion.com/reference/retrieve-a-block
      */
     static async retrieveBlock(blockId) {
         const cacheKey = `notion:block:${blockId}`;
@@ -249,8 +245,6 @@ class API {
 
     /**
      * Retrieves children of a block.
-     * Endpoint: https://developers.notion.com/reference/get-block-children
-     * Optional params: start_cursor and page_size.
      */
     static async getBlockChildren(blockId, options = {}) {
         const cacheKey = `notion:blockChildren:${blockId}:${options.start_cursor || ''}:${options.page_size || ''}`;
@@ -258,7 +252,6 @@ class API {
             const url = new URL(`https://api.notion.com/v1/blocks/${blockId}/children`);
             if (options.start_cursor) url.searchParams.append('start_cursor', options.start_cursor);
             if (options.page_size) url.searchParams.append('page_size', options.page_size);
-
             const res = await fetch(url.toString(), {
                 method: 'GET',
                 headers: this.headers()
@@ -275,7 +268,6 @@ class API {
 
     /**
      * Retrieves a page by ID.
-     * Endpoint: https://developers.notion.com/reference/retrieve-a-page
      */
     static async retrievePage(pageId) {
         const cacheKey = `notion:page:${pageId}`;
@@ -295,7 +287,6 @@ class API {
 
     /**
      * Retrieves a specific property of a page.
-     * Endpoint: https://developers.notion.com/reference/retrieve-a-page-property
      */
     static async retrievePageProperty(pageId, propertyId) {
         const cacheKey = `notion:pageProperty:${pageId}:${propertyId}`;
@@ -313,11 +304,9 @@ class API {
     }
 
     /**
-     * Retrieves a database by ID.
-     * Endpoint: https://api.notion.com/v1/databases/{database_id}/query
-     * https://developers.notion.com/reference/post-database-query
+     * Retrieves a database by querying it.
      */
-    static async queryDatabase(databaseId, queryData) {
+    static async queryDatabase(databaseId, queryData = {}) {
         const cacheKey = `notion:databaseQuery:${databaseId}:${JSON.stringify(queryData)}`;
         return this.cacheFetch(cacheKey, async () => {
             const res = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
@@ -335,7 +324,6 @@ class API {
 
     /**
      * Retrieves a database by ID.
-     * Endpoint: https://developers.notion.com/reference/retrieve-a-database
      */
     static async retrieveDatabase(databaseId) {
         const cacheKey = `notion:database:${databaseId}`;
@@ -355,9 +343,6 @@ class API {
 
     /**
      * Searches across Notion content.
-     * Endpoint: https://developers.notion.com/reference/post-search
-     * Accepts a query object, for example:
-     * { query: "my search", filter: { property: "object", value: "page" } }
      */
     static async search(queryData) {
         const cacheKey = `notion:search:${JSON.stringify(queryData)}`;
@@ -377,7 +362,6 @@ class API {
 
     /**
      * Retrieves a list of users in the workspace.
-     * Endpoint: https://developers.notion.com/reference/get-users
      */
     static async getUsers() {
         const cacheKey = `notion:users`;
@@ -397,7 +381,6 @@ class API {
 
     /**
      * Retrieves a single user by ID.
-     * Endpoint: https://developers.notion.com/reference/get-user
      */
     static async retrieveUser(userId) {
         const cacheKey = `notion:user:${userId}`;

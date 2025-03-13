@@ -27,9 +27,9 @@ async function fetchChildBlocksRecursively(blocks) {
 
 /**
  * Recursively render a single block to HTML.
- * @param {Block} block - A Notion block object.
- * @param level - The current depth of the block in the hierarchy.
- * @param req - The Express request object.
+ * @param {Object} block - A Notion block object.
+ * @param {number} level - The current depth of the block in the hierarchy.
+ * @param {Object} req - The Express request object.
  * @returns {string} The rendered HTML for the block and its children.
  */
 async function renderBlock(block, level = 0, req) {
@@ -46,28 +46,28 @@ async function renderBlock(block, level = 0, req) {
             }
             break;
         case 'heading_1':
-            if (block.data && block.data.rich_text && block.data.rich_text.length > 0) {
-                html += `<h1>${block.renderRichText()}</h1>`;
-            } else {
-                html += `<h1></h1>`;
-            }
+            html += block.data && block.data.rich_text && block.data.rich_text.length > 0
+                ? `<h1 id="${block.renderRichText().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}">${block.renderRichText()}</h1>`
+                : `<h1></h1>`;
             break;
         case 'heading_2':
-            if (block.data && block.data.rich_text && block.data.rich_text.length > 0) {
-                html += `<h2>${block.renderRichText()}</h2>`;
-            } else {
-                html += `<h2></h2>`;
-            }
+            html += block.data && block.data.rich_text && block.data.rich_text.length > 0
+                ? `<h2 id="${block.renderRichText().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}">${block.renderRichText()}</h2>`
+                : `<h2></h2>`;
             break;
         case 'heading_3':
-            if (block.data && block.data.rich_text && block.data.rich_text.length > 0) {
-                html += `<h3>${block.renderRichText()}</h3>`;
-            } else {
-                html += `<h3></h3>`;
-            }
+            html += block.data && block.data.rich_text && block.data.rich_text.length > 0
+                ? `<h3 id="${block.renderRichText().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}">${block.renderRichText()}</h3>`
+                : `<h3></h3>`;
             break;
         case 'divider':
             html += `<hr />`;
+            break;
+        case 'quote':
+            html += `<blockquote class="blockquote">${block.renderRichText()}</blockquote>`;
+            break;
+        case 'table_of_contents':
+            html += `<div class="container toc"></div>`;
             break;
         case 'bulleted_list_item':
             if (block.data && block.data.rich_text && block.data.rich_text.length > 0) {
@@ -87,6 +87,7 @@ async function renderBlock(block, level = 0, req) {
             html += `</div>`;
             break;
         case 'column':
+            // Handled as part of column_list; no individual rendering needed.
             break;
         case "table":
             html += `<table class="table">`;
@@ -109,38 +110,35 @@ async function renderBlock(block, level = 0, req) {
             html += `</table>`;
             break;
         case "table_row":
+            // Table rows are handled within the table case.
             break;
-        case "child_database":
+        case "child_database": {
             const db = new Notion.Database(await Notion.NotionAPI.retrieveDatabase(block.id));
             const dbData = await Notion.NotionAPI.queryDatabase(block.id);
-            // title of table(database) block.data.title
-            html += `<div class="lead">${db.iconHtml}` + "&nbsp;" + `${Notion.Block.renderText(db.title)}</div>`;
-            // responsive table
+            html += `<div class="lead">${db.iconHtml}&nbsp;${Notion.Block.renderText(db.title)}</div>`;
             html += `<div class="table-responsive"><table class="table">`;
-            // ""(icon+name with link domain+/blog+?p=<page id>), Created time, Last updated time, Author (Created by)
             html += `<thead><tr><th>Doc name</th><th>Last updated time</th><th>Created by</th></tr></thead>`;
             html += `<tbody>`;
             for (let page of dbData.results) {
                 page = new Notion.Page(page);
                 html += `<tr>`;
-                html += `<td><a href="${req.app.locals.domain}blog?p=${page.id}">${page.iconHtml}` + "&nbsp;" + `${page.title}</a></td>`;
-                // html += `<td>${new Date(page.created_time).toLocaleString()}</td>`;
+                html += `<td><a href="${req.app.locals.domain}blog?p=${page.id}">${page.iconHtml}&nbsp;${page.title}</a></td>`;
                 html += `<td>${new Date(page.last_edited_time).toLocaleString()}</td>`;
                 html += `<td>${page.properties["Created by"].created_by.name}</td>`;
                 html += `</tr>`;
             }
             html += `</tbody></table></div>`;
+        }
             break;
         case "code":
             if (block.data.language && block.data.language === "mermaid") {
-                // mermaid preview
+                // Mermaid preview.
                 html += `<div class="mermaid d-flex justify-content-center">${block.data.rich_text[0].plain_text}</div>`;
-                // caption
                 if (block.data.caption) {
                     html += `<p class="text-center">${block.data.caption[0].plain_text}</p>`;
                 }
             } else {
-                // code block with syntax highlighting with caption
+                // Code block with syntax highlighting and optional caption.
                 html += `<figure class="highlight"><pre><code class="language-${block.data.language}">${block.data.rich_text[0].plain_text}</code></pre>`;
                 if (block.data.caption) {
                     html += `<figcaption class="text-center">${block.data.caption[0].plain_text}</figcaption>`;
@@ -148,21 +146,23 @@ async function renderBlock(block, level = 0, req) {
                 html += `</figure>`;
             }
             break;
-        case "equation": // block latex
-            html += `<div class="text-center my-2"><span class="katex">${katex.renderToString(block.data.expression, {
+        case "equation":
+            // html += `<div class="text-center my-2">${block.data.expression}</div>`;
+            html += `<div class="text-center my-2"><box class="katex">${katex.renderToString(block.data.expression, {
                 displayMode: true,
                 throwOnError: true,
                 output: "mathml"
-            })}</span></div>`;
+            })}</box></div>`;
             break;
         case "image":
-            html += `<img src="${block.data.file.url}" class="img-fluid"  alt="${Notion.Block.renderText(block.data.caption)}">`;
+            if (block.data.file && block.data.file.url)
+                html += `<img src="${block.data.file.url}" class="img-fluid" alt="${Notion.Block.renderText(block.data.caption) || null}">`;
             break;
         default:
             html += `<p>Unknown block type: ${block.type}</p>`;
             break;
     }
-    // Recursively render any child blocks.
+    // Recursively render any child blocks if not skipped.
     if (block.children && block.children.length > 0 && !skipChildren) {
         for (const child of block.children) {
             html += await renderBlock(child, level + 1, req);
@@ -174,7 +174,7 @@ async function renderBlock(block, level = 0, req) {
 /**
  * Render an array of blocks into a single HTML snippet.
  * @param {Array} blocks - An array of Notion block objects.
- * @param req - The Express request object.
+ * @param {Object} req - The Express request object.
  * @returns {string} The complete HTML snippet.
  */
 async function renderBlocks(blocks, req) {
@@ -188,35 +188,28 @@ async function renderBlocks(blocks, req) {
 router.get("/", async (req, res, next) => {
     try {
         if (req.query.p) {
-            // Single page view: when a user clicks a card, p=<pageId> is provided.
+            // Single page view: render a full page’s content.
             const pageId = req.query.p;
-            // Retrieve the top-level blocks for the page.
+            const pageData = await Notion.NotionAPI.retrievePage(pageId);
             const blockData = await Notion.NotionAPI.getBlockChildren(pageId);
-
-            // Recursively fetch children for blocks that have them.
             await fetchChildBlocksRecursively(blockData.results);
-
-            // Render the complete HTML snippet from all blocks.
-            renderBlocks(blockData.results, req).then((pageContentHtml) =>
-                res.render("blog", {
-                    lang: req.getLocale(),
-                    activePage: "Blog",
-                    pageTitle: res.__("Blog"),
-                    domain: req.app.locals.domain,
-                    pageContentHtml,
-                    currentPage: pageId,
-                })
-            );
+            const pageContentHtml = await renderBlocks(blockData.results, req);
+            res.render("blog", {
+                lang: req.getLocale(),
+                activePage: pageData.title,
+                pageTitle: pageData.title,
+                pageContentHtml,
+                pageData,
+            });
         } else {
-            // Root blog view: display cards for the list of blog topic pages.
+            // Root blog view: render blog topic cards.
             const pages = await Promise.all(
-                blogPageIds.map((pageId) => Notion.NotionAPI.retrievePage(pageId))
+                blogPageIds.map(pageId => Notion.NotionAPI.retrievePage(pageId))
             );
             res.render("blog", {
                 lang: req.getLocale(),
                 activePage: "Blog",
                 pageTitle: res.__("Blog"),
-                domain: req.app.locals.domain,
                 pages,
             });
         }

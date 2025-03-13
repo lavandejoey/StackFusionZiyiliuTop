@@ -40,24 +40,24 @@ html(lang=lang)
                     #mainNavbarNav.collapse.navbar-collapse
                         ul.navbar-nav
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link.main-navbar-item(href=domain, class=(activePage === "Home" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href="/", class=(activePage === "Home" ? "active" : ''))
                                     span(class=(activePage === "Home" ? "underline" : '')) ZLiu's
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link.main-navbar-item(href=domain + "about-me", class=(activePage === "About Me" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href="/about-me", class=(activePage === "About Me" ? "active" : ''))
                                     span(class=(activePage === "About Me" ? "underline" : '')) #{__("About Me")}
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link.main-navbar-item(href=domain + "contact", class=(activePage === "Contact" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href="/contact", class=(activePage === "Contact" ? "active" : ''))
                                     span(class=(activePage === "Contact" ? "underline" : '')) #{__("Contact")}
                             li.nav-item.d-flex.justify-content-center
-                                a.nav-link.main-navbar-item(href=domain + "blog", class=(activePage === "Blog" ? "active" : ''))
+                                a.nav-link.main-navbar-item(href="/blog", class=(activePage === "Blog" ? "active" : ''))
                                     span(class=(activePage === "Blog" ? "underline" : '')) #{__("Blog")}
                         // Empty space to push language switcher to the right
                         div.ms-auto.d-flex.justify-content-center
                             if user && user.userId && user.userId !== ""
-                                // profile button domain + "console/" + user.userId, method="get"
-                                a.btn.btn-outline-primary.mx-auto.me-md-4(href=domain + "console/" + user.userId)
+                                // profile button "/console/" + user.userId, method="get"
+                                a.btn.btn-outline-primary.mx-auto.me-md-4(href="/console/" + user.userId)
                                     i.fas.fa-user
-                                a.btn.btn-outline-danger.mx-auto.me-md-4(href=domain + "auth/logout")
+                                a.btn.btn-outline-danger.mx-auto.me-md-4(href="/auth/logout")
                                     i.fas.fa-sign-out-alt
                             div.dropdown.d-flex.justify-content-center.align-items-center.mx-auto(style='width: 100px')
                                 button.btn.btn-outline-primary.no-caret.d-flex.align-items-center.justify-content-center(data-bs-toggle="dropdown" style='width: 100%; height: 100%;')
@@ -89,10 +89,10 @@ html(lang=lang)
             footer.w-100.d-flex.justify-content-center.py-3.mt-auto(style="color: gray; z-index: 100")
                 div.text-center
                     p.mb-0
-                        a(href=domain + "auth/login", style='text-decoration: none; color: gray;')
+                        a(href="/auth/login", style='text-decoration: none; color: gray;')
                             | Copyright &#169; 2021-
                             span(id='current-year')
-                        a(href=domain, style='text-decoration: none; color: gray;')
+                        a(href="/", style='text-decoration: none; color: gray;')
                             |  #{__("Ziyi LIU")}
         // Floating info box for "Copied to Clipboard" message at horizontal center
         div#copyInfoBox.alert.alert-info.alert-dismissible.text-center.px-3.py-2(
@@ -114,3 +114,18 @@ html(lang=lang)
     script(type='module').
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({startOnLoad: true});
+
+    //<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css")
+    style.
+        .katex {
+            font-size: 1em;
+        }
+    //<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    script(defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js")
+    //<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+    script(defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js")
+    //script.
+    //    document.addEventListener("DOMContentLoaded", function() {
+    //        renderMathInElement(document.body);
+    //    });

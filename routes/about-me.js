@@ -13,7 +13,6 @@ router.get('/', function (req, res, next) {
         lang: req.getLocale(),
         activePage: "About Me",
         pageTitle: res.__("About Me"),
-        domain: req.app.locals.domain,
         pageData: cv(res),
     });
 });

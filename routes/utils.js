@@ -3,7 +3,6 @@ function getCommonViewOptions(req, res, pageTitle) {
     return {
         lang: req.getLocale() || 'en',
         pageTitle: pageTitle || "Ziyi Liu",
-        domain: req.app.locals.domain,
     };
 }
 

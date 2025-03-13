@@ -11,7 +11,6 @@ block content
             break-inside: avoid;
             margin-bottom: 1rem;
         }
-
     .container.mt-5
         if pages
             .masonry
@@ -27,9 +26,58 @@ block content
                                 != page.iconHtml
                                 span.text-decoration-none #{page.title}
                             p.text-decoration-none #{page.formattedLastEdited}
-        else if pageContentHtml
-            h1 Page Content
-            a.btn.btn-secondary(href="/blog") Back to Topics
+        else if pageContentHtml && pageContentHtml !== '' && pageTitle && pageTitle !== ''
+            // transparent btn for "/blog?p=:parent.id" / "/blog" "Blog Home"
+            if pageData.parent && pageData.parent.id && pageData.parent.id !== ''
+                a.btn.btn-transparent.text-primary(href=`/blog/?p=${pageData.parent.id}`) &#11164;&nbsp;#{__("Back to Parent Page")}
+            else
+                a.btn.btn-transparent.text-primary(href="/blog") &#11164;&nbsp;#{__("Blog Home")}
+
+            h1.mb-3 #{pageTitle}
             hr
-            //- Insert the fully rendered HTML snippet.
+            // Insert the fully rendered HTML snippet.
             != pageContentHtml
+
+    script.
+        // Create the toc unordered list element and add it to .toc
+        const toc = document.querySelector('.toc');
+        const tocList = document.createElement('ul');
+        toc.appendChild(tocList);
+
+        // Select all h1, h2, h3 elements
+        const headings = document.querySelectorAll('h1, h2, h3');
+        // Iterate over each heading with link and indent for each level
+        headings.forEach((heading) => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.textContent = heading.textContent;
+            // keeponly alphanumeric characters and replace spaces with hyphens
+            link.href = `#${heading.innerHTML.replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '-')}`;
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+            if (heading.tagName === 'H2') {
+                listItem.style.marginLeft = '1rem';
+            } else if (heading.tagName === 'H3') {
+                listItem.style.marginLeft = '2rem';
+            }
+        });
+        // Add smooth scrolling to all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                // Remove the leading '#' from the href value if present
+                const id = href.startsWith('#') ? href.slice(1) : href;
+                const target = document.getElementById(id);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    // Remove the hash from the URL after scrolling
+                    history.pushState(null, null, window.location.pathname + window.location.search);
+                } else {
+                    console.error(`Element with id ${href} not found.`);
+                    window.location.href = href;
+                }
+            });
+        });
