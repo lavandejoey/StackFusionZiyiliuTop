@@ -11,7 +11,10 @@ router.get('/', function (req, res, next) {
     // About me parts
 
     res.render("about-me", {
-        ...getCommonViewOptions(req, res, res.__("About Me"), "A brief introduction to the Ziyi LIU"),
+        ...getCommonViewOptions(req, res,
+            res.__("About LIU Ziyi - AI Researcher at Institut Polytechnique de Paris"),
+            "Learn about LIU Ziyi. Expertise in Machine Learning, Computer Vision, Trustworthy AI, and more."
+        ),
         activePage: "About Me",
         pageData: cv(res),
     });

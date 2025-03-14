@@ -196,7 +196,8 @@ router.get("/", async (req, res, next) => {
             await fetchChildBlocksRecursively(blockData.results);
             const pageContentHtml = await renderBlocks(blockData.results, req);
             res.render("blog", {
-                ...getCommonViewOptions(req, res, pageData.title, pageData.description || ""),
+                ...getCommonViewOptions(req, res,
+                    res.__("Ziyi's Blog") + " | " + pageData.title, pageData.description || ""),
                 activePage: pageData.title,
                 pageContentHtml,
                 pageData,
@@ -207,7 +208,10 @@ router.get("/", async (req, res, next) => {
                 blogPageIds.map(pageId => Notion.NotionAPI.retrievePage(pageId))
             );
             res.render("blog", {
-                ...getCommonViewOptions(req, res, res.__("Blog"), "Ziyi Liu's Blog"),
+                ...getCommonViewOptions(req, res,
+                    res.__("Ziyi's Blog") + " | " + res.__("AI, Math & Life Insights by LIU Ziyi"),
+                    "Read the latest articles and research insights by LIU Ziyi"
+                ),
                 activePage: "Blog",
                 pages,
             });

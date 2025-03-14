@@ -52,7 +52,6 @@ app.use(cookieParser());
 app.use(i18n.init);
 app.use((req, res, next) => {
     // Set default language
-    console.log("Cookies Locale: ", req.cookies.locale);
     let lang = req.cookies.locale || "en"; // Use cookie if available, otherwise default to "en"
 
     // Get browser/system language

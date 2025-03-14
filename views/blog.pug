@@ -38,6 +38,24 @@ block content
             // Insert the fully rendered HTML snippet.
             != pageContentHtml
 
+        //<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css")
+        style.
+            .katex {
+                font-size: 1em;
+            }
+        //<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+        script(defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js")
+        //<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+        script(defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js")
+        //script.
+        //    document.addEventListener("DOMContentLoaded", function() {
+        //        renderMathInElement(document.body);
+        //    });
+
+        script(type="module").
+            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+            mermaid.initialize({startOnLoad: true});
         script.
             // Create the toc unordered list element and add it to .toc
             const toc = document.querySelector('.toc');

@@ -1,12 +1,14 @@
 extends layout
 
 block content
+    h1.d-none #{__("LIU Ziyi")} - #{__("AI & Data Science at Institut Polytechnique de Paris")}
     div.container-fluid.flex-grow-1.d-flex.justify-content-center.align-items-center(style='height: 100%;')
         div#typewriter-container.text-center
             p#typewriter-text-wrapper(style='font-size: 2rem; white-space: pre-wrap; word-break: break-all; max-width: 100%; position: relative;')
                 span#typewriter-text
 
-    script.
+    script(type="module").
+        import Typewriter from '/typewriter-effect/dist/core.js';
         document.addEventListener("DOMContentLoaded", function () {
             const lang = document.documentElement.lang || "en";
             const texts = {
