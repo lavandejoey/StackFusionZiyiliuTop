@@ -40,6 +40,7 @@
     "node-ssh": "^13.2.0",
     "postmark": "^4.0.5",
     "pug": "^3.0.3",
+    "rough-notation": "^0.5.1",
     "sass": "^1.79.4",
     "sass-middleware": "^0.0.3",
     "typewriter-effect": "^2.21.0",

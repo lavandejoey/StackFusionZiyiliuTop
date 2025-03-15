@@ -46,8 +46,8 @@ block content
                     each education in pageData.educations
                         .container.mb-3
                             .row.mb-2
-                                .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                    img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
+                                .col-auto.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                    img.m-0.p-0(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
                                 .col-auto.m-0.p-0
                                     strong.m-0= education.institution
                             .row
@@ -74,8 +74,8 @@ block content
                     each internship in pageData.internships
                         .container.mb-3
                             .row.mb-2
-                                .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                    img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
+                                .col-auto.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                    img.m-0.p-0(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
                                 .col-auto.m-0.p-0
                                     strong.m-0= internship.institution
                             .row
@@ -138,9 +138,9 @@ block content
                 each education in pageData.educations
                     .container.mb-3
                         .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
-                            .col-auto.m-0.p-0
+                            .col-auto.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                img.m-0.p-0(src=education.logoSrc, alt=education.logoAlt, class='school-logo', style='width: 30px; height: 30px; margin-right: 10px;' title=education.logoTitle)
+                            .col-auto.m-0.p-0.d-flex.align-items-center
                                 strong.m-0= education.institution
                         .row
                             .col-1.d-flex.justify-content-start.align-items-center.d-none.d-sm-block
@@ -166,8 +166,8 @@ block content
                 each internship in pageData.internships
                     .container.mb-3
                         .row.mb-2
-                            .col-1.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
-                                img(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
+                            .col-auto.offset-1.d-flex.justify-content-center.align-items-center.d-none.d-sm-block
+                                img.m-0.p-0(src=internship.logoSrc, alt=internship.logoAlt, class="company-logo", style="width: 30px; height: 30px; margin-right: 10px;", title=internship.logoTitle)
                             .col-auto.m-0.p-0
                                 strong.m-0= internship.institution
                         .row

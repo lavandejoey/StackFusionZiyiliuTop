@@ -7,8 +7,7 @@ const quinary = '#bc6c25';
 const frameColor = '#ffc9b9';
 
 /************************************************** Rough Notation **************************************************/
-// import {annotate} from '../../node_modules/rough-notation/lib/rough-notation.esm.js';
-import {annotate} from 'https://unpkg.com/rough-notation?module';
+import { annotate } from '/rough-notation/lib/rough-notation.esm.js';
 
 // Function to safely apply annotation if the element exists
 function applyAnnotation(target, type, color) {
