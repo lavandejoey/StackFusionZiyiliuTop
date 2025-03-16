@@ -33,7 +33,7 @@ block content
             else
                 a.btn.btn-transparent.text-primary(href="/blog") &#11164;&nbsp;#{__("Blog Home")}
 
-            h1.mb-3 #{pageTitle}
+            h1.mb-3 #{pageTitle.split(' | ')[1]}
             hr
             // Insert the fully rendered HTML snippet.
             != pageContentHtml
