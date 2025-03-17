@@ -1,9 +1,9 @@
 // routes/auth.js
 const express = require("express");
 const router = express.Router();
-const {User, UserRole} = require("../models/authentication");
+const {User, UserRole} = require("../models/authentication.model");
 const {check, validationResult} = require('express-validator');
-const {getCommonViewOptions, regenerateSession, updateSession} = require("./utils");
+const {getCommonViewOptions, regenerateSession, updateSession} = require("./utils.route");
 
 
 // ----- GET Routes -----

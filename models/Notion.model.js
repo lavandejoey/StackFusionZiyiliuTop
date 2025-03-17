@@ -1,5 +1,5 @@
 // models/Notion.js
-const redisClient = require("../packages/redisClient.js");
+const redisClient = require("../packages/redisClient.package.js");
 const katex = require('katex');
 
 /**

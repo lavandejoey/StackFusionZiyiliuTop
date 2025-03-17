@@ -21,18 +21,18 @@ const fs = require('fs-extra');
 const cron = require('node-cron');
 
 // Custom modules and configurations
-const i18n = require("./packages/i18nConfig.js");
-const redis = require("./packages/redisClient.js");
+const i18n = require("./packages/i18nConfig.package.js");
+const redis = require("./packages/redisClient.package.js");
 
 // Routes
-const indexRouter = require('./routes/index');
-const aboutMeRouter = require('./routes/about-me');
-const contactRouter = require('./routes/contact');
-const authRouter = require('./routes/auth');
-const consoleRouter = require('./routes/console');
-const adminRouter = require('./routes/admin');
-const v2rayRouter = require('./routes/v2ray');
-const blogRouter = require('./routes/blog');
+const indexRouter = require('./routes/index.route');
+const aboutMeRouter = require('./routes/about-me.route');
+const contactRouter = require('./routes/contact.route');
+const authRouter = require('./routes/auth.route');
+const consoleRouter = require('./routes/console.route');
+const adminRouter = require('./routes/admin.route');
+const v2rayRouter = require('./routes/v2ray.route');
+const blogRouter = require('./routes/blog.route');
 
 // Create express app
 const app = express();

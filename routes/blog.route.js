@@ -2,8 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const katex = require('katex');
-const Notion = require("../models/Notion");
-const {getCommonViewOptions} = require("./utils");
+const Notion = require("../models/Notion.model");
+const {getCommonViewOptions} = require("./utils.route");
 
 // Define your root blog page IDs here.
 const blogPageIds = [

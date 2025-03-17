@@ -3,8 +3,8 @@
 // Require express and create a router
 const express = require("express");
 const router = express.Router();
-const {sendEmail} = require("../packages/postmark");
-const {getCommonViewOptions} = require("./utils");
+const {sendEmail} = require("../packages/postmark.package");
+const {getCommonViewOptions} = require("./utils.route");
 
 // GET contact page
 router.get('/', function (req, res, next) {

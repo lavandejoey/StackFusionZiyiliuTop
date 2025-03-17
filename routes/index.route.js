@@ -1,6 +1,6 @@
 // routes/index.js
 const express = require("express");
-const {getCommonViewOptions} = require("./utils");
+const {getCommonViewOptions} = require("./utils.route");
 const router = express.Router();
 
 /* GET home page. */

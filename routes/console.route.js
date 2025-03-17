@@ -1,8 +1,8 @@
 // routes/console.js
 const express = require("express");
 const router = express.Router();
-const {User, UserRole} = require("../models/authentication");
-const {getCommonViewOptions} = require("./utils");
+const {User, UserRole} = require("../models/authentication.model");
+const {getCommonViewOptions} = require("./utils.route");
 
 // Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {

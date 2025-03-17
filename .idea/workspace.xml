@@ -5,10 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/ziyiliu.uY-_7w.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/blog.pug" beforeDir="false" afterPath="$PROJECT_DIR$/views/blog.pug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en.locale.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/fr.locale.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-CN.locale.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-HK.locale.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Notion.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Notion.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/authentication.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/authentication.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/about-me.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/about-me.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/admin.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/blog.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/blog.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/console.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/console.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/contact.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/v2ray.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/v2ray.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/about-me.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/admin.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/auth.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/blog.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/console.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/contact.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/error.view.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.view.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +71,7 @@
     <setting file="file://$PROJECT_DIR$/public/stylesheets/style.sass" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -55,42 +81,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Node.js.app.js.executor": "Run",
-    "Node.js.bin/www.executor": "Run",
-    "Node.js.parser.js.executor": "Run",
-    "Node.js.test.js.executor": "Run",
-    "Node.js.v2rayLogParser.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "main",
-    "javascript.nodejs.core.library.configured.version": "18.19.1",
-    "javascript.nodejs.core.library.typings.version": "18.19.64",
-    "last.edited.regexp": "",
-    "last_opened_file_path": "/home/zliu/Documents/PROJECTS/ziyiliu.top-by-express/public/js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "npm.build-css.executor": "Run",
-    "npm.start:debug.executor": "Run",
-    "npm.watch-css.executor": "Debug",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Node.js.app.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.bin/www.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.test.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.v2rayLogParser.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.19.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.19.64&quot;,
+    &quot;last.edited.regexp&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/ziyiliu.top-by-express/public/js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build-css.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start:debug.executor&quot;: &quot;Run&quot;,
+    &quot;npm.watch-css.executor&quot;: &quot;Debug&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/js" />
@@ -204,7 +230,9 @@
       <workItem from="1741879371786" duration="26000" />
       <workItem from="1741879416009" duration="1876000" />
       <workItem from="1741941733863" duration="3817000" />
-      <workItem from="1742029326848" duration="11385000" />
+      <workItem from="1742029326848" duration="22802000" />
+      <workItem from="1742168476382" duration="732000" />
+      <workItem from="1742206672500" duration="356000" />
     </task>
     <servers />
   </component>

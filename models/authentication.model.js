@@ -1,6 +1,6 @@
 // models/authentication.js
-const db = require("../packages/mysql2Config");
-const {hashPassword, verifyPassword} = require("../packages/argon2");
+const db = require("../packages/mysql2Config.package");
+const {hashPassword, verifyPassword} = require("../packages/argon2.package");
 const {v4: uuidv4, validate: uuidValidate} = require("uuid");
 
 // Enums

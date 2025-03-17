@@ -4,7 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const {cv} = require("../data/cv");
-const {getCommonViewOptions} = require("./utils");
+const {getCommonViewOptions} = require("./utils.route");
 
 // GET contact page
 router.get('/', function (req, res, next) {

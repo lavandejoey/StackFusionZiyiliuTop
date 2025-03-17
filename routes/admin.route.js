@@ -2,8 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const {parseV2RayLogFile, getAllLogPaths} = require('../script/v2rayLogParser');
-const {User} = require("../models/authentication");
-const {getCommonViewOptions} = require("./utils");
+const {User} = require("../models/authentication.model");
+const {getCommonViewOptions} = require("./utils.route");
 
 // Session auth check for all routes under /admin
 router.use(async (req, res, next) => {

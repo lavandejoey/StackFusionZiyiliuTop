@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const YAML = require("yaml");
-const {User} = require("../models/authentication");
+const {User} = require("../models/authentication.model");
 SERVER_LIST = [
     {name: "ZLiu US proxy", server: "us.ziyiliu.top"},
     {name: "ZLiu DE proxy", server: "de.ziyiliu.top"}
@@ -173,7 +173,7 @@ router.get("/config", async (req, res) => {
         const user = new User(null, email);
         await user.fetchUser();
 
-        if (!user || !user.uuid || !user.v2_iter_id) {
+        if (!user || !user.uuid || !user.v2_iter_id || user.isLocked()) {
             console.log("User not found or missing required fields:", email);
             return res.status(404).send("User not found");
         }
