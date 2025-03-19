@@ -23,6 +23,6 @@
     "start": "NODE_ENV=production npm run build:all && npm run start:backend"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   }
 }

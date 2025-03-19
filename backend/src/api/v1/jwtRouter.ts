@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/jwtRouter.ts
-import {Request, Response, Router} from "express"
+import {Router} from "express"
 import jwt, {JwtPayload} from "jsonwebtoken"
 import {successResponse, errorResponse} from "middlewares/response";
 import {UserModel} from "models/user.model";
@@ -86,7 +86,7 @@ jwtRouter.post("/login", async (req, res): Promise<any> => {
  * Response:
  * "data": {"accessToken": {"token": "xxxxx.yyyyy.zzzzz", "expireAt": "2000-01-01T00:00:00.000Z"}}
  */
-jwtRouter.post('/refresh', async (req, res): Promise<any> => {
+jwtRouter.post("/refresh", async (req, res): Promise<any> => {
     // Process Request Body
     const refreshToken = req.body.token || req.body.refreshToken;
     if (!refreshToken) {
@@ -98,7 +98,7 @@ jwtRouter.post('/refresh', async (req, res): Promise<any> => {
         const payload = jwt.verify(refreshToken, JWT_SECRET) as JwtPayload;
         const storedToken = await redisGet(`refreshToken:${payload.sub}`);
         if (!storedToken || storedToken !== refreshToken) {
-            return res.status(403).json(errorResponse(403, 'Refresh token expired or invalid.'));
+            return res.status(403).json(errorResponse(403, "Refresh token expired or invalid."));
         }
 
         return res.status(200).json(successResponse(req, {
@@ -117,7 +117,7 @@ jwtRouter.post('/refresh', async (req, res): Promise<any> => {
 /** Logout by removing the refresh token
  * POST /api/v1/jwt/logout
  */
-jwtRouter.post('/logout', async (req, res): Promise<any> => {
+jwtRouter.post("/logout", async (req, res): Promise<any> => {
     // Process Request Body
     const refreshToken = req.body.token || req.body.refreshToken;
     if (!refreshToken) {

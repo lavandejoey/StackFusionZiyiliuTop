@@ -5,54 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
-      <change afterPath="$PROJECT_DIR$/.idea/StackFusionZiyiliuTop.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/www" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/authentication.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/userRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/userRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/v2rayRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/v2rayRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/response.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/models/useRole.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/useRole.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/utils/argon2.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/utils/argon2.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/utils/mysql2Config.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/utils/mysql2Config.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/utils/redisClient.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/utils/redisClient.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/argon2.package.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/mysql2Config.package.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/redisClient.package.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Black_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Bold_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Light_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Medium_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_SC_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_TC_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/fonts/HarmonyOS/HarmonyOS_Sans_Thin_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/6702323f5tc220c8b48779336a48bb54.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logo-pic-bg.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logo-pic-bg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logo-pic.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/ECUST_university_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/ENSTA_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/Institut_polytechnique_de_Paris_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/boc_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/iscas_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logos/porsche_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/v2ray.route.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,6 +90,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
+    "npm.backend > build.executor": "Run",
     "npm.backend > dev.executor": "Run",
     "npm.build-css.executor": "Run",
     "npm.start:debug.executor": "Run",
@@ -160,6 +129,16 @@
     <configuration name="v2rayLogParser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/script/v2rayLogParser.js" working-dir="$PROJECT_DIR$/script">
       <method v="2" />
     </configuration>
+    <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="backend &gt; dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
@@ -173,11 +152,13 @@
     <list>
       <item itemvalue="Node.js.parser.js" />
       <item itemvalue="Node.js.v2rayLogParser.js" />
+      <item itemvalue="npm.backend &gt; build" />
       <item itemvalue="npm.backend &gt; dev" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="npm.backend &gt; dev" />
+        <item itemvalue="npm.backend &gt; build" />
         <item itemvalue="Node.js.parser.js" />
         <item itemvalue="Node.js.v2rayLogParser.js" />
       </list>
@@ -237,7 +218,8 @@
       <workItem from="1742168476382" duration="732000" />
       <workItem from="1742206672500" duration="356000" />
       <workItem from="1742405131404" duration="385000" />
-      <workItem from="1742405946885" duration="64000" />
+      <workItem from="1742405946885" duration="4470000" />
+      <workItem from="1742417147879" duration="601000" />
     </task>
     <servers />
   </component>

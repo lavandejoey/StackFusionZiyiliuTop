@@ -9,24 +9,21 @@ const SERVER_LIST: { name: string, server: string }[] = [
     {name: "ZLiu DE proxy", server: "de.ziyiliu.top"}
 ];
 
-/** Retrieve the Clash configuration based on the user's email
- * GET /api/v1/proxy/config?email=xxx@xxx.com&uuid=xxxxx
- * GET /api/v1/proxy/config/:uuid
+/** Retrieve the Proxy Config by Email
+ * GET /api/v1/proxy/config?email=xxx@xxx.com
  * GET /api/v1/proxy/config/:email
  * @param email: string
- * @param uuid: string
  */
-proxyRouter.get(["/config", "/config/:uuid", "config/:email"], async (req, res): Promise<any> => {
+proxyRouter.get(["/config", "config/:email"], async (req, res): Promise<any> => {
     // Process Request Body (x-www-form-urlencoded) or Query Params (?email=xxx&uuid=xxx)
     const email: string = req.query.email || req.body.email || "";
-    const uuid: string = req.query.uuid || req.body.uuid || "";
-    if (email === "" && uuid === "") return res.status(400).send("Email or UUID is required");
+    if (email === "") return res.status(400).send("Email is required");
 
     try {
-        const user: UserModel | null = await new UserModel(uuid, email).fetchUser();
+        const user: UserModel | null = await new UserModel(null, email).fetchUser();
 
         if (!user || !user.uuid || !user.email || !user.v2_iter_id) return res.status(404).send("User not found");
-        if (!user.isUserFriend()) return res.status(403).send("Permission denied");
+        if (!user.isUserFriend() && !user.isAdmin()) return res.status(403).send("Permission denied");
 
         const yamlContent = generateClashYaml(user.email, user.uuid, user.v2_iter_id);
         // send non-downloadable text

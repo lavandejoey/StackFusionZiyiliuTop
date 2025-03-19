@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/userRouter.ts
-import {Router} from 'express'
+import {Router} from "express"
 import {successResponse, errorResponse} from "middlewares/response";
 import {UserModel, UserRow} from "models/user.model";
 import {authJWT} from "middlewares/authJWT";

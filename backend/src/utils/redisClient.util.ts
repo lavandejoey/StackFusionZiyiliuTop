@@ -28,4 +28,5 @@ const redisGet = async (key: string): Promise<string | null> => {
 const redisDel = async (key: string) => {
     await redisClient.del(key);
 };
+
 export {redisClient, redisSet, redisGet, redisDel};

@@ -37,14 +37,14 @@ app.use(session({
         httpOnly: true,
         secure: IS_PROD,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        sameSite: 'lax'
+        sameSite: "lax"
     }
 }));
 
 // Routers
 app.use(`/api/${process.env.API_VERSION}/jwt`, jwtRouter);
 app.use(`/api/${process.env.API_VERSION}/user`, userRouter);
-app.use(`/api/${process.env.API_VERSION}/v2ray`, proxyRouter);
+app.use(`/api/${process.env.API_VERSION}/proxy`, proxyRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)

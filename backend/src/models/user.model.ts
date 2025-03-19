@@ -1,15 +1,15 @@
 // /StackFusionZiyiliuTop/backend/src/models/user.model.ts
-import {v4 as uuid4, validate as uuidValidate} from 'uuid'
+import {v4 as uuid4, validate as uuidValidate} from "uuid"
 import dbClient from "utils/mysql2Config.util"
-import {RowDataPacket} from 'mysql2/promise'
-import {hashPassword, verifyPassword} from 'utils/argon2.util'
+import {RowDataPacket} from "mysql2/promise"
+import {hashPassword, verifyPassword} from "utils/argon2.util"
 import {UserRoleEnum, UserRoleMappingRow, UserRoleModel} from "models/useRole.model"
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 enum UserStatusEnum {
-    ACTIVE = 'active',
-    INACTIVE = 'inactive'
+    ACTIVE = "active",
+    INACTIVE = "inactive"
 }
 
 
@@ -46,31 +46,31 @@ class UserModel {
 
     static async fetchAllUsers(): Promise<UserRow[]> {
         try {
-            const [rows] = await dbClient.query<UserRow[]>('SELECT * FROM user')
+            const [rows] = await dbClient.query<UserRow[]>("SELECT * FROM user")
             return rows
         } catch (error) {
-            console.error('Error fetching users:', error)
+            console.error("Error fetching users:", error)
             return []
         }
     }
 
     async fetchUser(): Promise<UserModel | null> {
-        let sql: string = ''
+        let sql: string = ""
         let params: string[] = []
 
         if (this.uuid) {
             if (!uuidValidate(this.uuid)) {
-                console.error('Invalid UUID format')
+                console.error("Invalid UUID format")
                 return null
             }
-            sql = 'SELECT * FROM user WHERE uuid = ?'
+            sql = "SELECT * FROM user WHERE uuid = ?"
             params = [this.uuid]
         } else if (this.email) {
             if (!emailRegex.test(this.email)) {
-                console.error('Invalid email format')
+                console.error("Invalid email format")
                 return null
             }
-            sql = 'SELECT * FROM user WHERE LOWER(email) = LOWER(?)'
+            sql = "SELECT * FROM user WHERE LOWER(email) = LOWER(?)"
             params = [this.email]
         } else {
             return null
@@ -79,7 +79,7 @@ class UserModel {
         try {
             const [rows] = await dbClient.query<UserRow[]>(sql, params)
             if (rows.length === 0) {
-                console.log('User not found')
+                console.log("User not found")
                 return null
             }
 
@@ -103,7 +103,7 @@ class UserModel {
                 const role_id = user_role_ids[0][i].role_id;
                 const [role_rows] = await dbClient.query<UserRoleMappingRow[]>(role_sql, [role_id]);
                 if (role_rows.length === 0) {
-                    console.log('Role not found')
+                    console.log("Role not found")
                     return null
                 }
                 const role = role_rows[0]
@@ -112,7 +112,7 @@ class UserModel {
 
             return this
         } catch (error) {
-            console.error('Error fetching user:', error)
+            console.error("Error fetching user:", error)
             return null
         }
     }
@@ -126,17 +126,17 @@ class UserModel {
         v2_iter_id?: number
     ): Promise<UserModel | null> {
         if (!email || !password) {
-            console.error('Email and password are required for creating a new user')
+            console.error("Email and password are required for creating a new user")
             return null
         }
 
         if (!emailRegex.test(email)) {
-            console.error('Invalid email format')
+            console.error("Invalid email format")
             return null
         }
 
         if (password.length < 6) {
-            console.error('Password is too short')
+            console.error("Password is too short")
             return null
         }
 
@@ -144,18 +144,18 @@ class UserModel {
             this.uuid = uuid || uuid4()
             this.email = email
             this.password_hash = await hashPassword(password)
-            this.first_name = first_name || ''
-            this.last_name = last_name || ''
+            this.first_name = first_name || ""
+            this.last_name = last_name || ""
             this.v2_iter_id = v2_iter_id || Math.floor(Math.random() * 100)
             this.status = UserStatusEnum.INACTIVE
 
-            const sql = 'INSERT INTO user (uuid, email, password_hash, first_name, last_name, v2_iter_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
+            const sql = "INSERT INTO user (uuid, email, password_hash, first_name, last_name, v2_iter_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)"
             const params = [this.uuid, this.email, this.password_hash, this.first_name, this.last_name, this.v2_iter_id, this.status]
 
             await dbClient.query(sql, params)
             return this
         } catch (error) {
-            console.error('Error creating user:', error)
+            console.error("Error creating user:", error)
             return null
         }
     }
@@ -167,13 +167,13 @@ class UserModel {
             const authenticated = await verifyPassword(password, this.password_hash)
 
             if (authenticated) {
-                const sql = 'UPDATE user SET updated_at = NOW() WHERE uuid = ?'
+                const sql = "UPDATE user SET updated_at = NOW() WHERE uuid = ?"
                 await dbClient.query(sql, [this.uuid])
             }
 
             return authenticated
         } catch (error) {
-            console.error('Error authenticating user:', error)
+            console.error("Error authenticating user:", error)
             return false
         }
     }
@@ -200,17 +200,17 @@ class UserModel {
 
     async updateUserStatus(status: UserStatusEnum): Promise<boolean> {
         if (!Object.values(UserStatusEnum).includes(status)) {
-            console.error('Invalid status')
+            console.error("Invalid status")
             return false
         }
 
         try {
-            const sql = 'UPDATE user SET status = ? WHERE uuid = ?'
+            const sql = "UPDATE user SET status = ? WHERE uuid = ?"
             await dbClient.query(sql, [status, this.uuid])
             this.status = status
             return true
         } catch (error) {
-            console.error('Error updating user status:', error)
+            console.error("Error updating user status:", error)
             return false
         }
     }
@@ -223,8 +223,8 @@ class UserModel {
         last_name?: string,
         v2_iter_id?: number
     ): Promise<UserModel | null> {
-        if (!old_password || !await verifyPassword(old_password, this.password_hash || '')) {
-            console.error('Old password is incorrect or missing')
+        if (!old_password || !await verifyPassword(old_password, this.password_hash || "")) {
+            console.error("Old password is incorrect or missing")
             return null
         }
 
@@ -233,54 +233,52 @@ class UserModel {
 
         if (email) {
             if (!emailRegex.test(email)) {
-                console.error('Invalid email format')
+                console.error("Invalid email format")
                 return null
             }
-            updates.push('email = ?')
+            updates.push("email = ?")
             params.push(email)
         }
 
         if (new_password) {
             if (new_password.length < 6) {
-                console.error('Password is too short')
+                console.error("Password is too short")
                 return null
             }
             const new_password_hash = await hashPassword(new_password)
-            updates.push('password_hash = ?')
+            updates.push("password_hash = ?")
             params.push(new_password_hash)
         }
 
         if (first_name) {
-            updates.push('first_name = ?')
+            updates.push("first_name = ?")
             params.push(first_name)
         }
 
         if (last_name) {
-            updates.push('last_name = ?')
+            updates.push("last_name = ?")
             params.push(last_name)
         }
 
-        if (typeof v2_iter_id === 'number') {
-            updates.push('v2_iter_id = ?')
+        if (typeof v2_iter_id === "number") {
+            updates.push("v2_iter_id = ?")
             params.push(v2_iter_id)
         }
 
         if (updates.length === 0) {
-            console.error('Nothing to update')
+            console.error("Nothing to update")
             return null
         }
 
         try {
-            const sql = `UPDATE user
-                         SET ${updates.join(', ')}
-                         WHERE uuid = ?`
+            const sql = `UPDATE user SET ${updates.join(", ")} WHERE uuid = ?`
             params.push(this.uuid)
 
             await dbClient.query(sql, params)
             await this.fetchUser() // refresh user data
             return this
         } catch (error) {
-            console.error('Error updating user:', error)
+            console.error("Error updating user:", error)
             return null
         }
     }

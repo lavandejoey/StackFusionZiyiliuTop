@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/utils/mysql2Config.util.ts
-import mysql, {Pool, PoolConnection, RowDataPacket, ResultSetHeader, FieldPacket} from 'mysql2/promise'
+import mysql, {Pool, PoolConnection, RowDataPacket, ResultSetHeader, FieldPacket} from "mysql2/promise"
 
 class MySQL {
     private pool: Pool
@@ -23,7 +23,7 @@ class MySQL {
                 connection.release()
             })
             .catch(err => {
-                console.error('Error connecting to MySQL:', err)
+                console.error("Error connecting to MySQL:", err)
             })
     }
 

@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/models/useRole.model.ts
-import {RowDataPacket} from 'mysql2/promise'
+import {RowDataPacket} from "mysql2/promise"
 import dbClient from "utils/mysql2Config.util"
 
 // Role mapping row
@@ -30,10 +30,10 @@ export class UserRoleModel {
 
     static async fetchAllRoles(): Promise<UserRoleMappingRow[]> {
         try {
-            const [rows] = await dbClient.query<UserRoleMappingRow[]>('SELECT * FROM user_role')
+            const [rows] = await dbClient.query<UserRoleMappingRow[]>("SELECT * FROM user_role")
             return rows
         } catch (error) {
-            console.error('Error fetching roles:', error)
+            console.error("Error fetching roles:", error)
             return []
         }
     }

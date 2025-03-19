@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/utils/argon2.util.ts
-import argon2 from 'argon2'
+import argon2 from "argon2"
 
 /**
  * Hash a plain text password using Argon2
@@ -10,7 +10,7 @@ async function hashPassword(password: string): Promise<string | undefined> {
     try {
         return await argon2.hash(password)
     } catch (error) {
-        console.error('Error hashing password:', error)
+        console.error("Error hashing password:", error)
         return undefined
     }
 }
@@ -25,7 +25,7 @@ async function verifyPassword(password: string, hash: string): Promise<boolean> 
     try {
         return await argon2.verify(hash, password)
     } catch (error) {
-        console.error('Error verifying password:', error)
+        console.error("Error verifying password:", error)
         return false
     }
 }
