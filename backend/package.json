@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -r tsconfig-paths/register src/app.ts",
+    "build": "tsc",
+    "start": "node -r tsconfig-paths/register dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "helmet": "^8.0.0",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.10",
+    "argon2": "^0.41.1",
+    "bcrypt": "^5.1.1",
+    "connect-redis": "^8.0.2",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "ioredis": "^5.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.13.0",
+    "nodemon": "^3.1.9",
+    "redis": "^4.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "uuid": "^11.1.0",
+    "yaml": "^2.7.0"
+  }
+}
