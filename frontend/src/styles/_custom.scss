@@ -1,0 +1,105 @@
+// Custom styles for your website
+body {
+  padding: 50px;
+}
+
+a {
+  color: #00B7FF;
+}
+
+/* Floating border around the page */
+.phoframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 5px;
+  border: 1em solid $frame-color;
+  z-index: 9999;
+  pointer-events: none
+}
+
+// Custom styles to the active navbar item
+.main-navbar-item.nav-link {
+  font-weight: normal;
+  width: 120px;
+  // center the element in side
+  text-align: center;
+
+  &.active {
+    font-weight: bold;
+    transform: scale(1.1);
+    // un-clickable
+    pointer-events: none;
+  }
+
+  &:hover {
+    font-weight: bold;
+    transform: scale(1.1);
+    transition: all 0.25s ease-in-out
+  }
+}
+
+/* Remove the dropdown arrow */
+.no-caret::after {
+  display: none
+}
+
+/* Center the dropdown menu */
+.dropdown-menu-center {
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+/* CSS to style the vertical line */
+.vertical-line {
+  width: 1px;
+  /* Adjust height as needed */
+  height: 80%;
+  background-color: #ddd;
+  position: absolute;
+  /* Position in the center between columns */
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%)
+}
+
+.user-select-all {
+  cursor: pointer;
+}
+
+//.text-truncate-n series n = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+@for $i from 1 through 50 {
+  .text-truncate-#{$i} {
+    max-width: #{$i}ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+#typewriter-container {
+  display: inline-block;
+  overflow: hidden;
+  padding: 1rem;
+  max-width: 100%;
+}
+
+#typewriter-text-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-size: 2rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+#typewriter-text {
+  font-size: clamp(1.5rem, 5vw + 1rem, 3rem); /* Responsive size: min 1.5rem, max 3rem */
+  font-family: "Shantell Sans", cursive;
+  white-space: pre-wrap;
+  word-break: break-word; /* Allow the line to break naturally, preserving partial words */
+}
