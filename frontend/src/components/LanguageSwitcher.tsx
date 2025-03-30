@@ -1,7 +1,7 @@
 // /StackFusionZiyiliuTop/frontend/src/components/LanguageSwitcher.tsx
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Dropdown} from "react-bootstrap";
 import {faLanguage} from "@fortawesome/free-solid-svg-icons";
+import {Dropdown} from "react-bootstrap";
 
 function LanguageSwitcher() {
     const languages = [

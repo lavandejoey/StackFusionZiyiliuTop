@@ -6,7 +6,9 @@ import {useTypewriter, Cursor} from "react-simple-typewriter";
 import {useTranslation} from "react-i18next";
 
 const Home: React.FC = () => {
-    const [language] = React.useState("en");
+    // parse language code with i18n
+    const {t, i18n} = useTranslation();
+    const language = i18n.language;
     const [text] = useTypewriter({
         words:
             language === "fr"
@@ -21,8 +23,6 @@ const Home: React.FC = () => {
         loop: true,
         delaySpeed: 1500,
     });
-
-    const {t} = useTranslation();
 
     return (
         <MainLayout activePage={"Home"}>

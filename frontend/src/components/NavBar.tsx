@@ -32,7 +32,7 @@ const NavBar: React.FC<NavBarProps> = ({activePage, user}) => {
                                 className={`d-flex justify-content-center main-navbar-item ${activePage === item.name ? "active" : ""}`}
                             >
                                 <AnnotatedText text={item.text} show={activePage === item.name}
-                                               color={themeColours.quaternary}/>
+                                               color={themeColours.quinary}/>
                             </Nav.Link>
                         ))}
                     </Nav>
