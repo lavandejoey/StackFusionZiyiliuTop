@@ -113,6 +113,30 @@ a {
   }
 }
 
+#typewriter-container {
+  display: inline-block;
+  overflow: hidden;
+  padding: 1rem;
+  max-width: 100%;
+}
+
+#typewriter-text-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-size: 2rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+#typewriter-text {
+  font-size: clamp(1.5rem, 5vw + 1rem, 3rem); /* Responsive size: min 1.5rem, max 3rem */
+  font-family: "Shantell Sans", cursive;
+  white-space: pre-wrap;
+  word-break: break-word; /* Allow the line to break naturally, preserving partial words */
+}
+
 // Finally, import Bootstrap's styles
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons";

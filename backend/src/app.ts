@@ -15,6 +15,7 @@ import {RedisStore} from "connect-redis";
 import jwtRouter from "api/v1/jwtRouter"
 import userRouter from "api/v1/userRouter"
 import proxyRouter from "api/v1/v2rayRouter";
+import contactRouter from "api/v1/contactRouter";
 
 const PORT = process.env.BACKEND_PORT;
 const IS_PROD = process.env.NODE_ENV === "production";
@@ -45,6 +46,7 @@ app.use(session({
 app.use(`/api/${process.env.API_VERSION}/jwt`, jwtRouter);
 app.use(`/api/${process.env.API_VERSION}/user`, userRouter);
 app.use(`/api/${process.env.API_VERSION}/proxy`, proxyRouter);
+app.use(`/api/${process.env.API_VERSION}/contact`, contactRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)

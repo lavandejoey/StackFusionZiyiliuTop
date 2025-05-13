@@ -14,7 +14,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "express-validator": "^7.2.1",
     "helmet": "^8.0.0",
+    "postmark": "^4.0.5",
     "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
