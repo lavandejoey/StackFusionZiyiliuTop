@@ -8,7 +8,7 @@ declare module "axios" {
 }
 
 // Determine API base URL from Vite env
-const DEV = import.meta.env.VITE_ENV === "development";
+const DEV = import.meta.env.DEV;
 const DOMAIN = DEV ? import.meta.env.VITE_API_DOMAIN_DEV : import.meta.env.VITE_API_DOMAIN_PROD;
 const VERSION = import.meta.env.VITE_API_VERSION;
 
