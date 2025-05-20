@@ -27,11 +27,16 @@ export default defineConfig({
         // Express Backend Server
         proxy: {
             "/api": {
-                target: "http://localhost:2069",
+                target: "https://ziyiliu.top",
                 changeOrigin: true,
                 secure: false, // true for https, false for http
             }
-        }
+        },
+        allowedHosts: [
+            "localhost",
+            "ziyiliu.top",
+            "www.ziyiliu.top"
+        ],
     },
     build: {
         outDir: "dist",

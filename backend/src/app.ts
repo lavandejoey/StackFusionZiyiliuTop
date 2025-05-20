@@ -1,7 +1,6 @@
 // /StackFusionZiyiliuTop/backend/src/app.ts
 /* Packages */
 import express from "express";
-// @ts-ignore
 import helmet from "helmet";
 import session from "express-session";
 import cors from "cors";
@@ -35,10 +34,8 @@ const DOMAIN = rawDomain?.replace(/\/+$/, "");
 const app = express();
 if (IS_PROD) app.set("trust proxy", 1); // trust first proxy
 // Enable CORS for exactly your frontend origin, with credentials:
-app.use(cors({
-    origin: DOMAIN,
-    credentials: true,
-}));
+app.use(cors({origin: DOMAIN, credentials: true}));
+app.options("/api/*", cors({origin: DOMAIN, credentials: true}));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
