@@ -1,10 +1,10 @@
 // /StackFusionZiyiliuTop/backend/src/models/user.model.ts
 import {v4 as uuid4, validate as uuidValidate} from "uuid"
-import dbClient from "utils/mysql2Config.util"
+import dbClient from "@/utils/mysql2Config.util"
 import {RowDataPacket} from "mysql2/promise"
-import {hashPassword, verifyPassword} from "utils/argon2.util"
-import {UserRoleEnum, UserRoleMappingRow, UserRoleModel} from "models/useRole.model"
-import {isEmail} from "utils/valid.util";
+import {hashPassword, verifyPassword} from "@/utils/argon2.util"
+import {UserRoleEnum, UserRoleMappingRow, UserRoleModel} from "@/models/useRole.model"
+import {isEmail} from "@/utils/valid.util";
 
 enum UserStatusEnum {
     ACTIVE = "active",

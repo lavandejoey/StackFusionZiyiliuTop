@@ -1,10 +1,10 @@
 // /StackFusionZiyiliuTop/backend/src/middlewares/authJWT.ts
 import {Request, Response, NextFunction} from "express"
 import jwt, {JwtPayload} from "jsonwebtoken"
-import {errorResponse} from "middlewares/response"
-import {UserModel} from "models/user.model"
-import {isUuidV4} from "utils/valid.util";
-import {SERVER_TOKEN_KEY} from "utils/jwt.util";
+import {errorResponse} from "@/middlewares/response"
+import {UserModel} from "@/models/user.model"
+import {isUuidV4} from "@/utils/valid.util";
+import {SERVER_TOKEN_KEY} from "@/utils/jwt.util";
 
 // env constants – keep naming consistent
 const JWT_SECRET = process.env.JWT_SECRET_KEY!

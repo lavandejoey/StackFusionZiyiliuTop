@@ -2,7 +2,7 @@
 import {Response} from "express";
 import {randomUUID} from "crypto";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {redisSet} from "utils/redisClient.util";
+import {redisSet} from "@/utils/redisClient.util";
 import process from "node:process";
 
 // env constants – keep naming consistent

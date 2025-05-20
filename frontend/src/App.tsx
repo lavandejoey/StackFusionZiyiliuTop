@@ -8,7 +8,8 @@ import Contact from "@/pages/Contact";
 import UserHome from "@/pages/UserHome";
 import BlogList from "@/pages/BlogList";
 import BlogPost from "@/pages/BlogPost";
-import {AuthProvider, useAuth} from "@/hooks/useAuth";
+import {useAuth} from "@/hooks/useAuth";
+import {AuthProvider} from "@/contexts/AuthContext";
 
 function RequireAuth() {
     const {user, ready} = useAuth();

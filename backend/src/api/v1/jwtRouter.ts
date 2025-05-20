@@ -1,9 +1,9 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/jwtRouter.ts
 import {Router} from "express";
 import cookieParser from "cookie-parser";
-import {UserModel} from "models/user.model";
-import {successResponse, errorResponse} from "middlewares/response";
-import {signUserToken, signServerToken, setAuthCookie,} from "utils/jwt.util";
+import {UserModel} from "@/models/user.model";
+import {successResponse, errorResponse} from "@/middlewares/response";
+import {signUserToken, signServerToken, setAuthCookie,} from "@/utils/jwt.util";
 
 const jwtRouter = Router()
 jwtRouter.use(cookieParser())

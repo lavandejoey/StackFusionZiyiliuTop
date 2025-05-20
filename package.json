@@ -26,8 +26,5 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "express-rate-limit": "^7.5.0",
-    "katex": "^0.16.22",
-    "xss": "^1.0.15"
   }
 }

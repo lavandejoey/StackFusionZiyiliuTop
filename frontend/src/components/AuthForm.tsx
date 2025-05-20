@@ -1,6 +1,6 @@
 // /StackFusionZiyiliuTop/frontend/src/components/AuthForm.tsx
 import "@/styles/AuthForm.css";
-import {useRef, useState, useCallback, useEffect, FormEvent} from "react";
+import {useRef, useState, useEffect, FormEvent, useMemo} from "react";
 import {useNavigate} from "react-router-dom";
 import {SwitchTransition, CSSTransition} from "react-transition-group";
 import {
@@ -50,28 +50,31 @@ export function AuthForm() {
     const formRef = useRef<HTMLFormElement>(null);
 
     /* --------------- async e-mail duplicate check ---------------- */
-    const checkEmail = useCallback(
-        debounce(async (value: string) => {
-            if (!emailRegex.test(value)) return;
-            setCheckingEmail(true);
-            try {
-                const {data} = await apiEmailExists(value);
-                setFieldErrors((prev) => ({
-                    ...prev,
-                    email: mode === "signup"
-                        ? data.exists ? "E-mail already in use" : ""
-                        : !data.exists ? "E-mail not found" : "",
-                }));
-            } catch (_err) {
-                setFieldErrors((prev) => ({
-                    ...prev,
-                    email: "Unable to verify e-mail right now",
-                }));
-            } finally {
-                setCheckingEmail(false);
-            }
-        }, 400),
-        [mode],
+    const checkEmail = useMemo(
+        () =>
+            debounce(async (value: string) => {
+                if (!emailRegex.test(value)) return;
+                setCheckingEmail(true);
+                try {
+                    const {data} = await apiEmailExists(value);
+                    setFieldErrors((prev) => ({
+                        ...prev,
+                        email: mode === "signup"
+                            ? data.exists ? "E-mail already in use" : ""
+                            : !data.exists ? "E-mail not found" : "",
+                    }));
+                } catch (err) {
+                    // Handle error gracefully
+                    console.error("Error checking email:", err);
+                    setFieldErrors((prev) => ({
+                        ...prev,
+                        email: "Unable to verify e-mail right now",
+                    }));
+                } finally {
+                    setCheckingEmail(false);
+                }
+            }, 400),
+        [mode, setCheckingEmail, setFieldErrors]
     );
 
     // Cancel any pending debounce on unmount or mode change
@@ -155,9 +158,10 @@ export function AuthForm() {
                 const userUuid = response.data.user.uuid;
                 navigate(`/user/${userUuid}`);
             }
-        } catch (err: any) {
+        } catch (err) {
+            console.error("Error during login/signup:", err);
             setServerError(
-                err.response?.data?.error?.message ?? "Unexpected error"
+                "Unable to log in. Please check your credentials and try again."
             );
         } finally {
             setLoading(false);
@@ -176,7 +180,7 @@ export function AuthForm() {
         <Row className="justify-content-center">
             <Col>
                 <h2 className="text-center mb-5">
-                    {mode === "login" ? "👋 Welcome back!" : "Let’s get started…"}
+                    {mode === "login" ? "👋 Welcome back!" : "Let's get started…"}
                 </h2>
 
                 <Tabs

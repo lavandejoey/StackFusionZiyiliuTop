@@ -1,10 +1,10 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/userRouter.ts
 import {CookieOptions, Router} from "express"
-import {UserModel, UserRow} from "models/user.model"
-import {successResponse, errorResponse} from "middlewares/response"
-import {authAdmJWT, authCrsJWT, authSvrJWT, authUsrJWT} from "middlewares/authJWT"
-import {setAuthCookie, signUserToken} from "utils/jwt.util";
-import {isUuidV4} from "utils/valid.util";
+import {UserModel, UserRow} from "@/models/user.model"
+import {successResponse, errorResponse} from "@/middlewares/response"
+import {authAdmJWT, authCrsJWT, authSvrJWT, authUsrJWT} from "@/middlewares/authJWT"
+import {setAuthCookie, signUserToken} from "@/utils/jwt.util";
+import {isUuidV4} from "@/utils/valid.util";
 
 const userRouter = Router()
 

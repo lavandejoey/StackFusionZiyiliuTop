@@ -1,6 +1,7 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogPost.tsx
 import {useEffect, useState} from "react";
-import {useParams, Link} from "react-router-dom";
+import {useParams} from "react-router-dom";
+import {LinkContainer} from "react-router-bootstrap";
 import {Container, Button, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
@@ -52,9 +53,11 @@ export default function BlogPost() {
         <MainLayout>
             <PageHead title={meta.title} description={meta.description || ""}/>
             <Container fluid className="mt-5">
-                <Button as={Link as any} to={backHref} variant="link" className="mb-3">
-                    &larr; Back
-                </Button>
+                <LinkContainer to={backHref} className="mb-3">
+                    <Button variant="link">
+                        &larr; Back
+                    </Button>
+                </LinkContainer>
                 <h1 className="mb-3">{meta.title}</h1>
                 <div dangerouslySetInnerHTML={{__html: html}}/>
             </Container>

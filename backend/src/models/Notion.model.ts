@@ -1,6 +1,6 @@
 // /StackFusionZiyiliuTop/backend/src/models/Notion.model.ts
 import katex from "katex";
-import {redisClient} from "utils/redisClient.util";
+import {redisClient} from "@/utils/redisClient.util";
 
 // SHARED TYPES & HELPERS
 export interface NotionObject {

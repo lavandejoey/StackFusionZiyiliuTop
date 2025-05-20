@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250520 Auth api with frontend completed.">
-      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/contexts/AuthContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useAuth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useAuth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +35,8 @@
         <option value="SCSS File" />
         <option value="OpenAPI" />
         <option value="TypeScript File" />
-        <option value="TypeScript JSX File" />
         <option value="CSS File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -88,12 +101,23 @@
     "nodejs_package_manager_path": "npm",
     "npm.backend > build.executor": "Run",
     "npm.backend > dev.executor": "Run",
+    "npm.backend > start.executor": "Run",
+    "npm.backend > typecheck.executor": "Run",
     "npm.build-css.executor": "Run",
+    "npm.build.executor": "Run",
+    "npm.build:all.executor": "Run",
+    "npm.clean.executor": "Run",
     "npm.dev:all.executor": "Run",
     "npm.frontend > build.executor": "Run",
     "npm.frontend > dev.executor": "Run",
+    "npm.frontend > lint.executor": "Run",
     "npm.frontend > preview.executor": "Run",
+    "npm.frontend > start.executor": "Run",
+    "npm.frontend > test.executor": "Run",
+    "npm.install:all.executor": "Run",
+    "npm.lint.executor": "Run",
     "npm.start:debug.executor": "Run",
+    "npm.typecheck.executor": "Run",
     "npm.watch-css.executor": "Debug",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
@@ -122,22 +146,22 @@
       <recent name="$PROJECT_DIR$/frontend/src" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev:all">
-    <configuration name="backend &gt; dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.backend &gt; build">
+    <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="dev" />
+        <script value="build" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="dev:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+    <configuration name="backend &gt; start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="dev:all" />
+        <script value="start" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -153,11 +177,11 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="frontend &gt; dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="frontend &gt; lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/frontend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="dev" />
+        <script value="lint" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -173,20 +197,13 @@
       <envs />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="npm.backend &gt; dev" />
-      <item itemvalue="npm.dev:all" />
-      <item itemvalue="npm.frontend &gt; build" />
-      <item itemvalue="npm.frontend &gt; dev" />
-      <item itemvalue="npm.frontend &gt; preview" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev:all" />
+        <item itemvalue="npm.backend &gt; start" />
+        <item itemvalue="npm.backend &gt; build" />
         <item itemvalue="npm.frontend &gt; preview" />
-        <item itemvalue="npm.frontend &gt; dev" />
         <item itemvalue="npm.frontend &gt; build" />
-        <item itemvalue="npm.backend &gt; dev" />
+        <item itemvalue="npm.frontend &gt; lint" />
       </list>
     </recent_temporary>
   </component>
@@ -257,7 +274,7 @@
       <workItem from="1747346173842" duration="39280000" />
       <workItem from="1747666936574" duration="10269000" />
       <workItem from="1747737720865" duration="31000" />
-      <workItem from="1747737763691" duration="16461000" />
+      <workItem from="1747737763691" duration="22743000" />
     </task>
     <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
       <option name="closed" value="true" />

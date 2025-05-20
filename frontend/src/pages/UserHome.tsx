@@ -12,7 +12,7 @@ export default function UserHome() {
 
     useEffect(() => {
         if (!user) refresh().finally(() => setLoading(false));
-    }, [user]);
+    }, [user, refresh]);
 
     if (loading)
         return (

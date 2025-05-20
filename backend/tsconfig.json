@@ -12,6 +12,7 @@
     "module": "commonjs",
     "outDir": "./dist",
     "rootDir": "./src",
+    "sourceRoot": "./src",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -19,12 +20,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
-    "paths": {},
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*", "dist/*"]
+    },
 
     "sourceMap": true,
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "types": ["node", "express"]
+    "types": ["express"],
 
     /* Projects */
     // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */

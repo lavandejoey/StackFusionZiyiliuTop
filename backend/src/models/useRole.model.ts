@@ -1,6 +1,6 @@
 // /StackFusionZiyiliuTop/backend/src/models/useRole.model.ts
 import {RowDataPacket} from "mysql2/promise"
-import dbClient from "utils/mysql2Config.util"
+import dbClient from "@/utils/mysql2Config.util"
 
 // Role mapping row
 export interface UserRoleMappingRow extends RowDataPacket {

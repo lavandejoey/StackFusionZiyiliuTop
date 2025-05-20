@@ -1,7 +1,7 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/v2rayRouter.ts
 import {Router} from "express"
 import YAML from "yaml";
-import {UserModel} from "models/user.model";
+import {UserModel} from "@/models/user.model";
 
 const proxyRouter = Router()
 const SERVER_LIST: { name: string, server: string }[] = [

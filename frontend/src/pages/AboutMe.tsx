@@ -50,10 +50,21 @@ const processTimeline = ({bookIcon, internIcon, educationCircles, internshipCirc
     createLineBetweenElements(internIcon, internshipCircles[internshipCircles.length - 1], svg);
 };
 
+interface InfoItem {
+    logoSrc: string;
+    logoAlt: string;
+    logoTitle: string;
+    institution: string;
+    start: string;
+    end: string;
+    location: string;
+    titles: string[];
+}
+
 interface InfoSectionProps {
     title: string;
     icon: IconDefinition;
-    data: any[];
+    data: InfoItem[];
     circleId: string;
     logoClass: string;
     t: (key: string) => string;

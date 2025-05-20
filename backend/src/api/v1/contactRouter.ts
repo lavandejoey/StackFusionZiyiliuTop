@@ -4,8 +4,8 @@ import process from "node:process";
 import rateLimit from "express-rate-limit";
 import {Router, Request, Response} from "express";
 import {body, validationResult} from "express-validator";
-import {sendEmail} from "utils/postmark.util";
-import {errorResponse, successResponse} from "middlewares/response";
+import {sendEmail} from "@/utils/postmark.util";
+import {errorResponse, successResponse} from "@/middlewares/response";
 
 const contactRouter = Router();
 contactRouter.use(

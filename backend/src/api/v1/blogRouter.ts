@@ -2,8 +2,8 @@
 import {Router, Request, Response, NextFunction, json} from "express";
 import katex from "katex";
 import process from "node:process";
-import {errorResponse} from "middlewares/response";
-import {Block, Database, NotionAPI, Page} from "models/Notion.model";
+import {errorResponse} from "@/middlewares/response";
+import {Block, Database, NotionAPI, Page} from "@/models/Notion.model";
 import axios from "axios";
 
 const blogRouter = Router();
