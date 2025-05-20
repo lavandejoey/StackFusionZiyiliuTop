@@ -74,62 +74,62 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Node.js.app.js.executor": "Run",
-    "Node.js.bin/www.executor": "Run",
-    "Node.js.parser.js.executor": "Run",
-    "Node.js.test.js.executor": "Run",
-    "Node.js.v2rayLogParser.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "Markdown-Groovy.md.groovy",
-    "database.data.extractors.current.id": "Markdown-Groovy.md.groovy",
-    "git-widget-placeholder": "decouple",
-    "javascript.nodejs.core.library.configured.version": "18.19.1",
-    "javascript.nodejs.core.library.typings.version": "18.19.91",
-    "last.edited.regexp": "",
-    "last_opened_file_path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/models",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "npm.backend > build.executor": "Run",
-    "npm.backend > dev.executor": "Run",
-    "npm.backend > start.executor": "Run",
-    "npm.backend > typecheck.executor": "Run",
-    "npm.build-css.executor": "Run",
-    "npm.build.executor": "Run",
-    "npm.build:all.executor": "Run",
-    "npm.clean.executor": "Run",
-    "npm.dev:all.executor": "Run",
-    "npm.frontend > build.executor": "Run",
-    "npm.frontend > dev.executor": "Run",
-    "npm.frontend > lint.executor": "Run",
-    "npm.frontend > preview.executor": "Run",
-    "npm.frontend > start.executor": "Run",
-    "npm.frontend > test.executor": "Run",
-    "npm.install:all.executor": "Run",
-    "npm.lint.executor": "Run",
-    "npm.start:debug.executor": "Run",
-    "npm.typecheck.executor": "Run",
-    "npm.watch-css.executor": "Debug",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Node.js.app.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.bin/www.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.test.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.v2rayLogParser.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;decouple&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.19.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.19.91&quot;,
+    &quot;last.edited.regexp&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/models&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.backend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; typecheck.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-css.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.clean.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; preview.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; test.executor&quot;: &quot;Run&quot;,
+    &quot;npm.install:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start:debug.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck.executor&quot;: &quot;Run&quot;,
+    &quot;npm.watch-css.executor&quot;: &quot;Debug&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend/src/models" />
