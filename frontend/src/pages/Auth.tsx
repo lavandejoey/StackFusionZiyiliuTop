@@ -1,8 +1,8 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/Auth.tsx
 import {Container, Row, Col} from "react-bootstrap";
-import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
 import {AuthForm} from "@/components/AuthForm";
+import MainLayout from "@/components/MainLayout";
 
 export default function AuthPage() {
     return (

@@ -55,7 +55,6 @@ jwtRouter.post("/login", async (req, res) => {
 jwtRouter.post("/logout", async (req, res) => {
     // clear cookies
     res.clearCookie(process.env.USER_ACCESS_COOKIE_NAME!)
-    // TODO: Implement Redis token invalidation
     res.status(200).json(successResponse(req, {}, "Logout successful"))
 })
 

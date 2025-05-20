@@ -20,6 +20,7 @@ import jwtRouter from "api/v1/jwtRouter";
 import userRouter from "api/v1/userRouter";
 import proxyRouter from "api/v1/v2rayRouter";
 import contactRouter from "api/v1/contactRouter";
+import blogRouter from "api/v1/blogRouter";
 import {errorResponse} from "middlewares/response";
 
 const PORT = Number(process.env.BACKEND_PORT) || 2069;
@@ -62,6 +63,7 @@ app.use(`/api/${process.env.API_VERSION}/jwt`, jwtRouter);
 app.use(`/api/${process.env.API_VERSION}/user`, userRouter);
 app.use(`/api/${process.env.API_VERSION}/proxy`, proxyRouter);
 app.use(`/api/${process.env.API_VERSION}/contact`, contactRouter);
+app.use(`/api/${process.env.API_VERSION}/blog`, blogRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

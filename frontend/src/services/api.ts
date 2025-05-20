@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/frontend/src/services/api.ts
-import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError} from "axios";
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError,} from "axios";
 
 declare module "axios" {
     export interface AxiosRequestConfig {
@@ -31,7 +31,9 @@ api.interceptors.response.use(
             cfg.url?.includes("/jwt/login") ||
             cfg.url?.includes("/jwt/server") ||
             cfg.url?.includes("/user/signup")
-        ) return Promise.reject(error);
+        ) {
+            return Promise.reject(error);
+        }
 
         // only retry once
         if (cfg._retry) return Promise.reject(error);
@@ -44,7 +46,7 @@ api.interceptors.response.use(
             window.location.href = "/auth";           // hard redirect
             return Promise.reject(error);
         }
-    },
+    }
 );
 
 // Auth User / JWT endpoints
@@ -69,5 +71,11 @@ export const apiMailingMessage = (body: {
     surname: string, firstName: string, email: string, message: string,
 }) => api.post("/contact", body);
 
-// Export instance if needed directly
+// Fetch list of blog home pages
+export const apiFetchBlogList = () => api.get("/blog");
+
+// Fetch one blog post (metadata + rendered HTML)
+export const apiFetchBlogPost = (pageId: string) =>
+    api.get(`/blog/${encodeURIComponent(pageId)}`);
+
 export default api;

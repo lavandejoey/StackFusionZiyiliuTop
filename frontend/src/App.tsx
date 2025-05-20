@@ -1,12 +1,14 @@
 // /StackFusionZiyiliuTop/frontend/src/App.tsx
 import {Routes, Route, Navigate, Outlet} from "react-router-dom";
+import {Container, Spinner} from "react-bootstrap";
 import Home from "@/pages/Home";
+import AuthPage from "@/pages/Auth";
 import AboutMe from "@/pages/AboutMe";
 import Contact from "@/pages/Contact";
-import AuthPage from "@/pages/Auth";
 import UserHome from "@/pages/UserHome";
+import BlogList from "@/pages/BlogList";
+import BlogPost from "@/pages/BlogPost";
 import {AuthProvider, useAuth} from "@/hooks/useAuth";
-import {Container, Spinner} from "react-bootstrap";
 
 function RequireAuth() {
     const {user, ready} = useAuth();
@@ -30,6 +32,8 @@ export default function App() {
                 <Route path="/about-me" element={<AboutMe/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/auth" element={<AuthPage/>}/>
+                <Route path="/blog" element={<BlogList/>}/>
+                <Route path="/blog/:pageId" element={<BlogPost/>}/>
 
                 {/* protected */}
                 <Route element={<RequireAuth/>}>
