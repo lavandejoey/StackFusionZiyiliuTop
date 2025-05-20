@@ -1,0 +1,319 @@
+openapi: 3.1.0
+info:
+  title: User Management API
+  version: 1.0.0
+  description: |
+    Endpoints for managing users: list, signup, retrieve, and update.  
+    Protected by JWT (user or server tokens) via cookie or Authorization header.
+servers:
+  - url: https://{domain}/api/v1/user
+    variables:
+      domain:
+        default: ZiyiLiu.top
+  - url: http://localhost:2069/api/v1/user
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Send a user or long-term JWT in the `Authorization` header:  
+        `Authorization: Bearer <token>`
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: USER_ACCESS_COOKIE_NAME
+      description: HTTP-only user access token cookie
+    serverCookieAuth:
+      type: apiKey
+      in: cookie
+      name: SERVER_ACCESS_COOKIE_NAME
+      description: HTTP-only server JWT cookie
+
+  schemas:
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        v2_iter_id:
+          type: integer
+          example: 42
+        status:
+          type: string
+          enum: [ active, inactive ]
+          example: active
+        roles:
+          type: array
+          items:
+            type: string
+          example: [ ADMIN, USER ]
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00.000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-05-15T08:30:00.000Z"
+
+    UserListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    UserResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/User'
+
+    NewUserRequest:
+      type: object
+      required: [ firstName, lastName, email, password ]
+      properties:
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: newuser@example.com
+        password:
+          type: string
+          format: password
+          example: S3cr3tPwd!
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Smith
+        email:
+          type: string
+          format: email
+          example: jane.smith@example.com
+        oldPassword:
+          type: string
+          format: password
+          example: OldPwd123
+        newPassword:
+          type: string
+          format: password
+          example: NewPwd456
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: "User not found."
+
+paths:
+  /all:
+    get:
+      summary: Retrieve all users
+      description: Admin only. Returns a list of all users.
+      security:
+        - bearerAuth: [ ]
+        - cookieAuth: [ ]
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '401':
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Permission denied (not admin)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /signup:
+    post:
+      summary: Create a new user
+      description: Server-token only. Signs up a new user and issues a short-term JWT.
+      security:
+        - serverCookieAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUserRequest'
+      responses:
+        '200':
+          description: User created successfully
+          headers:
+            Set-Cookie:
+              description: HTTP-only user access token cookie
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Missing fields or user already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /{uuid}:
+    patch:
+      summary: Update a user
+      description: |
+        Admins may update any user.  
+        Users may update their own profile or password.
+      security:
+        - bearerAuth: [ ]
+        - cookieAuth: [ ]
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request (invalid UUID, missing password fields, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /{key}:
+    get:
+      summary: Retrieve a user by UUID or email
+      description: |
+        Admins may retrieve any user.  
+        Users may retrieve their own.
+      security:
+        - bearerAuth: [ ]
+        - cookieAuth: [ ]
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+          description: UUID or email of the user
+      responses:
+        '200':
+          description: The requested user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

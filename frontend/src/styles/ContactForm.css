@@ -1,0 +1,18 @@
+/*/StackFusionZiyiliuTop/frontend/src/styles/ContactForm.css*/
+#send-icon {
+    display: inline-block;
+    position: relative;
+    transition: color 0.2s, transform 5s ease-in, opacity 1s ease-in;
+}
+
+@keyframes flyAway {
+    to {
+        color: #bc6c25;
+        transform: translate(40vw, -50vh) scale(3);
+        opacity: 0;
+    }
+}
+
+.animate-fly-away {
+    animation: flyAway 1s forwards;
+}

@@ -4,37 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d62dd4c8-904d-493b-b850-285eabcdf1b2/storage_v2/_src_/schema/ziyiliu.uY-_7w.meta" beforeDir="false" />
+    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250520 Auth api with frontend completed.">
+      <change afterPath="$PROJECT_DIR$/ecosystem.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en.locale.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/fr.locale.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-CN.locale.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-HK.locale.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Notion.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Notion.model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/authentication.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/authentication.model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/about-me.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/about-me.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/admin.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/auth.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/blog.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/blog.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/console.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/console.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/contact.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/v2ray.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/v2ray.route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/about-me.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/admin.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/auth.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/blog.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/console.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/contact.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/error.view.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/index.view.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +20,11 @@
         <option value="Pug File" />
         <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="SCSS File" />
+        <option value="OpenAPI" />
         <option value="TypeScript File" />
+        <option value="CSS File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -68,10 +44,15 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/public/stylesheets/style.sass" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/node/globals.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/react/index.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/react/jsx-runtime.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/ioredis/built/utils/RedisCommander.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/lodash.debounce/index.js" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/react-bootstrap/esm/Form.d.ts" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -91,24 +72,44 @@
     &quot;Node.js.v2rayLogParser.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;decouple&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.19.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.19.64&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.19.91&quot;,
     &quot;last.edited.regexp&quot;: &quot;&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/ziyiliu.top-by-express/public/js&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/models&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.backend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; typecheck.executor&quot;: &quot;Run&quot;,
     &quot;npm.build-css.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.clean.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; preview.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; test.executor&quot;: &quot;Run&quot;,
+    &quot;npm.install:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
     &quot;npm.start:debug.executor&quot;: &quot;Run&quot;,
+    &quot;npm.typecheck.executor&quot;: &quot;Run&quot;,
     &quot;npm.watch-css.executor&quot;: &quot;Debug&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -119,52 +120,66 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/js" />
-      <recent name="$PROJECT_DIR$/views" />
-      <recent name="$PROJECT_DIR$/public/images/logos" />
-      <recent name="$PROJECT_DIR$/routes" />
-      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/backend/src/models" />
+      <recent name="$PROJECT_DIR$/backend/src/api/v1" />
+      <recent name="$PROJECT_DIR$/backend/src/utils" />
+      <recent name="$PROJECT_DIR$/frontend/src/assets" />
+      <recent name="$PROJECT_DIR$/frontend/src/styles" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/js" />
-      <recent name="$PROJECT_DIR$/public/images" />
-      <recent name="$PROJECT_DIR$/public/images/logos" />
-      <recent name="$PROJECT_DIR$/packages" />
-      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/backend/doc" />
+      <recent name="$PROJECT_DIR$/frontend/public" />
+      <recent name="$PROJECT_DIR$/frontend/src/components" />
+      <recent name="$PROJECT_DIR$/frontend/src/styles" />
+      <recent name="$PROJECT_DIR$/frontend/src" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.start:debug">
-    <configuration name="parser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/locales/parser.js" working-dir="$PROJECT_DIR$/locales">
-      <method v="2" />
-    </configuration>
-    <configuration name="v2rayLogParser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/script/v2rayLogParser.js" working-dir="$PROJECT_DIR$/script">
-      <method v="2" />
-    </configuration>
-    <configuration name="build-css" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+  <component name="RunManager" selected="npm.backend &gt; build">
+    <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="build-css" />
+        <script value="build" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="start:debug" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+    <configuration name="backend &gt; start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="start:debug" />
+        <script value="start" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="watch-css" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+    <configuration name="frontend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="watch-css" />
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="frontend &gt; lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="frontend &gt; preview" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="preview" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -172,18 +187,18 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.start:debug" />
-        <item itemvalue="Node.js.parser.js" />
-        <item itemvalue="npm.build-css" />
-        <item itemvalue="npm.watch-css" />
-        <item itemvalue="Node.js.v2rayLogParser.js" />
+        <item itemvalue="npm.backend &gt; start" />
+        <item itemvalue="npm.backend &gt; build" />
+        <item itemvalue="npm.frontend &gt; preview" />
+        <item itemvalue="npm.frontend &gt; build" />
+        <item itemvalue="npm.frontend &gt; lint" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.26053.12" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-WS-251.25410.117" />
       </set>
     </attachedChunks>
   </component>
@@ -233,7 +248,39 @@
       <workItem from="1742029326848" duration="22802000" />
       <workItem from="1742168476382" duration="732000" />
       <workItem from="1742206672500" duration="356000" />
+      <workItem from="1742405131404" duration="385000" />
+      <workItem from="1742405946885" duration="4470000" />
+      <workItem from="1742417147879" duration="14344000" />
+      <workItem from="1742500209980" duration="6651000" />
+      <workItem from="1742910759421" duration="2880000" />
+      <workItem from="1743083115988" duration="156000" />
+      <workItem from="1743083285487" duration="58781000" />
+      <workItem from="1744211964684" duration="1000" />
+      <workItem from="1744805923218" duration="4000" />
+      <workItem from="1746479510841" duration="167000" />
+      <workItem from="1747146433951" duration="4479000" />
+      <workItem from="1747346173842" duration="39280000" />
+      <workItem from="1747666936574" duration="10269000" />
+      <workItem from="1747737720865" duration="31000" />
+      <workItem from="1747737763691" duration="22743000" />
     </task>
+    <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
+      <option name="closed" value="true" />
+      <created>1747160702777</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747160702777</updated>
+    </task>
+    <task id="LOCAL-00002" summary="20250520 Auth api with frontend completed.">
+      <option name="closed" value="true" />
+      <created>1747736857744</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747736857744</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,6 +299,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />
-    <option name="LAST_COMMIT_MESSAGE" value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />
+    <MESSAGE value="20250513 Remove unused old files." />
+    <MESSAGE value="20250520 Auth api with frontend completed." />
+    <option name="LAST_COMMIT_MESSAGE" value="20250520 Auth api with frontend completed." />
   </component>
 </project>
