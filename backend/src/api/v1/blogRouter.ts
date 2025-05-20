@@ -183,7 +183,14 @@ async function renderBlocks(blocks: Block[]): Promise<string> {
 
 // ROUTES
 
-/* list root pages */
+/** List all blog pages
+ *  Request: GET /api/v1/blog
+ *  Response: [
+ *    {"id": "...", "title": "...", "iconHtml": "...", "cover": "...", "formattedLastEdited": "..."},
+ *    ...
+ *  ]
+ *  Response 200: {"pages": [ ... ]}
+ */
 blogRouter.get("/", async (_req, res, next) => {
     try {
         const pages = await Promise.all(
@@ -205,6 +212,10 @@ blogRouter.get("/", async (_req, res, next) => {
 });
 
 /* single post */
+/** Retrieve a blog post
+ *  Request: GET /api/v1/blog/:id
+ *  Response 200: {"pageData": {...}, "html": "..."}
+ */
 blogRouter.get("/:id", async (req: Request<{ id: string }>, res, next) => {
     try {
         const page = await NotionAPI.retrievePage(req.params.id);
@@ -227,6 +238,11 @@ blogRouter.get("/:id", async (req: Request<{ id: string }>, res, next) => {
     }
 });
 
+/** Retrieve a blog post cover image
+ *  Request: GET /api/v1/blog/media/cover/:id
+ *  Response 200: {"url": "..."}
+ *  Response 404: {"error": "Image not found"}
+ */
 blogRouter.get(
     "/media/:kind(cover|image)/:id",
     async (req: Request<{ kind: "cover" | "image"; id: string }>, res: Response, next: NextFunction) => {

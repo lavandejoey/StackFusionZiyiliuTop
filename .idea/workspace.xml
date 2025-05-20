@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250520 Auth api with frontend completed.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/models/Notion.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/Notion.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Notion.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/admin.route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/blog.route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/admin.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/blog.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -268,7 +257,7 @@
       <workItem from="1747346173842" duration="39280000" />
       <workItem from="1747666936574" duration="10269000" />
       <workItem from="1747737720865" duration="31000" />
-      <workItem from="1747737763691" duration="15812000" />
+      <workItem from="1747737763691" duration="16461000" />
     </task>
     <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
       <option name="closed" value="true" />
