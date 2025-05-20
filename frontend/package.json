@@ -1,7 +1,10 @@
 {
   "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0",
+  "description": "React frontend for Stack Fusion Ziyiliu",
+  "keywords": ["frontend", "react", "typescript", "ui"],
+  "author": "Ziyi LIU",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

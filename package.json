@@ -1,9 +1,8 @@
 {
-  "name": "Stack Fusion Ziyiliu Top",
+  "name": "StackFusionZiyiliuTop",
   "version": "3.0.0",
-  "private": true,
-  "description": "",
-  "keywords": [],
+  "description": "Monorepo for Stack Fusion Ziyiliu platform",
+  "keywords": ["stack", "fusion", "ziyiliu", "monorepo"],
   "author": "Ziyi LIU",
   "license": "MIT",
   "workspaces": [
