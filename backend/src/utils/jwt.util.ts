@@ -3,10 +3,11 @@ import {Response} from "express";
 import {randomUUID} from "crypto";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {redisSet} from "utils/redisClient.util";
+import process from "node:process";
 
 // env constants – keep naming consistent
 const JWT_SECRET = process.env.JWT_SECRET_KEY!
-export const SERVER_TOKEN_KEY = "server_token"
+export const SERVER_TOKEN_KEY = process.env.SERVER_TOKEN_KEY!
 const SERVER_TOKEN_EXPIRY = Number(process.env.SERVER_TOKEN_EXPIRY)!
 
 export const buildPayload = (sub: string): JwtPayload => ({

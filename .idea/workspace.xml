@@ -6,15 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250520 Auth api with frontend completed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Auth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/blogRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/models/Notion.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/Notion.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Notion.model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/admin.route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/blog.route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/admin.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/blog.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,9 +32,9 @@
         <option value="HTML File" />
         <option value="SCSS File" />
         <option value="OpenAPI" />
-        <option value="CSS File" />
         <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -266,7 +268,7 @@
       <workItem from="1747346173842" duration="39280000" />
       <workItem from="1747666936574" duration="10269000" />
       <workItem from="1747737720865" duration="31000" />
-      <workItem from="1747737763691" duration="8215000" />
+      <workItem from="1747737763691" duration="15812000" />
     </task>
     <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
       <option name="closed" value="true" />

@@ -2,6 +2,7 @@
 import katex from "katex";
 import {redisClient} from "utils/redisClient.util";
 
+// SHARED TYPES & HELPERS
 export interface NotionObject {
     object: string;
     id: string;
@@ -12,7 +13,7 @@ export interface NotionObject {
     archived?: boolean;
     in_trash?: boolean;
 
-    [key: string]: any;
+    [k: string]: any;
 }
 
 export interface FetchOptions {
@@ -34,44 +35,73 @@ export class BaseObject {
     in_trash: boolean;
     icon?: any;
     cover?: any;
+    children?: Block[];
 
     constructor(data: NotionObject, type: string) {
-        if (!data || data.object !== type) {
-            throw new Error(`Invalid ${type} data`);
-        }
-        this.object = data.object;
-        this.id = data.id;
-        this.created_time = data.created_time;
-        this.created_by = data.created_by;
-        this.last_edited_time = data.last_edited_time;
-        this.last_edited_by = data.last_edited_by;
+        if (!data || data.object !== type) throw new Error(`Invalid ${type} data`);
+        ({
+            object: this.object,
+            id: this.id,
+            created_time: this.created_time,
+            created_by: this.created_by,
+            last_edited_time: this.last_edited_time,
+            last_edited_by: this.last_edited_by,
+        } = data);
         this.archived = data.archived ?? false;
         this.in_trash = data.in_trash ?? false;
-        this._validateRequiredFields();
+        this.icon = (data as any).icon;
+        this.cover = (data as any).cover;
+        this._require(this.id && this.created_time, "Missing id / created_time");
     }
 
-    protected _validateRequiredFields(): void {
-        if (!this.id || !this.created_time) {
-            throw new Error(`Missing required fields in ${this.object} object`);
-        }
+    protected _require(cond: unknown, msg: string) {
+        if (!cond) throw new Error(`${this.object}: ${msg}`);
     }
 
-    /**
-     * Render the page/icon emoji or external‐URL to a 32px HTML snippet.
-     */
+    /** Render the page / emoji icon to 32 px */
     get iconHtml(): string {
         const size = "32px";
         if (!this.icon) return "";
         if (this.icon.type === "emoji") {
-            return `<span style="font-size:${size};display:inline-block;width:${size};height:${size};line-height:${size};text-align:center">
-                ${this.icon.emoji}
-              </span>`;
+            return `<span style="font-size:${size};display:inline-block;width:${size};height:${size};line-height:${size};text-align:center">${this.icon.emoji}</span>`;
         }
         if (this.icon.type === "external" && this.icon.external?.url) {
-            return `<img src="${this.icon.external.url}" alt="Icon" 
-                   style="max-width:${size};max-height:${size};width:auto;height:auto" />`;
+            return `<img src="${this.icon.external.url}" style="max-width:${size};max-height:${size}" alt="Icon" />`;
         }
+        // TODO: handle file-type icon if needed
         return "";
+    }
+}
+
+/**
+ * Parent pointer (page_id, database_id, block_id or workspace).
+ */
+export class Parent {
+    type: string;
+    id: string;
+    workspace?: boolean;
+
+    constructor(data: any) {
+        if (!data || !data.type) throw new Error("Invalid parent");
+        this.type = data.type;
+        switch (data.type) {
+            case "page_id":
+                this.id = data.page_id;
+                break;
+            case "database_id":
+                this.id = data.database_id;
+                break;
+            case "block_id":
+                this.id = data.block_id;
+                break;
+            case "workspace":
+                this.id = "workspace-root";
+                this.workspace = true;
+                break;
+            default:
+                // TODO: confirm any other parent types – docs list only the four above :contentReference[oaicite:0]{index=0}
+                throw new Error(`Unknown parent type ${data.type}`);
+        }
     }
 }
 
@@ -88,22 +118,24 @@ export class Block extends BaseObject {
         super(data, "block");
         this.parent = new Parent(data.parent);
         this.type = data.type;
-        this.has_children = data.has_children ?? false;
-        this.data = data[this.type] || {};
+        this.has_children = data.has_children;
+        this.data = data[this.type] ?? {};
     }
+
+    /*  RICH-TEXT  */
 
     renderRichText(): string {
-        if (!this.data.rich_text) return "";
-        return Block.renderText(this.data.rich_text);
+        return this.data.rich_text ? Block.renderText(this.data.rich_text) : "";
     }
 
-    static renderText(
-        rich: Array<{ plain_text: string; annotations?: any; href?: string; type?: string; equation?: any }> | any
-    ): string {
-        const arr = Array.isArray(rich) ? rich : [rich];
-        return arr
+    static renderText(rich: any[] | any): string {
+        const list = Array.isArray(rich) ? rich : [rich];
+
+        return list
             .map((rt) => {
                 let txt = rt.plain_text;
+
+                /* annotations (bold / italic / …)  :contentReference[oaicite:1]{index=1} */
                 const a = rt.annotations ?? {};
                 if (a.bold) txt = `<strong>${txt}</strong>`;
                 if (a.italic) txt = `<em>${txt}</em>`;
@@ -111,45 +143,69 @@ export class Block extends BaseObject {
                 if (a.strikethrough) txt = `<s>${txt}</s>`;
                 if (a.code) txt = `<code>${txt}</code>`;
                 if (a.color && a.color !== "default") {
-                    txt = `<span style="color:${a.color}">${txt}</span>`;
+                    if (a.color.endsWith("_background")) {
+                        txt = `<span style="background-color:${a.color.replace(
+                            "_background",
+                            ""
+                        )}">${txt}</span>`;
+                    } else {
+                        txt = `<span style="color:${a.color}">${txt}</span>`;
+                    }
                 }
-                if (rt.href) {
-                    txt = `<a href="${rt.href}" target="_blank">${txt}</a>`;
-                }
+
+                /* links (for “text” objects) */
+                if (rt.href) txt = `<a href="${rt.href}" target="_blank">${txt}</a>`;
+
+                /* equation already handled */
                 if (rt.type === "equation" && rt.equation) {
-                    txt = `<span class="katex">
-                   ${katex.renderToString(rt.equation.expression, {
-                        displayMode: false,
-                        throwOnError: true,
-                        output: "mathml",
-                    })}
-                 </span>`;
+                    txt = `<span class="katex">${katex.renderToString(
+                        rt.equation.expression,
+                        {displayMode: false, throwOnError: true, output: "mathml"}
+                    )}</span>`;
                 }
+
+                /* mention handling (page / database / date / user)  :contentReference[oaicite:2]{index=2} */
+                if (rt.type === "mention" && rt.mention) {
+                    const m = rt.mention;
+                    switch (m.type) {
+                        case "page":
+                            txt = `<a href="/blog/${m.page.id}">${txt}</a>`;
+                            break;
+                        case "database":
+                            // We don’t have a dedicated DB page – bounce to blog home for now
+                            txt = `<a href="/blog">${txt}</a>`;
+                            break;
+                        case "date":
+                            txt = `<time datetime="${m.date.start}">${txt}</time>`;
+                            break;
+                        case "user":
+                            // plain text already contains user name (@Name)
+                            break;
+                        // TODO: link_preview / template_mention if needed
+                    }
+                }
+
                 return txt;
             })
             .join("");
     }
 
+    /*  LIST ITEM  */
+
     renderBulletedListItem(isLast = false): string {
-        const html = this.renderRichText();
         const colorClass = this.data.color !== "default" ? `text-${this.data.color}` : "";
         const margin = isLast ? "mb-3" : "";
-        return `<li class="${colorClass} ${margin}">${html}</li>`;
+        return `<li class="${colorClass} ${margin}">${this.renderRichText()}</li>`;
     }
 
-    /** Blocks never show an icon by themselves */
-    get iconHtml(): string {
-        return "";
+    override get iconHtml(): string {
+        return ""; // blocks never expose their own icon
     }
 }
 
-/**
- * Represents a Notion page object (with properties, title, etc.).
- */
+// PAGE
 export class Page extends BaseObject {
     parent: Parent;
-    icon: any | null;
-    cover: any | null;
     properties: Record<string, any>;
     url: string | null;
     public_url: string | null;
@@ -157,27 +213,23 @@ export class Page extends BaseObject {
     constructor(data: any) {
         super(data, "page");
         this.parent = new Parent(data.parent);
-        this.icon = data.icon ?? null;
-        this.cover = data.cover ?? null;
         this.properties = data.properties ?? {};
         this.url = data.url ?? null;
         this.public_url = data.public_url ?? null;
+    }
+
+    get title(): string {
+        for (const key in this.properties) {
+            const prop = this.properties[key];
+            if (prop.type === "title" && prop.title?.length) return prop.title[0].plain_text;
+        }
+        return "Untitled";
     }
 
     get formattedLastEdited(): string {
         return this.last_edited_time
             ? `Updated at ${new Date(this.last_edited_time).toLocaleString()}`
             : "";
-    }
-
-    get title(): string {
-        for (const key in this.properties) {
-            const prop = this.properties[key];
-            if (prop.type === "title" && Array.isArray(prop.title) && prop.title.length) {
-                return prop.title[0].plain_text;
-            }
-        }
-        return "Untitled";
     }
 }
 
@@ -188,8 +240,6 @@ export class Database extends BaseObject {
     parent: Parent;
     title: any[];
     description: any[];
-    icon: any | null;
-    cover: any | null;
     properties: Record<string, any>;
     is_inline: boolean;
     url: string | null;
@@ -200,65 +250,33 @@ export class Database extends BaseObject {
         this.parent = new Parent(data.parent);
         this.title = data.title ?? [];
         this.description = data.description ?? [];
-        this.icon = data.icon ?? null;
-        this.cover = data.cover ?? null;
         this.properties = data.properties ?? {};
-        this.is_inline = data.is_inline ?? false;
+        this.is_inline = !!data.is_inline;
         this.url = data.url ?? null;
         this.public_url = data.public_url ?? null;
     }
 }
 
-/**
- * Parent pointer (page_id, database_id, block_id or workspace).
- */
-export class Parent {
-    type: string;
-    id: string;
-    workspace?: boolean;
-
-    constructor(data: any) {
-        if (!data || !data.type) throw new Error("Invalid parent data");
-        this.type = data.type;
-        switch (data.type) {
-            case "database_id":
-                this.id = data.database_id;
-                break;
-            case "page_id":
-                this.id = data.page_id;
-                break;
-            case "block_id":
-                this.id = data.block_id;
-                break;
-            case "workspace":
-                this.id = data.workspace;
-                this.workspace = true;
-                break;
-            default:
-                throw new Error(`Unknown parent type: ${data.type}`);
-        }
-    }
-}
 
 /**
  * Represents a Notion user.
  */
 export class User {
-    object: "user";
-    id: string;
-    type: string;
-    name: string;
-    avatar_url: string | null;
+    object?: "user";
+    id?: string;
+    type?: string;
+    name?: string;
+    avatar_url?: string | null;
 
     constructor(data: any) {
-        if (!data || data.object !== "user") {
-            throw new Error("Invalid user data");
-        }
-        this.object = "user";
-        this.id = data.id;
-        this.type = data.type ?? "person";
-        this.name = data.name ?? "Unknown";
-        this.avatar_url = data.avatar_url ?? null;
+        if (!data || data.object !== "user") throw new Error("Invalid user");
+        Object.assign(this, {
+            object: "user",
+            id: data.id,
+            type: data.type ?? "person",
+            name: data.name ?? "Unknown",
+            avatar_url: data.avatar_url ?? null,
+        });
     }
 }
 
@@ -276,13 +294,12 @@ export class NotionAPI {
 
     static async cacheFetch<T>(
         key: string,
-        fetchFunc: () => Promise<T>,
+        fn: () => Promise<T>,
         expiry = 12 * 3600
     ): Promise<T> {
         const cached = await redisClient.get(key);
         if (cached) return JSON.parse(cached) as T;
-
-        const data = await fetchFunc();
+        const data = await fn();
         await redisClient.set(key, JSON.stringify(data), "EX", expiry);
         return data;
     }

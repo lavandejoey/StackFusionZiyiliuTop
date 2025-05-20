@@ -1,103 +1,93 @@
 // /StackFusionZiyiliuTop/backend/src/api/v1/blogRouter.ts
-import {Router, Request} from "express";
+import {Router, Request, Response, NextFunction, json} from "express";
 import katex from "katex";
+import process from "node:process";
+import {errorResponse} from "middlewares/response";
 import {Block, Database, NotionAPI, Page} from "models/Notion.model";
+import axios from "axios";
 
 const blogRouter = Router();
+const rootPageIds = String(process.env.NOTION_ROOT_BLOG_LIST).split(",");
 
-// hard-coded “root” blog pages
-const blogPageIds = [
-    "1ada8db7a37b80d09d3fc14728af649c",
-    "1b1a8db7a37b8197a376d0a1acffc675",
-    "1ada8db7a37b807db1fbd6012ed5f837",
-];
-
-/** Recursively fetches and attaches children to any block that has them. */
-async function fetchChildBlocksRecursively(blocks: any[]) {
-    for (const block of blocks) {
-        if (block.has_children) {
-            const children = await NotionAPI.getBlockChildren(block.id);
-            block.children = children.results;
-            await fetchChildBlocksRecursively(block.children);
+async function fetchChildrenRecursive(blocks: Block[]) {
+    for (const blk of blocks) {
+        if (blk.has_children) {
+            const children = await NotionAPI.getBlockChildren(blk.id);
+            blk.children = children.results as Block[];
+            await fetchChildrenRecursive(blk.children);
         }
     }
 }
 
-/** Renders a Notion block (and its children) to an HTML string. */
-async function renderBlock(block: any, level = 0): Promise<string> {
-    if (!block) return "";
+async function renderBlock(blk: Block, lvl = 0): Promise<string> {
     let html = "";
-    const indent = "  ".repeat(level);
+    const indent = "  ".repeat(lvl);
     let skipChildren = false;
 
-    switch (block.type) {
+    switch (blk.type) {
         case "paragraph":
-            html += block.data?.rich_text?.length
-                ? `<p>${indent}${block.renderRichText()}</p>`
+            html += blk.data.rich_text?.length
+                ? `<p>${indent}${blk.renderRichText()}</p>`
                 : `<p></p>`;
             break;
 
         case "heading_1":
-            html += `<h1 id="${block.renderRichText()
-                .replace(/[^a-zA-Z0-9 ]/g, "")
-                .replace(/ /g, "-")}">${block.renderRichText()}</h1>`;
-            break;
-
         case "heading_2":
-            html += `<h2 id="${block.renderRichText()
-                .replace(/[^a-zA-Z0-9 ]/g, "")
-                .replace(/ /g, "-")}">${block.renderRichText()}</h2>`;
+        case "heading_3": {
+            const n = blk.type.split("_")[1];
+            const tag = `h${n}`;
+            const text = blk.renderRichText();
+            const slug = text.replace(/<[^>]+>/g, "").replace(/[^a-zA-Z0-9 ]/g, "").replace(/ /g, "-");
+            html += `<${tag} id="${slug}">${text}</${tag}>`;
             break;
-
-        case "heading_3":
-            html += `<h3 id="${block.renderRichText()
-                .replace(/[^a-zA-Z0-9 ]/g, "")
-                .replace(/ /g, "-")}">${block.renderRichText()}</h3>`;
-            break;
+        }
 
         case "divider":
-            html += `<hr />`;
+            html += `<hr/>`;
             break;
 
         case "quote":
-            html += `<blockquote class="blockquote">${block.renderRichText()}</blockquote>`;
+            html += `<blockquote class="blockquote">${blk.renderRichText()}</blockquote>`;
             break;
 
         case "table_of_contents":
             html += `<div class="container toc"></div>`;
             break;
 
-        case "bulleted_list_item":
-            const colorClass = block.data.color !== "default" ? `text-${block.data.color}` : "";
-            html += `<li class="${colorClass}">${block.renderRichText()}</li>`;
-            break;
-
         case "column_list":
             skipChildren = true;
             html += `<div class="row">`;
-            for (const col of block.children) {
-                html += `<div class="col">${await renderBlock(col, level + 1)}</div>`;
+            for (const col of blk.children as Block[]) {
+                html += `<div class="col">${await renderBlock(col, lvl + 1)}</div>`;
             }
             html += `</div>`;
             break;
 
+        case "column":
+            skipChildren = true;
+            skipChildren = true;
+            // inline all children of a column
+            for (const child of blk.children as Block[]) {
+                html += await renderBlock(child, lvl + 1);
+            }
+            break;
+
         case "table":
+            skipChildren = true;
             html += `<table class="table">`;
-            // header
-            if (block.data.has_column_header) {
+            if (blk.data.has_column_header) {
                 html += `<thead><tr>`;
-                for (const cell of block.children[0].data.cells) {
+                for (const cell of blk.children?.[0]?.data?.cells || []) {
                     html += `<th>${Block.renderText(cell)}</th>`;
                 }
                 html += `</tr></thead><tbody>`;
             } else {
                 html += `<tbody>`;
             }
-            // rows
-            const startRow = block.data.has_column_header ? 1 : 0;
-            for (let i = startRow; i < block.children.length; i++) {
+            const start = blk.data.has_column_header ? 1 : 0;
+            for (let i = start; i < (blk.children?.length || 0); i++) {
                 html += `<tr>`;
-                for (const cell of block.children[i].data.cells) {
+                for (const cell of blk.children?.[i]?.data?.cells || []) {
                     html += `<td>${Block.renderText(cell)}</td>`;
                 }
                 html += `</tr>`;
@@ -106,39 +96,47 @@ async function renderBlock(block: any, level = 0): Promise<string> {
             break;
 
         case "child_database": {
-            const db = new Database(
-                await NotionAPI.retrieveDatabase(block.id)
-            );
-            const dbData = await NotionAPI.queryDatabase(block.id);
+            const db = new Database(await NotionAPI.retrieveDatabase(blk.id));
+            const rows = await NotionAPI.queryDatabase(blk.id);
             html += `<div class="lead">${db.iconHtml}&nbsp;${Block.renderText(db.title)}</div>`;
-            html += `<div class="table-responsive"><table class="table"><thead>
-                 <tr><th>Doc name</th><th>Last updated</th><th>Created by</th></tr>
-               </thead><tbody>`;
-            for (let page of dbData.results) {
-                page = new Page(page);
-                html += `<tr>
-                   <td><a href="/blog/${page.id}">${page.iconHtml}&nbsp;${page.title}</a></td>
-                   <td>${new Date(page.last_edited_time).toLocaleString()}</td>
-                   <td>${page.properties["Created by"].created_by.name}</td>
-                 </tr>`;
+            html +=
+                '<div class="table-responsive"><table class="table"><thead><tr><th>Doc name</th><th>Last updated</th><th>Created by</th></tr></thead><tbody>';
+            for (let row of rows.results) {
+                row = new Page(row);
+                html += `<tr><td><a href="/blog/${row.id}">${row.iconHtml}&nbsp;${row.title}</a></td><td>${new Date(
+                    row.last_edited_time
+                ).toLocaleString()}</td><td>${
+                    row.properties["Created by"]?.created_by?.name ?? "—"
+                }</td></tr>`;
             }
-            html += `</tbody></table></div>`;
+            html += "</tbody></table></div>";
             break;
         }
 
+        case "table_row":
+            // already handled inside <table>; suppress default
+            return "";
+
+        case "link_preview":
+            const url = blk.data.url;
+            const cap = blk.data.caption ? Block.renderText(blk.data.caption) : "";
+            html += `<div class="link-preview">
+                 <a href="${url}" target="_blank">${url}</a>
+                 ${cap ? `<div class="caption">${cap}</div>` : ""}
+               </div>`;
+            break;
+
         case "code":
-            if (block.data.language === "mermaid") {
-                html += `<div class="mermaid d-flex justify-content-center">${block.data.rich_text[0].plain_text}</div>`;
-                if (block.data.caption) {
-                    html += `<p class="text-center">${block.data.caption[0].plain_text}</p>`;
+            if (blk.data.language === "mermaid") {
+                html += `<div class="mermaid">${blk.data.rich_text?.[0]?.plain_text}</div>`;
+                if (blk.data.caption?.length) {
+                    html += `<p class="text-center">${blk.data.caption[0].plain_text}</p>`;
                 }
             } else {
                 html += `<figure class="highlight">
-                   <pre><code class="language-${block.data.language}">
-                     ${block.data.rich_text[0].plain_text}
-                   </code></pre>`;
-                if (block.data.caption) {
-                    html += `<figcaption class="text-center">${block.data.caption[0].plain_text}</figcaption>`;
+                   <pre><code class="language-${blk.data.language}">${blk.data.rich_text?.[0]?.plain_text}</code></pre>`;
+                if (blk.data.caption?.length) {
+                    html += `<figcaption class="text-center">${blk.data.caption[0].plain_text}</figcaption>`;
                 }
                 html += `</figure>`;
             }
@@ -146,88 +144,126 @@ async function renderBlock(block: any, level = 0): Promise<string> {
 
         case "equation":
             html += `<div class="text-center my-2">
-                 <box class="katex">
-                   ${katex.renderToString(block.data.expression, {
-                displayMode: true,
-                throwOnError: true,
-                output: "mathml",
-            })}
-                 </box>
+                 <span class="katex">${katex.renderToString(
+                blk.data.expression,
+                {displayMode: true, throwOnError: true, output: "mathml"}
+            )}</span>
                </div>`;
             break;
 
-        case "image":
-            if (block.data.file?.url) {
-                html += `<img src="${block.data.file.url}" class="img-fluid" alt="${Block.renderText(block.data.caption)}"/>`;
-            }
+        case "image": {
+            // Point to our proxy rather than directly embedding the expiring URL
+            const src = `/api/${process.env.API_VERSION}/blog/media/image/${blk.id}`;
+            // Optional caption rendering
+            const captionHtml = blk.data.caption?.length
+                ? `<figcaption>${Block.renderText(blk.data.caption)}</figcaption>`
+                : "";
+            html += `<figure class="text-center"><img src="${src}" class="img-fluid" alt="${captionHtml ? "Image with caption" : ""}" />${captionHtml}</figure>`;
             break;
+        }
 
         default:
-            html += `<p>Unknown block type: ${block.type}</p>`;
+            html += `<p>Unhandled block type ${blk.type}</p>`;
+        // TODO: handle embed, synced_block, etc.
     }
 
-    // render children if needed
-    if (!skipChildren && block.children?.length) {
-        for (const child of block.children) {
-            html += await renderBlock(child, level + 1);
+    if (!skipChildren && blk.children?.length) {
+        for (const child of blk.children as Block[]) {
+            html += await renderBlock(child, lvl + 1);
         }
     }
-
     return html;
 }
 
-/** Flattens an array of blocks into one HTML string. */
-async function renderBlocks(blocks: any[]): Promise<string> {
-    let html = "";
-    for (const block of blocks) {
-        html += await renderBlock(block);
-    }
-    return html;
+async function renderBlocks(blocks: Block[]): Promise<string> {
+    let out = "";
+    for (const b of blocks) out += await renderBlock(b);
+    return out;
 }
 
-/** GET /api/v1/blog → list of root pages */
+// ROUTES
+
+/* list root pages */
 blogRouter.get("/", async (_req, res, next) => {
     try {
         const pages = await Promise.all(
-            blogPageIds.map(async (id) => {
+            rootPageIds.map(async (id) => {
                 const p = await NotionAPI.retrievePage(id);
                 return {
                     id: p.id,
                     title: p.title,
-                    iconHtml: p.iconHtml,
+                    iconHtml: p.icon?.emoji ?? null,
                     cover: p.cover?.external?.url || p.cover?.file?.url || null,
                     formattedLastEdited: new Date(p.last_edited_time).toLocaleString(),
                 };
             })
         );
         res.json({pages});
-    } catch (err) {
-        next(err);
+    } catch (e) {
+        next(e);
     }
 });
 
-/** GET /api/v1/blog/:id → single page’s metadata + rendered HTML */
+/* single post */
 blogRouter.get("/:id", async (req: Request<{ id: string }>, res, next) => {
     try {
-        const {id} = req.params;
-        const pageData = await NotionAPI.retrievePage(id);
-        const blocks = await NotionAPI.getBlockChildren(id);
-        await fetchChildBlocksRecursively(blocks.results);
-        const html = await renderBlocks(blocks.results);
+        const page = await NotionAPI.retrievePage(req.params.id);
+        const kids = await NotionAPI.getBlockChildren(page.id);
+        await fetchChildrenRecursive(kids.results as Block[]);
+        const html = await renderBlocks(kids.results as Block[]);
 
         res.json({
             pageData: {
-                id: pageData.id,
-                title: pageData.title,
-                description: pageData.properties,
-                parent: pageData.parent,
-                iconHtml: pageData.iconHtml,
+                id: page.id,
+                title: page.title,
+                description: page.properties?.Description?.rich_text?.[0]?.plain_text ?? "",
+                parent: page.parent,
+                iconHtml: page.iconHtml,
             },
             html,
         });
-    } catch (err) {
-        next(err);
+    } catch (e) {
+        next(e);
     }
 });
+
+blogRouter.get(
+    "/media/:kind(cover|image)/:id",
+    async (req: Request<{ kind: "cover" | "image"; id: string }>, res: Response, next: NextFunction) => {
+        try {
+            const {kind, id} = req.params;
+            let url: string | undefined;
+
+            if (kind === "cover") {
+                // fresh page → pull cover object
+                const page = await NotionAPI.retrievePage(id);
+                const c = (page as any).cover;
+                url = c?.file?.url ?? c?.external?.url;
+            } else {
+                // block image → pull block object
+                const notionResp = await axios.get(`https://api.notion.com/v1/blocks/${id}`, {
+                    headers: NotionAPI.headers(),
+                });
+                const blockData = notionResp.data[notionResp.data.type];
+                url = blockData?.file?.url ?? blockData?.external?.url;
+            }
+
+            if (!url) {
+                res.status(404).json(errorResponse(req, 404, "Image not found"));
+                return;
+            }
+
+            // stream via axios
+            const imageResp = await axios.get<import("stream").Readable>(url, {
+                responseType: "stream",
+            });
+
+            res.setHeader("Content-Type", imageResp.headers["content-type"] || "application/octet-stream");
+            imageResp.data.pipe(res);
+        } catch (err) {
+            next(err);
+        }
+    }
+);
 
 export default blogRouter;

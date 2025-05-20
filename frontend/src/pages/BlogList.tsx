@@ -5,8 +5,10 @@ import {Container} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
 import {apiFetchBlogList} from "@/services/api";
+import {Spinner} from "react-bootstrap";
+import "@/styles/masonry.css";
 
-interface Page {
+interface PageCard {
     id: string;
     title: string;
     iconHtml: string;
@@ -15,54 +17,42 @@ interface Page {
 }
 
 export default function BlogList() {
-    const [pages, setPages] = useState<Page[]>([]);
+    const [pages, setPages] = useState<PageCard[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         apiFetchBlogList()
-            .then((res) => {
-                setPages(res.data.pages);
-            })
-            .catch((err) => {
-                console.error("Failed to load blog list:", err);
-            })
+            .then((r) => setPages(r.data.pages))
+            .catch(console.error)
             .finally(() => setLoading(false));
     }, []);
 
     return (
         <MainLayout>
-            <PageHead title="Blog" description="Read the latest articles"/>
+            <PageHead title="Blog" description="Latest articles"/>
             <Container className="mt-5">
                 {loading ? (
-                    <p>Loading…</p>
+                    <div className="d-flex justify-content-center mt-5">
+                        <Spinner animation="border" role="status"/>
+                    </div>
                 ) : (
                     <div className="masonry">
-                        {pages.map((page) => (
-                            <Link
-                                to={`/blog/${page.id}`}
-                                key={page.id}
-                                className="card mb-3 text-decoration-none"
-                            >
-                                {page.cover && (
+                        {pages.map((p) => (
+                            <Link key={p.id} to={`/blog/${p.id}`} className="card mb-3 text-decoration-none">
+                                {p.cover && (
                                     <img
-                                        src={page.cover}
+                                        src={p.cover}
                                         className="card-img-top"
-                                        alt="Cover"
-                                        style={{
-                                            maxHeight: 200,
-                                            width: "100%",
-                                            objectFit: "cover",
-                                        }}
+                                        style={{maxHeight: 200, objectFit: "cover"}}
+                                        alt={p.title}
                                     />
                                 )}
                                 <div className="card-body">
                                     <h5 className="card-title d-flex align-items-center">
-                    <span
-                        dangerouslySetInnerHTML={{__html: page.iconHtml}}
-                    />
-                                        <span className="ms-2">{page.title}</span>
+                                        <span dangerouslySetInnerHTML={{__html: p.iconHtml}}/>
+                                        <span className="ms-2">{p.title}</span>
                                     </h5>
-                                    <p>{page.formattedLastEdited}</p>
+                                    <p>{p.formattedLastEdited}</p>
                                 </div>
                             </Link>
                         ))}

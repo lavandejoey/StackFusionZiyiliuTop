@@ -55,7 +55,6 @@ export const apiLogin = (email: string, password: string) => api.post("/jwt/logi
 export const apiLogout = () => api.post("/jwt/logout");
 export const apiFetchSelfUser = () => api.get("/user/me");
 export const apiFetchAllUsers = () => api.get("/user/all");
-// export const apiSignup = (body: any) => api.post("/user/signup", body);
 export const apiSignup = (body: {
     firstName: string; lastName: string; email: string; password: string;
 }) => api.post("/user/signup", body);
@@ -77,5 +76,15 @@ export const apiFetchBlogList = () => api.get("/blog");
 // Fetch one blog post (metadata + rendered HTML)
 export const apiFetchBlogPost = (pageId: string) =>
     api.get(`/blog/${encodeURIComponent(pageId)}`);
+
+/**
+ * Returns a URL that will proxy to our Express media endpoint.
+ * @param kind  "cover" | "image"
+ * @param id    pageId (for cover) or blockId (for image)
+ */
+export function getMediaUrl(kind: "cover" | "image", id: string): string {
+    // baseURL already points to `${DOMAIN}/api/${VERSION}`
+    return `${DOMAIN}/api/${VERSION}/blog/media/${kind}/${encodeURIComponent(id)}`;
+}
 
 export default api;

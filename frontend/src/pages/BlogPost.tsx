@@ -1,49 +1,61 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogPost.tsx
 import {useEffect, useState} from "react";
 import {useParams, Link} from "react-router-dom";
-import {Container, Button} from "react-bootstrap";
-import {apiFetchBlogPost} from "@/services/api";
+import {Container, Button, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
+import {apiFetchBlogPost} from "@/services/api";
+
+interface Parent {
+    type: string;
+    id?: string;
+    database_id?: string;
+    page_id?: string;
+}
 
 interface PageMeta {
     id: string;
     title: string;
     description?: string;
-    parent?: { id: string };
+    parent: Parent;
     iconHtml: string;
 }
 
 export default function BlogPost() {
     const {pageId} = useParams<{ pageId: string }>();
-    const [page, setPage] = useState<PageMeta | null>(null);
-    const [html, setHtml] = useState<string>("");
+    const [meta, setMeta] = useState<PageMeta | null>(null);
+    const [html, setHtml] = useState("");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!pageId) return;
         apiFetchBlogPost(pageId)
-            .then((res) => {
-                setPage(res.data.pageData);
-                setHtml(res.data.html);
+            .then((r) => {
+                setMeta(r.data.pageData);
+                setHtml(r.data.html);
             })
-            .catch((err) => {
-                console.error("Failed to load blog post:", err);
-            })
+            .catch(console.error)
             .finally(() => setLoading(false));
     }, [pageId]);
 
-    if (loading) return <MainLayout><p>Loading…</p></MainLayout>;
-    if (!page) return <MainLayout><p>Post not found.</p></MainLayout>;
+    if (loading) return <MainLayout>
+        <div className="d-flex justify-content-center mt-5"><Spinner animation="border" role="status"/></div>
+    </MainLayout>;
+    if (!meta) return <MainLayout>
+        <div className="d-flex justify-content-center mt-5"><h3>Not found</h3></div>
+    </MainLayout>;
+
+    /* back-link logic – if parent is a page jump there, else blog home   :contentReference[oaicite:3]{index=3} */
+    const backHref = meta.parent?.type === "page_id" ? `/blog/${meta.parent.id}` : "/blog";
 
     return (
         <MainLayout>
-            <PageHead title={page.title} description={page.description || ""}/>
+            <PageHead title={meta.title} description={meta.description || ""}/>
             <Container fluid className="mt-5">
-                <Button variant="link" as={Link as any} to="/blog" className="mb-3">
-                    &larr; Back to Blog
+                <Button as={Link as any} to={backHref} variant="link" className="mb-3">
+                    &larr; Back
                 </Button>
-                <h1 className="mb-3">{page.title}</h1>
+                <h1 className="mb-3">{meta.title}</h1>
                 <div dangerouslySetInnerHTML={{__html: html}}/>
             </Container>
         </MainLayout>

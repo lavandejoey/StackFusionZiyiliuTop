@@ -4,7 +4,7 @@ import jwt, {JwtPayload} from "jsonwebtoken"
 import {errorResponse} from "middlewares/response"
 import {UserModel} from "models/user.model"
 import {isUuidV4} from "utils/valid.util";
-import {SERVER_TOKEN_KEY} from "../utils/jwt.util";
+import {SERVER_TOKEN_KEY} from "utils/jwt.util";
 
 // env constants – keep naming consistent
 const JWT_SECRET = process.env.JWT_SECRET_KEY!
@@ -32,6 +32,9 @@ export const authUsrJWT = async (req: Request, res: Response, next: NextFunction
     const payload = extractJWT(req)
     if (!payload) {
         res.status(401).json(errorResponse(req, 401, "Invalid token"))
+        return
+    } else if (payload.sub === SERVER_TOKEN_KEY) {
+        res.status(403).json(errorResponse(req, 403, "Permission denied"))
         return
     }
 
