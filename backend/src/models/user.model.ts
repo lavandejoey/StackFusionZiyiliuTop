@@ -4,8 +4,7 @@ import dbClient from "utils/mysql2Config.util"
 import {RowDataPacket} from "mysql2/promise"
 import {hashPassword, verifyPassword} from "utils/argon2.util"
 import {UserRoleEnum, UserRoleMappingRow, UserRoleModel} from "models/useRole.model"
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import {isEmail} from "utils/valid.util";
 
 enum UserStatusEnum {
     ACTIVE = "active",
@@ -66,7 +65,7 @@ class UserModel {
             sql = "SELECT * FROM user WHERE uuid = ?"
             params = [this.uuid]
         } else if (this.email) {
-            if (!emailRegex.test(this.email)) {
+            if (!isEmail(this.email)) {
                 console.error("Invalid email format")
                 return null
             }
@@ -94,6 +93,7 @@ class UserModel {
             this.created_at = user.created_at
             this.updated_at = user.updated_at
 
+            this.roles = []
             const user_role_sql: string = "SELECT role_id FROM user_role_mapping WHERE user_uuid = ?"
             // role_id list by query user-role relation table
             const user_role_ids = await dbClient.query(user_role_sql, [this.uuid]);
@@ -130,13 +130,23 @@ class UserModel {
             return null
         }
 
-        if (!emailRegex.test(email)) {
+        if (!isEmail(email)) {
+
             console.error("Invalid email format")
             return null
         }
 
         if (password.length < 6) {
             console.error("Password is too short")
+            return null
+        }
+
+        // check if user already exists
+        // SELECT 1 FROM user WHERE email=?
+        const checkSql = "SELECT 1 FROM user WHERE LOWER(email) = LOWER(?)"
+        const [checkRows] = await dbClient.query(checkSql, [email])
+        if (checkRows.length > 0) {
+            console.error("User already exists")
             return null
         }
 
@@ -164,14 +174,21 @@ class UserModel {
         if (!this.password_hash) return false
 
         try {
+            // passwd verification
             const authenticated = await verifyPassword(password, this.password_hash)
-
-            if (authenticated) {
-                const sql = "UPDATE user SET updated_at = NOW() WHERE uuid = ?"
-                await dbClient.query(sql, [this.uuid])
+            if (!authenticated) {
+                console.error("Password verification failed")
+                return false
             }
-
-            return authenticated
+            // activeness check
+            const isActive = this.status === UserStatusEnum.ACTIVE
+            if (!isActive) {
+                console.error("User is inactive")
+                return false
+            }
+            const sql = "UPDATE user SET updated_at = NOW() WHERE uuid = ?"
+            await dbClient.query(sql, [this.uuid])
+            return true
         } catch (error) {
             console.error("Error authenticating user:", error)
             return false
@@ -215,71 +232,85 @@ class UserModel {
         }
     }
 
-    async updateUser(
-        email?: string,
-        old_password?: string,
-        new_password?: string,
-        first_name?: string,
-        last_name?: string,
-        v2_iter_id?: number
-    ): Promise<UserModel | null> {
-        if (!old_password || !await verifyPassword(old_password, this.password_hash || "")) {
-            console.error("Old password is incorrect or missing")
-            return null
-        }
-
-        const updates: string[] = []
-        const params: any[] = []
-
-        if (email) {
-            if (!emailRegex.test(email)) {
-                console.error("Invalid email format")
-                return null
-            }
-            updates.push("email = ?")
-            params.push(email)
-        }
-
-        if (new_password) {
-            if (new_password.length < 6) {
-                console.error("Password is too short")
-                return null
-            }
-            const new_password_hash = await hashPassword(new_password)
-            updates.push("password_hash = ?")
-            params.push(new_password_hash)
-        }
-
-        if (first_name) {
-            updates.push("first_name = ?")
-            params.push(first_name)
-        }
-
-        if (last_name) {
-            updates.push("last_name = ?")
-            params.push(last_name)
-        }
-
-        if (typeof v2_iter_id === "number") {
-            updates.push("v2_iter_id = ?")
-            params.push(v2_iter_id)
-        }
-
-        if (updates.length === 0) {
-            console.error("Nothing to update")
-            return null
+    async updatePassword(newPassword: string): Promise<boolean> {
+        // basic policy
+        if (newPassword.length < 6) {
+            console.error("New password must be at least 6 characters");
+            return false;
         }
 
         try {
-            const sql = `UPDATE user SET ${updates.join(", ")} WHERE uuid = ?`
-            params.push(this.uuid)
+            // hash & persist
+            const newHash = await hashPassword(newPassword);
+            const sql = `
+                UPDATE user
+                SET password_hash = ?,
+                    updated_at    = NOW()
+                WHERE uuid = ?
+            `;
+            await dbClient.query(sql, [newHash, this.uuid]);
+            // update in-memory
+            this.password_hash = newHash;
+            return true;
+        } catch (err) {
+            console.error("Error updating password:", err);
+            return false;
+        }
+    }
 
-            await dbClient.query(sql, params)
-            await this.fetchUser() // refresh user data
-            return this
-        } catch (error) {
-            console.error("Error updating user:", error)
-            return null
+    async updateProfile(fields: Partial<{
+        email: string;
+        first_name: string;
+        last_name: string;
+    }>): Promise<boolean> {
+        // nothing to do?
+        if (Object.keys(fields).length === 0) {
+            return true;
+        }
+
+        // validate email if supplied
+        if (fields.email && !isEmail(fields.email)) {
+            console.error("Invalid email format in updateProfile");
+            return false;
+        }
+
+        // build dynamic SET clause
+        const setClauses: string[] = [];
+        const params: any[] = [];
+
+        if (fields.email) {
+            setClauses.push("email = ?");
+            params.push(fields.email);
+        }
+        if (fields.first_name) {
+            setClauses.push("first_name = ?");
+            params.push(fields.first_name);
+        }
+        if (fields.last_name) {
+            setClauses.push("last_name = ?");
+            params.push(fields.last_name);
+        }
+
+        // always update timestamp
+        setClauses.push("updated_at = NOW()");
+
+        const sql = `
+            UPDATE user
+            SET ${setClauses.join(", ")}
+            WHERE uuid = ?
+        `;
+        params.push(this.uuid);
+
+        try {
+            await dbClient.query(sql, params);
+            // reflect changes in-memory
+            if (fields.email) this.email = fields.email;
+            if (fields.first_name) this.first_name = fields.first_name;
+            if (fields.last_name) this.last_name = fields.last_name;
+            return true;
+        } catch (err: any) {
+            console.error("Error updating profile:", err);
+            return false;
         }
     }
 }

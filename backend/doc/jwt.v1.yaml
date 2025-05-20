@@ -1,0 +1,224 @@
+openapi: 3.1.0
+info:
+  title: JWT Authentication API
+  version: 1.0.0
+  description: |
+    This document describes the JWT-based authentication endpoints for users and servers.
+servers:
+  - url: https://{domain}/api/v1/jwt
+    description: Production server
+    variables:
+      domain:
+        default: www.ZiyiLiu.top
+  - url: http://localhost:2069/api/v1/jwt
+    description: Local development
+
+paths:
+  /login:
+    post:
+      summary: User login
+      description: >
+        Authenticate a user by email & password.  
+        On success, sets an HTTP-only cookie and returns the short-lived JWT in the response body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              description: >
+                HTTP-only user access token cookie  
+                (name=`USER_ACCESS_COOKIE_NAME`, max-age from `ACCESS_TOKEN_EXPIRY_S`)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing or invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /logout:
+    post:
+      summary: User logout
+      description: >
+        Clears the user access token cookie.  
+        Requires a valid user token (cookie or Authorization header).
+      security:
+        - cookieAuth: [ ]
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas<EmptyDataResponse>'
+        '401':
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server:
+    post:
+      summary: Server token generation
+      description: >
+        Generate a server (machine-to-machine) JWT and set it as an HTTP-only cookie.
+      responses:
+        '200':
+          description: Server token generated
+          headers:
+            Set-Cookie:
+              description: >
+                HTTP-only server token cookie  
+                (name=`SERVER_ACCESS_COOKIE_NAME`, max-age from `SERVER_TOKEN_EXPIRY_S`)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas<EmptyDataResponse>'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Standard JWT in Authorization header:  
+        `Authorization: Bearer <token>`
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: USER_ACCESS_COOKIE_NAME
+      description: HTTP-only user access token cookie
+    serverCookieAuth:
+      type: apiKey
+      in: cookie
+      name: SERVER_ACCESS_COOKIE_NAME
+      description: HTTP-only server JWT cookie
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: hunter2
+
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        username:
+          type: string
+          example: user
+        role:
+          type: array
+          items:
+            type: string
+          example:
+            - USER
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-05-15T08:30:00Z"
+
+    LoginResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            token:
+              type: string
+              description: Short-lived JWT
+        meta:
+          type: object
+          properties:
+            requestId:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
+
+    EmptyDataResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: Empty object
+          example: { }
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+      example:
+        error:
+          code: 401
+          message: "Invalid credentials"
+

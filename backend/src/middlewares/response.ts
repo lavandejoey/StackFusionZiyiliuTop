@@ -1,28 +1,59 @@
 // /StackFusionZiyiliuTop/backend/src/middlewares/response.ts
-import {Request} from "express";
+import {Request, Response, NextFunction} from "express";
+// import {v4 as uuidv4} from "uuid";
 
-const API_VERSION: string = process.env.API_VERSION || "N/A";
-const AUTHOR: string = process.env.AUTHOR || "N/A";
+const API_VERSION = process.env.API_VERSION ?? "N/A";
+const AUTHOR = process.env.AUTHOR ?? "N/A";
 
-const successResponse = (req: Request, data: object = {}, message: string = "OK", code: number = 200) => ({
+export const attachReqId = (req: Request, _res: Response, next: NextFunction) => {
+    // req.id = uuidv4();
+    next();
+};
+
+interface MetaBase {
+    // id: string;                       // request-id for tracing
+    code: number;                     // HTTP status
+    message: string;                  // human message
+    time: string;                     // ISO-8601 UTC
+    version: string;                  // API version
+    author: string;                   // team / service id
+    path: string;                     // original URL
+    payload?: string;                 // optional user uuid
+}
+
+export const successResponse = <T = unknown>(
+    req: Request,
+    data: T,
+    message = "OK",
+    code = 200,
+) => ({
     meta: {
-        code: code,
-        message: message,
+        // id: req.id as string,
+        code,
+        message,
         time: new Date().toISOString(),
         version: API_VERSION,
         author: AUTHOR,
-        payload: req?.user
-    }, data: data
+        path: req.originalUrl,
+        payload: (req.user as any)?.uuid,
+    } satisfies MetaBase,
+    data,
 });
 
-const errorResponse = (errorCode: number, message: string, errorDetails: object = {}) => ({
+export const errorResponse = (
+    req: Request,
+    code: number,
+    message: string,
+    details: unknown = null,
+) => ({
     meta: {
-        code: errorCode,
-        message: message,
+        // id: req.id as string,
+        code,
+        message,
         time: new Date().toISOString(),
         version: API_VERSION,
         author: AUTHOR,
-    }, error: errorDetails || null
+        path: req.originalUrl,
+    } satisfies MetaBase,
+    error: details,
 });
-
-export {successResponse, errorResponse};

@@ -61,18 +61,6 @@
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
-    <url>
-        <loc>https://ziyiliu.top/auth/login</loc>
-        <lastmod>2025-03-13</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
-    <url>
-        <loc>https://ziyiliu.top/auth/signup</loc>
-        <lastmod>2025-03-13</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
 
     <!-- Projects (High priority as they showcase key work) -->
     <url>

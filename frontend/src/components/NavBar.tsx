@@ -1,51 +1,61 @@
 // /StackFusionZiyiliuTop/frontend/src/components/Navbar.tsx
-import React from "react";
+import {Navbar, Nav, Button} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSignOutAlt, faUser} from "@fortawesome/free-solid-svg-icons";
 import AnnotatedText from "@/components/AnnotatedText";
-import {themeColours} from "@/styles/theme.ts";
-import LanguageSwitcher from "@/components/LanguageSwitcher.tsx";
-import {Navbar, Nav} from 'react-bootstrap';
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import {themeColours} from "@/styles/theme";
 import {useTranslation} from "react-i18next";
+import {useAuth} from "@/hooks/useAuth";
 
-interface NavBarProps {
-    activePage?: string;
-    user?: { userId?: string };
-}
-
-const NavBar: React.FC<NavBarProps> = ({activePage, user}) => {
+export default function NavBar({activePage}: { activePage?: string }) {
+    const {user, logout} = useAuth();
     const {t} = useTranslation();
+
     const NavigationItems = [
         {name: "Home", path: "/", text: "ZLiu's"},
         {name: "About Me", path: "/about-me", text: t("About Me")},
         {name: "Contact", path: "/contact", text: t("Contact")},
         {name: "Blog", path: "/blog", text: t("Blog")},
     ];
+
     return (
         <Navbar expand="sm" className="navbar-custom" style={{zIndex: 100}}>
             <div className="container">
                 <Navbar.Toggle aria-controls="mainNavbarNav"/>
                 <Navbar.Collapse id="mainNavbarNav">
                     <Nav className="me-auto">
-                        {NavigationItems.map(item => (
+                        {NavigationItems.map((it) => (
                             <Nav.Link
-                                key={item.name}
-                                href={item.path}
-                                className={`d-flex justify-content-center main-navbar-item ${activePage === item.name ? "active" : ""}`}
+                                key={it.name}
+                                href={it.path}
+                                className={`d-flex justify-content-center main-navbar-item ${
+                                    activePage === it.name ? "active" : ""
+                                }`}
                             >
-                                <AnnotatedText text={item.text} show={activePage === item.name}
-                                               color={themeColours.quinary}/>
+                                <AnnotatedText
+                                    text={it.text}
+                                    show={activePage === it.name}
+                                    color={themeColours.quinary}
+                                />
                             </Nav.Link>
                         ))}
                     </Nav>
 
+                    {/* right-hand side */}
                     <div className="ms-auto d-flex justify-content-center">
-                        {user && user.userId && (
+                        {user && (
                             <>
-                                <a className="btn btn-outline-primary mx-auto me-md-4" href={`/console/${user.userId}`}>
-                                    <i className="fas fa-user"></i>
-                                </a>
-                                <a className="btn btn-outline-danger mx-auto me-md-4" href="/auth/logout">
-                                    <i className="fas fa-sign-out-alt"></i>
-                                </a>
+                                <Button variant="outline-primary" className="mx-auto me-md-4"
+                                        href={`/user/${user.uuid}`}
+                                        aria-label="Account"
+                                >
+                                    <FontAwesomeIcon icon={faUser}/>
+                                </Button>
+                                <Button variant="outline-danger" className="mx-auto me-md-4" onClick={logout}
+                                        aria-label="Log out">
+                                    <FontAwesomeIcon icon={faSignOutAlt}/>
+                                </Button>
                             </>
                         )}
                         <LanguageSwitcher/>
@@ -54,6 +64,4 @@ const NavBar: React.FC<NavBarProps> = ({activePage, user}) => {
             </div>
         </Navbar>
     );
-};
-
-export default NavBar;
+}

@@ -4,37 +4,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources.">
+    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250513 Remove unused old files.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/cv.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/contactRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/contactRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/jwtRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/api/v1/userRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/api/v1/userRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/authJWT.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middlewares/response.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middlewares/response.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/utils/redisClient.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/utils/redisClient.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/about-me.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/admin.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/auth.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/blog.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/console.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/contact.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/utils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/routes/v2ray.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/fr.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/parser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-HK.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/i18nConfig.package.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/postmark.package.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/robots.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/about-me.route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/contact.route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/utils.route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/v2rayLogParser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/about-me.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/contact.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/error.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/index.pug" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layout.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/auth.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/admin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/fonts.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/fonts.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/fonts.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/ziyiliu.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth.route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/console.route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.route.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/auth.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/console.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,10 +55,10 @@
         <option value="Pug File" />
         <option value="JavaScript File" />
         <option value="HTML File" />
-        <option value="CSS File" />
         <option value="SCSS File" />
         <option value="TypeScript File" />
         <option value="OpenAPI" />
+        <option value="CSS File" />
         <option value="TypeScript JSX File" />
       </list>
     </option>
@@ -72,7 +79,10 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/public/stylesheets/style.sass" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/node/globals.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/react/jsx-runtime.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/ioredis/built/utils/RedisCommander.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/react-bootstrap/esm/Form.d.ts" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -85,64 +95,65 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Node.js.app.js.executor": "Run",
-    "Node.js.bin/www.executor": "Run",
-    "Node.js.parser.js.executor": "Run",
-    "Node.js.test.js.executor": "Run",
-    "Node.js.v2rayLogParser.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "decouple",
-    "javascript.nodejs.core.library.configured.version": "18.19.1",
-    "javascript.nodejs.core.library.typings.version": "18.19.91",
-    "last.edited.regexp": "",
-    "last_opened_file_path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/utils",
-    "list.type.of.created.stylesheet": "SCSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "npm.backend > build.executor": "Run",
-    "npm.backend > dev.executor": "Run",
-    "npm.build-css.executor": "Run",
-    "npm.dev:all.executor": "Run",
-    "npm.frontend > build.executor": "Run",
-    "npm.frontend > dev.executor": "Run",
-    "npm.frontend > preview.executor": "Run",
-    "npm.start:debug.executor": "Run",
-    "npm.watch-css.executor": "Debug",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Node.js.app.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.bin/www.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.test.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.v2rayLogParser.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;Markdown-Groovy.md.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;decouple&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.19.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.19.91&quot;,
+    &quot;last.edited.regexp&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/api/v1&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.backend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-css.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; preview.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start:debug.executor&quot;: &quot;Run&quot;,
+    &quot;npm.watch-css.executor&quot;: &quot;Debug&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/api/v1" />
       <recent name="$PROJECT_DIR$/backend/src/utils" />
       <recent name="$PROJECT_DIR$/frontend/src/assets" />
       <recent name="$PROJECT_DIR$/frontend/src/styles" />
       <recent name="$PROJECT_DIR$/frontend/src/assets/fonts" />
-      <recent name="$PROJECT_DIR$/frontend" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/doc" />
       <recent name="$PROJECT_DIR$/frontend/public" />
       <recent name="$PROJECT_DIR$/frontend/src/components" />
       <recent name="$PROJECT_DIR$/frontend/src/styles" />
       <recent name="$PROJECT_DIR$/frontend/src" />
-      <recent name="$PROJECT_DIR$/public/js" />
     </key>
   </component>
   <component name="RunManager" selected="npm.dev:all">
@@ -207,8 +218,8 @@
       <list>
         <item itemvalue="npm.dev:all" />
         <item itemvalue="npm.backend &gt; dev" />
-        <item itemvalue="npm.frontend &gt; dev" />
         <item itemvalue="npm.frontend &gt; preview" />
+        <item itemvalue="npm.frontend &gt; dev" />
         <item itemvalue="npm.frontend &gt; build" />
       </list>
     </recent_temporary>
@@ -277,7 +288,18 @@
       <workItem from="1744805923218" duration="4000" />
       <workItem from="1746479510841" duration="167000" />
       <workItem from="1747146433951" duration="4479000" />
+      <workItem from="1747346173842" duration="39280000" />
+      <workItem from="1747666936574" duration="9352000" />
     </task>
+    <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
+      <option name="closed" value="true" />
+      <created>1747160702777</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747160702777</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,6 +318,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />
-    <option name="LAST_COMMIT_MESSAGE" value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />
+    <MESSAGE value="20250513 Remove unused old files." />
+    <option name="LAST_COMMIT_MESSAGE" value="20250513 Remove unused old files." />
   </component>
 </project>

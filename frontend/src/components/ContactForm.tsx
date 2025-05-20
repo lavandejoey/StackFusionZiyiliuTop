@@ -5,6 +5,7 @@ import '@/styles/ContactForm.css';
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Button} from "react-bootstrap";
+import {apiMailingMessage} from "@/services/api.ts";
 
 interface FormData {
     surname: string;
@@ -49,16 +50,12 @@ const ContactForm: React.FC = () => {
         icon?.classList.add('animate-fly-away');
 
         try {
-            const res = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(form),
-            });
-            if (!res.ok) throw new Error(await res.text());
-            // TODO: show success toast / reset
+            const res = await apiMailingMessage(form);
+            if (res.status !== 200) {
+                throw new Error('Failed to send message');
+            }
         } catch (err) {
             console.error(err);
-            // TODO: show error notification
         } finally {
             setTimeout(() => {
                 icon?.remove();
