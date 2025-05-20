@@ -9,7 +9,7 @@ servers:
   - url: https://{domain}/api/v1/user
     variables:
       domain:
-        default: www.ZiyiLiu.top
+        default: ZiyiLiu.top
   - url: http://localhost:2069/api/v1/user
 
 components:
