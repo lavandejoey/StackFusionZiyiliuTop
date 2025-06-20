@@ -1,7 +1,7 @@
 // /StackFusionZiyiliuTop/backend/src/common/util/postmark.ts
 import {POSTMARK_API_TOKEN, NO_REPLY_EMAIL, CONTACT_EMAIL} from "@src/common/constants/ENV";
 import {ServerClient} from "postmark";
-import {ContactMail} from "@src/common/types";
+import {ContactMail} from "@src/types/mail";
 
 const apiToken = POSTMARK_API_TOKEN;
 if (!apiToken) throw new Error("Missing POSTMARK_API_TOKEN");

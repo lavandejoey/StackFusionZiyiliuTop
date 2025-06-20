@@ -19,7 +19,6 @@
     "dev": "NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts",
     "dev:hot": "nodemon --exec \"npm run dev\" --watch ./src --ext .ts",
     "lint": "eslint .",
-    "prestart": "npm run build",
     "start": "NODE_ENV=production node -r ./dist/config.js ./dist/index.js",
     "test": "NODE_ENV=test vitest"
   },

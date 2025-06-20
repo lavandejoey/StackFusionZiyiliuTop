@@ -3,7 +3,7 @@ import {Request, Response, Router} from "express";
 import YAML from "yaml";
 import UserService from "@src/services/UserService";
 import {errorResponse} from "@src/common/util/response";
-import {UserRoleEnum, UserStatusEnum} from "@src/types";
+import {UserRoleEnum, UserStatusEnum} from "@src/types/users";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 
 export const proxyRouter = Router();

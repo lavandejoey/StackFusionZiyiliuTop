@@ -5,7 +5,7 @@ import {requireOwner} from "@src/common/middlewares/authJWT";
 import UserService from "@src/services/UserService";
 import {errorResponse, successResponse} from "@src/common/util/response";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
-import {UserModel, UserRoleEnum} from "@src/types";
+import {UserModel, UserRoleEnum} from "@src/types/users";
 import {isUuidV4} from "@src/common/util/validators";
 
 export const userRouter = Router();

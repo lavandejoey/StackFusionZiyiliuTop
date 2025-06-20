@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "clean:all": "npm run clean --workspace backend && npm run clean --workspace frontend && rm -rf ./node_modules && rm -rf ./package-lock.json",
-    "install:all": "npm install && npm install --workspace backend && npm install --workspace frontend",
+    "install:all": "npm install",
     "lint:all": "npm run lint --workspace backend && npm run lint --workspace frontend",
     "dev:all": "concurrently \"npm run dev:hot --workspace backend\" \"npm run dev --workspace frontend\"",
     "build:all": "npm run build --workspace backend && npm run build --workspace frontend",

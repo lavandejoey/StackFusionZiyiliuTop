@@ -5,7 +5,7 @@ import {
     UserRow,
     UserRoleMappingRow,
     PasswordRow, UserCreateModel,
-} from "@src/types";
+} from "@src/types/users";
 import {verifyPassword} from "@src/common/util/argon2";
 import {default as dbClient} from "@src/common/util/mysql2Config";
 

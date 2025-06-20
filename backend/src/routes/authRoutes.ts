@@ -9,7 +9,7 @@ import {isEmail} from "jet-validators";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import jwtService from "@src/services/JwtService";
 import {requireUser} from "@src/common/middlewares/authJWT";
-import {UserCreateModel, UserModel} from "@src/types";
+import {UserCreateModel, UserModel} from "@src/types/users";
 import {isUuidV4} from "@src/common/util/validators";
 
 export const authRouter = Router();

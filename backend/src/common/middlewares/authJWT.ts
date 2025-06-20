@@ -4,7 +4,7 @@ import {errorResponse} from "@src/common/util/response";
 import JwtService from "@src/services/JwtService";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import UserService from "@src/services/UserService";
-import {UserRoleEnum} from "@src/types";
+import {UserRoleEnum} from "@src/types/users";
 import {isUuidV4} from "@src/common/util/validators";
 import {isEmail} from "jet-validators";
 

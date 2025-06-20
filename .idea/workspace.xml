@@ -37,9 +37,6 @@
       <change afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/tsconfig.prod.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/vitest.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
@@ -164,7 +161,7 @@
       <change beforePath="$PROJECT_DIR$/backend/frontend/vite.config.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +177,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
@@ -214,7 +211,7 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/zliu/Documents/PROJECTS/\n    StackFusionZiyiliuTop/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -277,26 +274,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="backend &gt; clean" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="clean" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="backend &gt; dev:hot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev:hot" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <configuration name="backend &gt; prestart" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
@@ -317,20 +294,40 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:all" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="npm.backend &gt; build" />
-      <item itemvalue="npm.backend &gt; clean" />
       <item itemvalue="npm.backend &gt; prestart" />
       <item itemvalue="npm.backend &gt; start" />
-      <item itemvalue="npm.backend &gt; dev:hot" />
+      <item itemvalue="npm.start" />
+      <item itemvalue="npm.build:all" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build:all" />
         <item itemvalue="npm.backend &gt; start" />
+        <item itemvalue="npm.start" />
         <item itemvalue="npm.backend &gt; prestart" />
         <item itemvalue="npm.backend &gt; build" />
-        <item itemvalue="npm.backend &gt; dev:hot" />
-        <item itemvalue="npm.backend &gt; clean" />
       </list>
     </recent_temporary>
   </component>
@@ -361,7 +358,7 @@
       <workItem from="1750013362781" duration="50233000" />
       <workItem from="1750322033719" duration="9758000" />
       <workItem from="1750352932495" duration="17675000" />
-      <workItem from="1750417106213" duration="4644000" />
+      <workItem from="1750417106213" duration="5536000" />
     </task>
     <servers />
   </component>
