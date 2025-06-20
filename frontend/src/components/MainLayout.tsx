@@ -5,11 +5,11 @@ import Alerts from "@/components/Alerts.tsx"
 import Footer from "@/components/Footer.tsx"
 
 interface MainLayoutProps {
-    activePage?: string;
-    info?: string;
-    error?: string;
-    success?: string;
-    warning?: string;
+    activePage?: string,
+    info?: string,
+    error?: string,
+    success?: string,
+    warning?: string,
     children: React.ReactNode;
 }
 

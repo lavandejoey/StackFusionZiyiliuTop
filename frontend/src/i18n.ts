@@ -13,7 +13,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
     // Fallback language when detection fails or a translation is missing
     fallbackLng: "en",
     // Debugging logs in development
-    debug: process.env.NODE_ENV === "development",
+    debug: import.meta.env.DEV,
     // Translation resources
     resources: {
         en: {translation: en},

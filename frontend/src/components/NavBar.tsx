@@ -6,7 +6,7 @@ import AnnotatedText from "@/components/AnnotatedText";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {themeColours} from "@/styles/theme";
 import {useTranslation} from "react-i18next";
-import {useAuth} from "@/hooks/useAuth";
+import {useAuth} from "@/contexts/useAuth";
 
 export default function NavBar({activePage}: { activePage?: string }) {
     const {user, logout} = useAuth();
@@ -47,7 +47,7 @@ export default function NavBar({activePage}: { activePage?: string }) {
                         {user && (
                             <>
                                 <Button variant="outline-primary" className="mx-auto me-md-4"
-                                        href={`/user/${user.uuid}`}
+                                        href={`/users/${user.uuid}`}
                                         aria-label="Account"
                                 >
                                     <FontAwesomeIcon icon={faUser}/>

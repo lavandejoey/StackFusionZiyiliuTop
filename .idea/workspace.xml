@@ -4,11 +4,166 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="20250520 DEV decouple: create pm2 run file.">
+    <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/StackFusionZiyiliuTop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/doc/jwt.v1.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/doc/user.v1.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/blogRouter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/contactRouter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/jwtRouter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/userRouter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/v2rayRouter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/app.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/middlewares/authJWT.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/middlewares/response.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/Notion.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/useRole.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/user.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/types/express/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/argon2.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/jwt.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/mysql2Config.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/postmark.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/redisClient.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/valid.util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/docker.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ecosystem.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/eslint.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/6702323f5tc220c8b48779336a48bb54.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic-bg.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic-bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/ECUST_university_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/ENSTA_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/Institut_polytechnique_de_Paris_logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/boc_logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/iscas_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/porsche_logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/public/sitemap.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/cvData.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Black.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Black_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Bold_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Light_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Medium_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Black.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Thin.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Black.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Thin.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Thin.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Thin_Italic.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/shantell.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/Alerts.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/AnnotatedText.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/AuthForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/ContactForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/Footer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/LanguageSwitcher.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/MainLayout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/NavBar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/PageHead.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/contexts/AuthContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/hooks/useAuth.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/i18n.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/en.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/fr.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/parser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/zh-CN.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/zh-HK.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/main.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/AboutMe.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Auth.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/BlogList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/BlogPost.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Contact.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Home.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/UserHome.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/services/api.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/AuthForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/ContactForm.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/_custom.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/_variables.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/main.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/masonry.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/theme.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/src/vite-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.node.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/frontend/vite.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecosystem.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eslint.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AnnotatedText.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AnnotatedText.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/contexts/AuthContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useAuth.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/i18n.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/i18n.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.node.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,135 +174,134 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JSX File" />
-        <option value="Pug File" />
-        <option value="JavaScript File" />
-        <option value="HTML File" />
-        <option value="SCSS File" />
-        <option value="OpenAPI" />
-        <option value="TypeScript File" />
-        <option value="CSS File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="decouple" />
-      </map>
-    </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;lavandejoey&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "lavandejoey"
   }
-}</component>
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/lavandejoey/StackFusionZiyiliuTop.git",
     "accountId": "ccb0e136-4a21-48e7-9fa4-297344e28a42"
   }
 }]]></component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/node_modules/@types/node/globals.d.ts" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/node_modules/@types/react/index.d.ts" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/node_modules/@types/react/jsx-runtime.d.ts" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/node_modules/ioredis/built/utils/RedisCommander.d.ts" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/node_modules/lodash.debounce/index.js" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/node_modules/react-bootstrap/esm/Form.d.ts" root0="SKIP_INSPECTION" />
-  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
+  &quot;associatedIndex&quot;: 8
 }</component>
-  <component name="ProjectId" id="2liSjyoiRNK7TaAEfRxrkrzbRbJ" />
+  <component name="ProjectId" id="2xPdmh8UAebkZzxaGs4cuoZYNsc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Node.js.app.js.executor": "Run",
-    "Node.js.bin/www.executor": "Run",
-    "Node.js.parser.js.executor": "Run",
-    "Node.js.test.js.executor": "Run",
-    "Node.js.v2rayLogParser.js.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "Markdown-Groovy.md.groovy",
-    "database.data.extractors.current.id": "Markdown-Groovy.md.groovy",
-    "git-widget-placeholder": "main",
-    "javascript.nodejs.core.library.configured.version": "18.19.1",
-    "javascript.nodejs.core.library.typings.version": "18.19.91",
-    "last.edited.regexp": "",
-    "last_opened_file_path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/backend/src/models",
-    "list.type.of.created.stylesheet": "CSS",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/zliu/Documents/PROJECTS/\n    StackFusionZiyiliuTop/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
     "npm.backend > build.executor": "Run",
+    "npm.backend > clean.executor": "Run",
     "npm.backend > dev.executor": "Run",
+    "npm.backend > dev:hot.executor": "Run",
+    "npm.backend > lint --fix.executor": "Run",
+    "npm.backend > lint.executor": "Run",
+    "npm.backend > prestart.executor": "Run",
     "npm.backend > start.executor": "Run",
-    "npm.backend > typecheck.executor": "Run",
-    "npm.build-css.executor": "Run",
     "npm.build.executor": "Run",
     "npm.build:all.executor": "Run",
-    "npm.clean.executor": "Run",
+    "npm.clean-install.executor": "Run",
     "npm.dev:all.executor": "Run",
+    "npm.dev:hot.executor": "Run",
     "npm.frontend > build.executor": "Run",
+    "npm.frontend > clean.executor": "Run",
     "npm.frontend > dev.executor": "Run",
     "npm.frontend > lint.executor": "Run",
     "npm.frontend > preview.executor": "Run",
-    "npm.frontend > start.executor": "Run",
-    "npm.frontend > test.executor": "Run",
     "npm.install:all.executor": "Run",
     "npm.lint.executor": "Run",
-    "npm.start:debug.executor": "Run",
-    "npm.typecheck.executor": "Run",
-    "npm.watch-css.executor": "Debug",
+    "npm.lint:all.executor": "Run",
+    "npm.start.executor": "Run",
+    "npm.type-check.executor": "Run",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
-    ]
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend" />
+      <recent name="$PROJECT_DIR$/backend/src/services" />
+      <recent name="$PROJECT_DIR$/backend/src/models/common/types" />
       <recent name="$PROJECT_DIR$/backend/src/models" />
-      <recent name="$PROJECT_DIR$/backend/src/api/v1" />
-      <recent name="$PROJECT_DIR$/backend/src/utils" />
-      <recent name="$PROJECT_DIR$/frontend/src/assets" />
-      <recent name="$PROJECT_DIR$/frontend/src/styles" />
+      <recent name="$PROJECT_DIR$/backend/src/routes" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/backend/doc" />
-      <recent name="$PROJECT_DIR$/frontend/public" />
-      <recent name="$PROJECT_DIR$/frontend/src/components" />
-      <recent name="$PROJECT_DIR$/frontend/src/styles" />
-      <recent name="$PROJECT_DIR$/frontend/src" />
+      <recent name="$PROJECT_DIR$/backend/src" />
+      <recent name="$PROJECT_DIR$/backend/dist" />
+      <recent name="$PROJECT_DIR$/backend/src/types" />
+      <recent name="$PROJECT_DIR$/backend/src/types/users" />
+      <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.backend &gt; build">
+  <component name="RunManager" selected="npm.backend &gt; start">
     <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
       <scripts>
         <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="backend &gt; clean" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="clean" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="backend &gt; dev:hot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev:hot" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="backend &gt; prestart" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prestart" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -163,133 +317,52 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="frontend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="frontend &gt; lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="lint" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="frontend &gt; preview" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/frontend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="preview" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
+    <list>
+      <item itemvalue="npm.backend &gt; build" />
+      <item itemvalue="npm.backend &gt; clean" />
+      <item itemvalue="npm.backend &gt; prestart" />
+      <item itemvalue="npm.backend &gt; start" />
+      <item itemvalue="npm.backend &gt; dev:hot" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.frontend &gt; preview" />
-        <item itemvalue="npm.frontend &gt; lint" />
-        <item itemvalue="npm.frontend &gt; build" />
         <item itemvalue="npm.backend &gt; start" />
+        <item itemvalue="npm.backend &gt; prestart" />
         <item itemvalue="npm.backend &gt; build" />
+        <item itemvalue="npm.backend &gt; dev:hot" />
+        <item itemvalue="npm.backend &gt; clean" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-WS-251.25410.117" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-WS-251.26094.131" />
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7ec193a7-aaa9-4ba5-af5d-d5e7c0b05aba" name="Changes" comment="" />
-      <created>1725661544220</created>
+      <changelist id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="" />
+      <created>1747843802381</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1725661544220</updated>
-      <workItem from="1725661545374" duration="409000" />
-      <workItem from="1725783410574" duration="1939000" />
-      <workItem from="1726325526605" duration="36000" />
-      <workItem from="1726325573919" duration="1248000" />
-      <workItem from="1726345092941" duration="1656000" />
-      <workItem from="1726347279334" duration="22428000" />
-      <workItem from="1726644634953" duration="1028000" />
-      <workItem from="1726746398107" duration="553000" />
-      <workItem from="1726747209896" duration="4771000" />
-      <workItem from="1726769383582" duration="2235000" />
-      <workItem from="1726771631934" duration="13595000" />
-      <workItem from="1726843559576" duration="2233000" />
-      <workItem from="1726999117621" duration="1922000" />
-      <workItem from="1727892219859" duration="8512000" />
-      <workItem from="1728232035526" duration="14665000" />
-      <workItem from="1728313132463" duration="4417000" />
-      <workItem from="1728325245272" duration="14571000" />
-      <workItem from="1728413309088" duration="15802000" />
-      <workItem from="1729628707479" duration="7277000" />
-      <workItem from="1729879293324" duration="44238000" />
-      <workItem from="1731793007854" duration="3938000" />
-      <workItem from="1733000714850" duration="2085000" />
-      <workItem from="1734209852600" duration="6721000" />
-      <workItem from="1738847758417" duration="267000" />
-      <workItem from="1739046733335" duration="2429000" />
-      <workItem from="1739267208085" duration="2328000" />
-      <workItem from="1739281683495" duration="7379000" />
-      <workItem from="1739291629187" duration="11913000" />
-      <workItem from="1739363034790" duration="3368000" />
-      <workItem from="1741777147835" duration="31715000" />
-      <workItem from="1741859411021" duration="10797000" />
-      <workItem from="1741874808286" duration="4557000" />
-      <workItem from="1741879371786" duration="26000" />
-      <workItem from="1741879416009" duration="1876000" />
-      <workItem from="1741941733863" duration="3817000" />
-      <workItem from="1742029326848" duration="22802000" />
-      <workItem from="1742168476382" duration="732000" />
-      <workItem from="1742206672500" duration="356000" />
-      <workItem from="1742405131404" duration="385000" />
-      <workItem from="1742405946885" duration="4470000" />
-      <workItem from="1742417147879" duration="14344000" />
-      <workItem from="1742500209980" duration="6651000" />
-      <workItem from="1742910759421" duration="2880000" />
-      <workItem from="1743083115988" duration="156000" />
-      <workItem from="1743083285487" duration="58781000" />
-      <workItem from="1744211964684" duration="1000" />
-      <workItem from="1744805923218" duration="4000" />
-      <workItem from="1746479510841" duration="167000" />
-      <workItem from="1747146433951" duration="4479000" />
-      <workItem from="1747346173842" duration="39280000" />
-      <workItem from="1747666936574" duration="10269000" />
-      <workItem from="1747737720865" duration="31000" />
-      <workItem from="1747737763691" duration="22743000" />
-      <workItem from="1747778148584" duration="611000" />
+      <updated>1747843802381</updated>
+      <workItem from="1747843803506" duration="20650000" />
+      <workItem from="1748333545231" duration="9781000" />
+      <workItem from="1748347494987" duration="19752000" />
+      <workItem from="1748431277768" duration="60604000" />
+      <workItem from="1748621794504" duration="52740000" />
+      <workItem from="1748893131896" duration="5552000" />
+      <workItem from="1748941253753" duration="36525000" />
+      <workItem from="1749154042977" duration="32000" />
+      <workItem from="1749154095649" duration="26513000" />
+      <workItem from="1749542219969" duration="30736000" />
+      <workItem from="1750013362781" duration="50233000" />
+      <workItem from="1750322033719" duration="9758000" />
+      <workItem from="1750352932495" duration="17675000" />
+      <workItem from="1750417106213" duration="3744000" />
     </task>
-    <task id="LOCAL-00001" summary="20250513 Remove unused old files.">
-      <option name="closed" value="true" />
-      <created>1747160702777</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1747160702777</updated>
-    </task>
-    <task id="LOCAL-00002" summary="20250520 Auth api with frontend completed.">
-      <option name="closed" value="true" />
-      <created>1747736857744</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1747736857744</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,11 +378,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="20250203 Fix the mobile screen display of about-me.pug; update and contact.pug; add log to indicate redis connection; update the source of some image resources." />
-    <MESSAGE value="20250513 Remove unused old files." />
-    <MESSAGE value="20250520 Auth api with frontend completed." />
-    <option name="LAST_COMMIT_MESSAGE" value="20250520 Auth api with frontend completed." />
   </component>
 </project>

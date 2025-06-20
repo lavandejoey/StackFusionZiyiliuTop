@@ -1,6 +1,6 @@
 // /StackFusionZiyiliuTop/frontend/src/components/AuthForm.tsx
 import "@/styles/AuthForm.css";
-import {useRef, useState, useEffect, FormEvent, useMemo} from "react";
+import {useRef, useState, useEffect, type FormEvent, useMemo,} from "react";
 import {useNavigate} from "react-router-dom";
 import {SwitchTransition, CSSTransition} from "react-transition-group";
 import {
@@ -8,8 +8,9 @@ import {
     Row, Spinner, Tab, Tabs,
 } from "react-bootstrap";
 import debounce from "lodash.debounce";
-import {useAuth} from "@/hooks/useAuth";
-import {apiEmailExists, apiSignup} from "@/services/api";
+import {useAuth} from "@/contexts/useAuth";
+import {apiEmailExists} from "@/services/authService";
+import {isAxiosError} from "axios";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -18,54 +19,54 @@ interface FormFields {
     email: string;
     password: string;
     confirmPassword: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
 }
 
 type FieldName = keyof FormFields;
 
 export function AuthForm() {
-    /* --------------- state ---------------- */
+    /* ---------------- state ---------------- */
     const [mode, setMode] = useState<"login" | "signup">("login");
     const [form, setForm] = useState<FormFields>({
         email: "",
         password: "",
         confirmPassword: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
     });
-    const [fieldErrors, setFieldErrors] = useState<
-        Partial<Record<FieldName, string>>
-    >({});
-    const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>(
-        {}
-    );
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
+    const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>({});
     const [checkingEmail, setCheckingEmail] = useState(false);
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState<string | null>(null);
     const [submitAttempted, setSubmitAttempted] = useState(false);
 
-    const {login} = useAuth();
+    // pull both login & signup from context
+    const {login, signup} = useAuth();
     const navigate = useNavigate();
     const formRef = useRef<HTMLFormElement>(null);
 
-    /* --------------- async e-mail duplicate check ---------------- */
+    /* ---- async e-mail “exists” check (debounced) ---- */
     const checkEmail = useMemo(
         () =>
             debounce(async (value: string) => {
                 if (!emailRegex.test(value)) return;
                 setCheckingEmail(true);
                 try {
-                    const {data} = await apiEmailExists(value);
+                    const exists = await apiEmailExists(value);
                     setFieldErrors((prev) => ({
                         ...prev,
-                        email: mode === "signup"
-                            ? data.exists ? "E-mail already in use" : ""
-                            : !data.exists ? "E-mail not found" : "",
+                        email:
+                            mode === "signup"
+                                ? exists
+                                    ? "E-mail already in use"
+                                    : ""
+                                : !exists
+                                    ? "E-mail not found"
+                                    : "",
                     }));
-                } catch (err) {
-                    // Handle error gracefully
-                    console.error("Error checking email:", err);
+                } catch {
                     setFieldErrors((prev) => ({
                         ...prev,
                         email: "Unable to verify e-mail right now",
@@ -74,36 +75,23 @@ export function AuthForm() {
                     setCheckingEmail(false);
                 }
             }, 400),
-        [mode, setCheckingEmail, setFieldErrors]
+        [mode]
     );
 
-    // Cancel any pending debounce on unmount or mode change
-    useEffect(() => {
-        return () => {
-            checkEmail.cancel();
-        };
-    }, [checkEmail]);
+    useEffect(() => checkEmail.cancel, [checkEmail]);
 
-    /* --------------- local validation on every change ------------ */
+    /* ---- local validation on every change ---- */
     useEffect(() => {
         const errors: Partial<Record<FieldName, string>> = {};
-
         if (form.email && !emailRegex.test(form.email)) {
             errors.email = "Enter a valid e-mail";
         }
-        if (
-            form.password &&
-            (form.password.length < 6 || form.password.length > 32)
-        ) {
+        if (form.password && (form.password.length < 6 || form.password.length > 32)) {
             errors.password = "Must be 6–32 characters";
         }
         if (mode === "signup") {
-            if (form.firstName.trim() === "") {
-                errors.firstName = "First name required";
-            }
-            if (form.lastName.trim() === "") {
-                errors.lastName = "Last name required";
-            }
+            if (!form.first_name.trim()) errors.first_name = "First name required";
+            if (!form.last_name.trim()) errors.last_name = "Last name required";
             if (
                 form.confirmPassword &&
                 form.password !== form.confirmPassword
@@ -111,71 +99,62 @@ export function AuthForm() {
                 errors.confirmPassword = "Passwords do not match";
             }
         }
-
         // Replace errors wholesale so resolved errors are cleared
         setFieldErrors(errors);
     }, [form, mode]);
 
-    /* --------------- enable/disable submit ----------------------- */
+    /* ---- enable/disable submit button ---- */
     const allRequiredFilled =
         mode === "login"
             ? Boolean(form.email && form.password)
             : (Object.values(form) as string[]).every(Boolean);
-
-    const noVisibleErrors = (Object.entries(fieldErrors) as [
-        FieldName,
-        string
-    ][])
+    const noVisibleErrors = (Object.entries(fieldErrors) as [FieldName, string][])
         .filter(([key]) => touched[key] || submitAttempted)
         .every(([, msg]) => !msg);
+    const canSubmit = !loading && !checkingEmail && allRequiredFilled && noVisibleErrors;
 
-    const canSubmit =
-        !loading && !checkingEmail && allRequiredFilled && noVisibleErrors;
-
-    /* --------------- submit handler ------------------------------ */
+    /* ---- submit handler for login or signup ---- */
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setSubmitAttempted(true);
-
-        // Recompute to avoid stale closure
-        const ready =
-            !loading && !checkingEmail && allRequiredFilled && noVisibleErrors;
-        if (!ready) return;
+        if (!canSubmit) return;
 
         setLoading(true);
         setServerError(null);
 
         try {
+            let user;
             if (mode === "login") {
-                await login(form.email, form.password);
+                user = await login(form.email, form.password);
             } else {
-                const response = await apiSignup({
-                    firstName: form.firstName,
-                    lastName: form.lastName,
+                user = await signup({
+                    first_name: form.first_name,
+                    last_name: form.last_name,
                     email: form.email,
                     password: form.password,
                 });
-                const userUuid = response.data.user.uuid;
-                navigate(`/user/${userUuid}`);
             }
-        } catch (err) {
-            console.error("Error during login/signup:", err);
-            setServerError(
-                "Unable to log in. Please check your credentials and try again."
-            );
+
+            navigate(`/users/${user.uuid}`, {replace: true});
+        } catch (error) {
+            console.error("Login/signup failed", error);
+            if (isAxiosError(error) && error.response) {
+                setServerError(error.response.data.message || "An unexpected error occurred.");
+            } else {
+                setServerError("Unable to log in / sign up. Please check your credentials and try again.");
+            }
         } finally {
             setLoading(false);
         }
     };
 
-    /* --------------- generic helpers ----------------------------- */
+    /* ---- generic helpers ---- */
     const markTouched = (field: FieldName) =>
         setTouched((t) => ({...t, [field]: true}));
-
     const localInvalid = (field: FieldName) =>
         (touched[field] || submitAttempted) && Boolean(fieldErrors[field]);
 
-    /* --------------- render -------------------------------------- */
+    /* ---- render ---- */
     return (
         <Row className="justify-content-center">
             <Col>
@@ -193,8 +172,8 @@ export function AuthForm() {
                                 email: "",
                                 password: "",
                                 confirmPassword: "",
-                                firstName: "",
-                                lastName: "",
+                                first_name: "",
+                                last_name: "",
                             });
                             setFieldErrors({});
                             setTouched({});
@@ -227,10 +206,10 @@ export function AuthForm() {
                         unmountOnExit
                     >
                         <Form ref={formRef} noValidate onSubmit={handleSubmit}>
-                            {/* ---------- signup extra fields ---------- */}
+                            {/* ---------- when in “Sign up” mode, show first/last name ---------- */}
                             {mode === "signup" && (
                                 <Row xs={1} md={2} className="g-2">
-                                    {(["firstName", "lastName"] as FieldName[]).map(
+                                    {(["first_name", "last_name"] as FieldName[]).map(
                                         (f, i) => (
                                             <Col key={f}>
                                                 <FloatingLabel
@@ -303,7 +282,9 @@ export function AuthForm() {
                                     placeholder="Password"
                                     value={form.password}
                                     autoComplete={
-                                        mode === "login" ? "current-password" : "new-password"
+                                        mode === "login"
+                                            ? "current-password"
+                                            : "new-password"
                                     }
                                     onChange={(e) =>
                                         setForm((prev) => ({

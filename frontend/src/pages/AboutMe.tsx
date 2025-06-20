@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {Col, Container, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-    IconDefinition,
+    type IconDefinition,
     faEnvelope, faPhone, faCalendarAlt, faMapMarkerAlt, faBook, faCircle, faBriefcase
 } from "@fortawesome/free-solid-svg-icons";
 import {cvData as cv} from "@/assets/cvData.ts";
@@ -51,22 +51,22 @@ const processTimeline = ({bookIcon, internIcon, educationCircles, internshipCirc
 };
 
 interface InfoItem {
-    logoSrc: string;
-    logoAlt: string;
-    logoTitle: string;
-    institution: string;
-    start: string;
-    end: string;
-    location: string;
+    logoSrc: string,
+    logoAlt: string,
+    logoTitle: string,
+    institution: string,
+    start: string,
+    end: string,
+    location: string,
     titles: string[];
 }
 
 interface InfoSectionProps {
-    title: string;
+    title: string,
     icon: IconDefinition;
     data: InfoItem[];
-    circleId: string;
-    logoClass: string;
+    circleId: string,
+    logoClass: string,
     t: (key: string) => string;
 }
 
@@ -326,7 +326,7 @@ const AboutMe: React.FC = () => {
             </div>
             {/* Mobile View */}
             <div className="d-lg-none my-4 mx-3" style={{position: "relative"}}>
-            {/*<div className="d-lg-none my-4 mx-3">*/}
+                {/*<div className="d-lg-none my-4 mx-3">*/}
                 <Row>
                     {/*Upper content*/}
                     <Container className="rounded-5 bg-white bg-opacity-0 border border-primary px-3 py-4 mt-4">

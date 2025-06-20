@@ -1,10 +1,10 @@
 // /StackFusionZiyiliuTop/backend/src/types/express/index.d.ts
-import {Request} from "express";
-import {UserModel} from "@/models/user.model";
+import {UserModel, AuthUser} from "@src/types";
 
 declare module "express-serve-static-core" {
-    interface Request {
-        user?: UserModel | null;
-        resourceUser?: UserModel | null;
+    interface Request extends Request {
+        id?: string;
+        user?: AuthUser; // Changed from UserModel to AuthUser
+        resourceUser?: UserModel;
     }
 }

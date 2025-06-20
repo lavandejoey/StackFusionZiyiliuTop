@@ -1,30 +1,27 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogList.tsx
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {Container} from "react-bootstrap";
+import {Container, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
-import {apiFetchBlogList} from "@/services/api";
-import {Spinner} from "react-bootstrap";
 import "@/styles/masonry.css";
-
-interface PageCard {
-    id: string;
-    title: string;
-    iconHtml: string;
-    cover: string | null;
-    formattedLastEdited: string;
-}
+import {getAllBlogPages, type PageCard} from "@/services/blogService";
 
 export default function BlogList() {
     const [pages, setPages] = useState<PageCard[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        apiFetchBlogList()
-            .then((r) => setPages(r.data.pages))
-            .catch(console.error)
-            .finally(() => setLoading(false));
+        getAllBlogPages()
+            .then((list) => {
+                setPages(list);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch blog pages:", err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     return (
@@ -35,10 +32,16 @@ export default function BlogList() {
                     <div className="d-flex justify-content-center mt-5">
                         <Spinner animation="border" role="status"/>
                     </div>
+                ) : pages.length === 0 ? (
+                    <p>No posts yet—check back soon!</p>
                 ) : (
                     <div className="masonry">
                         {pages.map((p) => (
-                            <Link key={p.id} to={`/blog/${p.id}`} className="card mb-3 text-decoration-none">
+                            <Link
+                                key={p.id}
+                                to={`/blog/${p.id}`}
+                                className="card mb-3 text-decoration-none"
+                            >
                                 {p.cover && (
                                     <img
                                         src={p.cover}
@@ -49,7 +52,9 @@ export default function BlogList() {
                                 )}
                                 <div className="card-body">
                                     <h5 className="card-title d-flex align-items-center">
-                                        <span dangerouslySetInnerHTML={{__html: p.iconHtml}}/>
+                    <span
+                        dangerouslySetInnerHTML={{__html: p.iconHtml}}
+                    />
                                         <span className="ms-2">{p.title}</span>
                                     </h5>
                                     <p>{p.formattedLastEdited}</p>

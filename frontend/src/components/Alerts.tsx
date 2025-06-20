@@ -10,7 +10,7 @@ import {
 
 interface AlertMessageProps {
     type: "info" | "danger" | "success" | "warning";
-    message?: string;
+    message?: string,
 }
 
 const AlertMessage: React.FC<AlertMessageProps> = ({type, message}) => {
@@ -52,10 +52,10 @@ const AlertMessage: React.FC<AlertMessageProps> = ({type, message}) => {
 };
 
 interface AlertsProps {
-    info?: string;
-    error?: string;
-    success?: string;
-    warning?: string;
+    info?: string,
+    error?: string,
+    success?: string,
+    warning?: string,
 }
 
 const Alerts: React.FC<AlertsProps> = ({info, error, success, warning}) => {
