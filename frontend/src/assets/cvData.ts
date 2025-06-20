@@ -53,17 +53,16 @@ export const cvData = (t: (key: string) => string) => ({
 
     // Internships array.
     internships: [
-        // Uncomment the following block if you wish to include the ENSTA Paris internship.
-        // {
-        //   institution: t("ENSTA Paris, U2IS Laboratory"),
-        //   start: t("Apr 2025"),
-        //   end: t("Aug 2025"),
-        //   location: t("Paris, France"),
-        //   titles: [t("Research Intern in XAI")],
-        //   logoSrc: "/images/logos/ENSTA_logo.png",
-        //   logoAlt: "ENSTA Paris Logo",
-        //   logoTitle: "ENSTA Paris",
-        // },
+        {
+            institution: t("Hi! Paris - Télécom Paris TLIC"),
+            start: t("Jun 2025"),
+            end: t("Aug 2025"),
+            location: t("Paris, France"),
+            titles: [t("Research Intern in Computer Vision")],
+            logoSrc: "/images/logos/HiParis_logo.png",
+            logoAlt: "HiParis Logo",
+            logoTitle: "Hi! Paris",
+        },
         {
             institution: t("Porsche Financial Leasing Ltd."),
             start: t("Jan 2024"),

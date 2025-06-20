@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/StackFusionZiyiliuTop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/StackFusionZiyiliuTop.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/cvData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/cvData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/parser.cjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +56,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.frontend > parser.cjs.executor": "Run",
+    "Node.js.parser.js.executor": "Run",
+    "Node.js.parser.ts.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
     "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
@@ -87,11 +93,12 @@
     "npm.install:all.executor": "Run",
     "npm.lint.executor": "Run",
     "npm.lint:all.executor": "Run",
+    "npm.parse:locales.executor": "Run",
     "npm.start.executor": "Run",
     "npm.type-check.executor": "Run",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -111,25 +118,11 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev:all">
-    <configuration name="backend &gt; prestart" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="prestart" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+  <component name="RunManager" selected="Node.js.frontend &gt; parser.cjs">
+    <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/locales/parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
-    <configuration name="backend &gt; start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="start" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+    <configuration name="parser.ts" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/locales/parser.ts" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
     <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -152,30 +145,30 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
+    <configuration name="parse:locales" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
       <command value="run" />
       <scripts>
-        <script value="start" />
+        <script value="parse:locales" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.backend &gt; prestart" />
-      <item itemvalue="npm.backend &gt; start" />
-      <item itemvalue="npm.start" />
+      <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+      <item itemvalue="Node.js.parser.ts" />
+      <item itemvalue="npm.parse:locales" />
       <item itemvalue="npm.build:all" />
       <item itemvalue="npm.dev:all" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+        <item itemvalue="npm.parse:locales" />
+        <item itemvalue="Node.js.parser.ts" />
         <item itemvalue="npm.build:all" />
         <item itemvalue="npm.dev:all" />
-        <item itemvalue="npm.start" />
-        <item itemvalue="npm.backend &gt; start" />
-        <item itemvalue="npm.backend &gt; prestart" />
       </list>
     </recent_temporary>
   </component>

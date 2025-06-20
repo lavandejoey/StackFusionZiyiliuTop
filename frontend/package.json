@@ -12,6 +12,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "parse:locales": "node src/locales/parser.cjs",
     "clean": "rm -rf ./dist && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "dev": "NODE_OPTIONS=\"--no-deprecation\" vite",
     "build": "tsc -b && vite build",
