@@ -5,17 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/eslint.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/HttpStatusCodes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/Paths.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/middlewares/authJWT.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/argon2.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/mysql2Config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/postmark.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/redisClient.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/response.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/route-errors.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/common/util/validators.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/repos/UserRepo.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/NotionRoutes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/authRoutes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/contactRoutes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/userRoutes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/server.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/services/JwtService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/services/NotionService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/services/UserService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/types/index.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/types/token.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/types/users.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/tsconfig.prod.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/vitest.config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.idea/.name" beforeDir="false" />
@@ -139,32 +164,7 @@
       <change beforePath="$PROJECT_DIR$/backend/frontend/vite.config.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecosystem.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eslint.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AnnotatedText.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AnnotatedText.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/contexts/AuthContext.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useAuth.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/i18n.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/i18n.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.node.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +180,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
@@ -214,7 +214,7 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/zliu/Documents/PROJECTS/\n    StackFusionZiyiliuTop/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -361,7 +361,7 @@
       <workItem from="1750013362781" duration="50233000" />
       <workItem from="1750322033719" duration="9758000" />
       <workItem from="1750352932495" duration="17675000" />
-      <workItem from="1750417106213" duration="3744000" />
+      <workItem from="1750417106213" duration="4644000" />
     </task>
     <servers />
   </component>
