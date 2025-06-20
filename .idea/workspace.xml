@@ -5,164 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/eslint.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/HttpStatusCodes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/constants/Paths.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/middlewares/authJWT.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/argon2.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/mysql2Config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/postmark.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/redisClient.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/response.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/route-errors.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/common/util/validators.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/repos/UserRepo.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/NotionRoutes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/authRoutes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/contactRoutes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/userRoutes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/server.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/services/JwtService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/services/NotionService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/services/UserService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/types/token.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/types/users.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/tsconfig.prod.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/vitest.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/StackFusionZiyiliuTop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/StackFusionZiyiliuTop.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/StackFusionZiyiliuTop.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/sqldialects.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/doc/jwt.v1.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/doc/user.v1.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/blogRouter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/contactRouter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/jwtRouter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/userRouter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/api/v1/v2rayRouter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/app.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/middlewares/authJWT.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/middlewares/response.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/Notion.model.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/useRole.model.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/models/user.model.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/types/express/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/argon2.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/jwt.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/mysql2Config.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/postmark.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/redisClient.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/src/utils/valid.util.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/docker.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/ecosystem.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/eslint.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/6702323f5tc220c8b48779336a48bb54.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic-bg.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic-bg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logo-pic.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/ECUST_university_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/ENSTA_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/Institut_polytechnique_de_Paris_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/boc_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/iscas_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/images/logos/porsche_logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/robots.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/public/sitemap.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/App.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/cvData.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Black_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Bold_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Light_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Medium_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_SC_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Black.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Bold.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_TC_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Thin.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/HarmonyOS/HarmonyOS_Sans_Thin_Italic.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/assets/fonts/shantell.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/Alerts.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/AnnotatedText.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/AuthForm.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/ContactForm.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/Footer.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/LanguageSwitcher.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/MainLayout.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/NavBar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/components/PageHead.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/contexts/AuthContext.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/hooks/useAuth.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/i18n.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/en.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/fr.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/parser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/zh-CN.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/locales/zh-HK.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/main.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/AboutMe.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Auth.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/BlogList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/BlogPost.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Contact.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/Home.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/pages/UserHome.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/services/api.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/AuthForm.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/ContactForm.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/_custom.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/_variables.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/main.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/masonry.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/styles/theme.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/src/vite-env.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.app.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/tsconfig.node.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/frontend/vite.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,18 +27,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "lavandejoey"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lavandejoey&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/lavandejoey/StackFusionZiyiliuTop.git",
-    "accountId": "ccb0e136-4a21-48e7-9fa4-297344e28a42"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lavandejoey/StackFusionZiyiliuTop.git&quot;,
+    &quot;accountId&quot;: &quot;ccb0e136-4a21-48e7-9fa4-297344e28a42&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -244,7 +91,7 @@
     "npm.type-check.executor": "Run",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
+    "ts.external.directory.path": "/home/zliu/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

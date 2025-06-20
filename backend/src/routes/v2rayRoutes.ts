@@ -20,7 +20,8 @@ const SERVER_LIST: { name: string, server: string }[] = [
 proxyRouter.get(["/config", "config/:email"], async (req: Request, res: Response) => {
     // Process Request Body (x-www-form-urlencoded) or Query Params (?email=xxx&uuid=xxx)
     const email: string = typeof req.query?.email === "string" ? req.query.email : req.params.email ?? "";
-    if (email === "") res.status(400).send(errorResponse(req, res, "Email is required"));
+    if (email === "") res.status(HttpStatusCodes.BAD_REQUEST)
+        .send(errorResponse(req, res, "Email is required"));
 
     try {
         const user = await UserService.getSelfProfile(undefined, email);
@@ -86,7 +87,8 @@ function generateClashYaml(email: string, uuid: string, alterId: number) {
         "proxy-groups": [{
             name: "ZLiu Proxy" + " " + email,
             type: "relay",
-            proxies: SERVER_LIST.map((server) => server.name + " " + email.slice(0, email.indexOf("@"))),
+            proxies: SERVER_LIST.map((server) =>
+                server.name + " " + email.slice(0, email.indexOf("@"))),
         }],
         mode: "Rule",
         "rule-providers": {

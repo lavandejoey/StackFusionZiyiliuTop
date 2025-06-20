@@ -1,4 +1,4 @@
-// /StackFusionZiyiliuTop/backend/src/types/token/index.d.ts
+// /StackFusionZiyiliuTop/backend/src/types/token.ts
 import {JwtPayload} from "jsonwebtoken";
 
 export interface TokenPayload extends JwtPayload {

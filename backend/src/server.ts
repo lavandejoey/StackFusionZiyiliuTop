@@ -23,7 +23,6 @@ const app = express();
 
 
 // **** Middleware **** //
-
 // Basic middleware
 app.use(express.json());
 app.use(cookieParser());

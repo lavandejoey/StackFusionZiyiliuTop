@@ -1,4 +1,4 @@
-// /StackFusionZiyiliuTop/backend/src/types/users/index.d.ts
+// /StackFusionZiyiliuTop/backend/src/types/users.ts
 import {RowDataPacket} from "mysql2/promise";
 
 export enum UserStatusEnum {

@@ -1,3 +1,4 @@
+// /StackFusionZiyiliuTop/backend/src/types/mail.ts
 export interface ContactMail {
     from?: string;
     to?: string;
