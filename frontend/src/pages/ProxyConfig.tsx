@@ -1,18 +1,13 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/ProxyConfig.tsx
-import {useEffect} from "react";
-import {useSearchParams} from "react-router-dom";
+import {Navigate, useLocation} from "react-router-dom";
 
-export default function ProxyConfig() {
-    const [searchParams] = useSearchParams();
-    const email = searchParams.get("email") ?? "";
+function ProxyConfig() {
+    const {search} = useLocation();
     const backend = import.meta.env.PROD
         ? import.meta.env.VITE_API_DOMAIN_PROD
-        : import.meta.env.VITE_API_DOMAIN_DEV;  // includes port in dev
-
-    const yamlUrl = `${backend}/api/${import.meta.env.VITE_API_VERSION}/proxy/config?email=${encodeURIComponent(email)}`;
-
-    useEffect(() => {
-        window.location.replace(yamlUrl);
-    }, []);
-    return null;
+        : import.meta.env.VITE_API_DOMAIN_DEV;
+    const yamlUrl = `${backend}/api/${import.meta.env.VITE_API_VERSION}/proxy/config${search}`;
+    return <Navigate to={`${yamlUrl}`} replace state={{from: window.location.pathname}}/>;
 }
+
+export default ProxyConfig;
