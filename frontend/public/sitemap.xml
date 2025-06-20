@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <!-- HomePage page -->
     <url>
         <loc>https://ziyiliu.top/</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="en" href="https://ziyiliu.top?lang=en"/>
@@ -18,7 +18,7 @@
     <!-- About -->
     <url>
         <loc>https://ziyiliu.top/about-me</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -26,25 +26,25 @@
     <!-- Blog -->
     <url>
         <loc>https://ziyiliu.top/blog</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://ziyiliu.top/blog/?p=1ada8db7-a37b-80d0-9d3f-c14728af649c</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://ziyiliu.top/blog/?p=1b1a8db7-a37b-8197-a376-d0a1acffc675</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://ziyiliu.top/blog/?p=1ada8db7-a37b-807d-b1fb-d6012ed5f837</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -52,7 +52,7 @@
     <!-- Contact -->
     <url>
         <loc>https://ziyiliu.top/contact</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.6</priority>
     </url>
@@ -60,7 +60,7 @@
     <!-- Auth (lower priority for login and signup) -->
     <url>
         <loc>https://ziyiliu.top/auth</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
@@ -68,7 +68,7 @@
     <!-- Projects (High priority as they showcase key work) -->
     <url>
         <loc>https://satnet.ziyiliu.top/</loc>
-        <lastmod>2024-06-26</lastmod>
+        <lastmod>2025-06-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
