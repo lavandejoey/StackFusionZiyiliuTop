@@ -29,21 +29,6 @@ export async function sendContactForm(
 }
 
 /**
- * Fetches the Clash YAML proxy config for a given email.
- * GET /api/v1/proxy/config?email=...
- */
-export async function getProxyConfig(email: string): Promise<string> {
-    const response = await api.get<string>(
-        `${Paths.Proxy.Base}/config`,
-        {
-            params: {email},
-            responseType: "text",
-        }
-    );
-    return response.data;
-}
-
-/**
  * Fetches a user by their UUID.
  * GET /api/v1/users/:uuid
  */

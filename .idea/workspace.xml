@@ -31,7 +31,6 @@
       <change afterPath="$PROJECT_DIR$/backend/src/services/NotionService.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/src/services/UserService.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/src/types/express/index.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/types/index.d.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/src/types/token.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/src/types/users.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
@@ -161,7 +160,9 @@
       <change beforePath="$PROJECT_DIR$/backend/frontend/vite.config.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProxyConfig.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +178,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
@@ -211,7 +212,7 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/zliu/Documents/PROJECTS/\n    StackFusionZiyiliuTop/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -263,17 +264,7 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.backend &gt; start">
-    <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="npm.dev:all">
     <configuration name="backend &gt; prestart" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/backend/package.json" />
       <command value="run" />
@@ -304,6 +295,16 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="dev:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev:all" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -315,19 +316,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.backend &gt; build" />
       <item itemvalue="npm.backend &gt; prestart" />
       <item itemvalue="npm.backend &gt; start" />
       <item itemvalue="npm.start" />
       <item itemvalue="npm.build:all" />
+      <item itemvalue="npm.dev:all" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="npm.build:all" />
-        <item itemvalue="npm.backend &gt; start" />
+        <item itemvalue="npm.dev:all" />
         <item itemvalue="npm.start" />
+        <item itemvalue="npm.backend &gt; start" />
         <item itemvalue="npm.backend &gt; prestart" />
-        <item itemvalue="npm.backend &gt; build" />
       </list>
     </recent_temporary>
   </component>
@@ -358,7 +359,7 @@
       <workItem from="1750013362781" duration="50233000" />
       <workItem from="1750322033719" duration="9758000" />
       <workItem from="1750352932495" duration="17675000" />
-      <workItem from="1750417106213" duration="5536000" />
+      <workItem from="1750417106213" duration="11532000" />
     </task>
     <servers />
   </component>

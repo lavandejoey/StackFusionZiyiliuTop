@@ -33,10 +33,13 @@ proxyRouter.get(["/config", "config/:email"], async (req: Request, res: Response
             res.status(403).send(errorResponse(req, res, "Access denied: User is not a friend or admin"));
         } else {
             const yamlContent = generateClashYaml(user.email, user.uuid, user.v2_iter_id);
-            // send non-downloadable text
-            res.setHeader("Content-Type", "text/yaml");
-            res.setHeader("Content-Disposition", `inline; filename=${email.slice(0, email.indexOf("@"))}.yaml`);
-            // Send file content
+            const filename = `${user.email.split("@")[0]}.yaml`;
+            // Use a standard YAML MIME type
+            res.setHeader("Content-Type", "application/x-yaml");
+            // Prevent MIME sniffing
+            res.setHeader("X-Content-Type-Options", "nosniff");
+            res.setHeader("Content-Disposition", `inline; filename=${filename}`);
+            // Send the file
             res.status(HttpStatusCodes.OK).send(yamlContent);
         }
     } catch (error) {

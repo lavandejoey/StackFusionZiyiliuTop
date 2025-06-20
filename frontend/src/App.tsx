@@ -40,6 +40,7 @@ export default function App() {
                 <Route path="/blog" element={<BlogList/>}/>
                 <Route path="/blog/:pageId" element={<BlogPost/>}/>
                 {/* proxy config download (no auth) */}
+                <Route path="/proxy" element={<ProxyConfig/>}/>
                 <Route path="/proxy/config" element={<ProxyConfig/>}/>
 
                 {/* protected routes */}
