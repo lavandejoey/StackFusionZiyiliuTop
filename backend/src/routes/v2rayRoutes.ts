@@ -26,14 +26,19 @@ proxyRouter.get(["/config", "config/:email"], async (req: Request, res: Response
         const user = await UserService.getSelfProfile(undefined, email);
 
         if (!user?.uuid || !user?.email || !user?.v2_iter_id) {
-            res.status(404).send(errorResponse(req, res, "User not found or incomplete user data"));
+            res.status(HttpStatusCodes.NOT_FOUND)
+                .send(errorResponse(req, res, "User not found or incomplete user data"));
+            return;
         } else if (
             (await UserService.hasRolesOr(user.uuid, [UserRoleEnum.USER_FRIEND, UserRoleEnum.ADMIN])) &&
             !(user.status === UserStatusEnum.ACTIVE)) {
-            res.status(403).send(errorResponse(req, res, "Access denied: User is not a friend or admin"));
+            res.status(HttpStatusCodes.UNAUTHORIZED)
+                .send(errorResponse(req, res, "Access denied: User is not a friend or admin"));
+            return;
         } else {
             const yamlContent = generateClashYaml(user.email, user.uuid, user.v2_iter_id);
             const filename = `${user.email.split("@")[0]}.yaml`;
+            res.setHeader("Cache-Control", "no-cache");
             // Use a standard YAML MIME type
             res.setHeader("Content-Type", "application/x-yaml");
             // Prevent MIME sniffing
