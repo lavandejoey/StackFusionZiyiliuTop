@@ -955,8 +955,6 @@ const LinkPreview: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 
 // Special component for child_database blocks
 const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "child_database") return null;
-
     const [database, setDatabase] = useState<DatabaseObjectResponse | null>(null);
     const [entries, setEntries] = useState<PageObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
@@ -1107,6 +1105,8 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         };
     }, [databaseId]);
 
+    if (block.type !== "child_database") return null;
+
     // Extract property values in a readable format
     const extractPropertyValue = (page: PageObjectResponse, propertyId: string) => {
         const property = page.properties[propertyId];
@@ -1190,12 +1190,12 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 
         // Determine which columns to display
         const visibleColumns = Object.entries(database.properties)
-            .filter(([_, prop]) => !['files', 'formula', 'rollup'].includes(prop.type))
-            .map(([id, _]) => id);
+            .filter(([, prop]) => !['files', 'formula', 'rollup'].includes(prop.type))
+            .map(([id]) => id);
 
         // Order: primary (title) first, metadata last
         const primaryPropId = Object.entries(database.properties)
-            .find(([_, prop]) => prop.type === 'title')?.[0];
+            .find(([, prop]) => prop.type === 'title')?.[0];
         const metaTypes = ['created_by', 'created_time', 'last_edited_by', 'last_edited_time'];
         const otherColumns = visibleColumns.filter(
             id => id !== primaryPropId && !metaTypes.includes(database.properties[id].type)

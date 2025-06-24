@@ -1,15 +1,16 @@
 // /StackFusionZiyiliuTop/frontend/src/components/Navbar.tsx
 import {Button, Nav, Navbar} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSignOutAlt, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faSignInAlt, faSignOutAlt, faUser} from "@fortawesome/free-solid-svg-icons";
 import AnnotatedText from "@/components/AnnotatedText";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {themeColours} from "@/styles/theme";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/contexts/useAuth";
+import {Link} from "react-router-dom";
 
 export default function NavBar({activePage}: { activePage?: string }) {
-    const {user, logout} = useAuth();
+    const {user, logout} = useAuth(); // Removed loading from destructuring
     const {t} = useTranslation();
 
     const NavigationItems = [
@@ -43,20 +44,38 @@ export default function NavBar({activePage}: { activePage?: string }) {
                     </Nav>
 
                     {/* right-hand side */}
-                    <div className="ms-auto d-flex justify-content-center">
-                        {user && (
+                    <div className="ms-auto d-flex justify-content-center align-items-center">
+                        {user ? (
                             <>
-                                <Button variant="outline-primary" className="mx-auto me-md-4"
-                                        href={`/users/${user.uuid}`}
-                                        aria-label="Account"
+                                <Link
+                                    to={`/users/${user.uuid}`}
+                                    className="btn btn-outline-primary mx-auto me-md-2"
+                                    aria-label="Account"
+                                    title={`${user.first_name} ${user.last_name}`}
                                 >
                                     <FontAwesomeIcon icon={faUser}/>
-                                </Button>
-                                <Button variant="outline-danger" className="mx-auto me-md-4" onClick={logout}
-                                        aria-label="Log out">
+                                    <span className="d-none d-md-inline ms-1">{user.first_name}</span>
+                                </Link>
+                                <Button
+                                    variant="outline-danger"
+                                    className="mx-auto me-md-2"
+                                    onClick={logout}
+                                    aria-label="Log out"
+                                    title="Log out"
+                                >
                                     <FontAwesomeIcon icon={faSignOutAlt}/>
                                 </Button>
                             </>
+                        ) : (
+                            <Link
+                                to="/auth"
+                                className="btn btn-outline-success mx-auto me-md-2"
+                                aria-label="Sign in"
+                                title="Sign in"
+                            >
+                                <FontAwesomeIcon icon={faSignInAlt}/>
+                                <span className="d-none d-md-inline ms-1">{t("Sign in")}</span>
+                            </Link>
                         )}
                         <LanguageSwitcher/>
                     </div>

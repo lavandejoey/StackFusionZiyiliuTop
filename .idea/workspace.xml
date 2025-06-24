@@ -5,43 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/MathJaxProvider.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/images/logo-pic.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/images/logo-pic.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/images/logos/Institut_polytechnique_de_Paris_logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/images/logos/Institut_polytechnique_de_Paris_logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/images/logos/boc_logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/images/logos/boc_logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/images/logos/porsche_logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/images/logos/porsche_logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Alerts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AuthForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ContactForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/constants/Paths.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/contexts/AuthProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/contexts/AuthProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/locales/parser.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/parser.cjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Contact.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Contact.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/apiService.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/services/authService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/authService.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/services/axios.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/axios.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/blogService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/blogService.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/AuthForm.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/AuthForm.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/masonry.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/masonry.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.node.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/userService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/userService.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,15 +126,8 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.start">
-    <configuration name="backend &gt; dev:hot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/backend/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev:hot" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+  <component name="RunManager" selected="npm.lint:all">
+    <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/locales/parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
     <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -203,7 +171,7 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.backend &gt; dev:hot" />
+      <item itemvalue="Node.js.frontend &gt; parser.cjs" />
       <item itemvalue="npm.lint:all" />
       <item itemvalue="npm.start" />
       <item itemvalue="npm.build:all" />
@@ -211,11 +179,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.start" />
         <item itemvalue="npm.build:all" />
-        <item itemvalue="npm.dev:all" />
         <item itemvalue="npm.lint:all" />
-        <item itemvalue="npm.backend &gt; dev:hot" />
+        <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+        <item itemvalue="npm.dev:all" />
+        <item itemvalue="npm.start" />
       </list>
     </recent_temporary>
   </component>

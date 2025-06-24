@@ -49,7 +49,7 @@ authRouter.post(ENDPOINTS.auth.login, async (req, res) => {
  */
 authRouter.post(ENDPOINTS.auth.logout, (req, res) => {
     JwtService.clearRefreshTokenCookie(res);
-    res.status(HttpStatusCodes.NO_CONTENT);
+    res.status(HttpStatusCodes.NO_CONTENT).send(successResponse(req, res, null, "Logout successful"));
 });
 
 /**

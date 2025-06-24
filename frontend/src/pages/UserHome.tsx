@@ -9,32 +9,33 @@ import {useAuth} from "@/contexts/useAuth";
 import type {UserModel} from "@/types/User.ts";
 
 export default function UserHome() {
-    const {uuid} = useParams<{ uuid: string }>();
-    const {logout} = useAuth();
+    const { uuid: paramUuid } = useParams<{ uuid: string }>();
+    const { user: authUser, logout } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState<UserModel | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!uuid) {
-            navigate("/auth", {replace: true});
+        const targetUuid = paramUuid ?? authUser?.uuid;
+        if (!targetUuid) {
+            navigate("/auth", { replace: true });
             return;
         }
 
         const fetchUser = async () => {
             try {
-                const userData = await getUserByUuid(uuid);
+                const userData = await getUserByUuid(targetUuid);
                 setUser(userData);
             } catch (error) {
                 console.error("Failed to fetch user data", error);
-                navigate("/auth", {replace: true});
+                navigate("/auth", { replace: true });
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUser();
-    }, [uuid, navigate]);
+    }, [paramUuid, authUser, navigate]);
 
     if (loading) {
         return (

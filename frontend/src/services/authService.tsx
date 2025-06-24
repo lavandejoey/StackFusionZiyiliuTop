@@ -31,8 +31,12 @@ export async function apiLogin(email: string, password: string): Promise<LoginRe
 
 /** Log out (clears server‐side cookie + client token) */
 export async function apiLogout(): Promise<void> {
-    await AuthAPI.logout();
-    sessionStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
+    try {
+        await AuthAPI.logout();
+    } catch (error) {
+        console.error("API logout request failed:", error);
+        throw error;
+    }
 }
 
 /** Refresh the access token via the HTTP‐only cookie */
@@ -46,8 +50,7 @@ export async function apiRefreshToken(): Promise<RefreshResponse> {
 /** Fetch the current user's profile */
 export async function apiGetMe(): Promise<UserModel> {
     const response = await AuthAPI.me();
-    const {user} = response.data.data;
-    return user;
+    return response.data.data;
 }
 
 /** Sign up & immediately log in; stores token & returns profile */

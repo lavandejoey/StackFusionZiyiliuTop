@@ -14,6 +14,14 @@ const API_PREFIX = `/api/${import.meta.env.VITE_API_VERSION}`;
 // grab the VITE key once
 const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY;
 
+// Track logout state to prevent token refresh
+let isLoggedOut = false;
+
+// Export utility function to set logged out state
+export const setLoggedOut = (value: boolean) => {
+    isLoggedOut = value;
+};
+
 // Build base URL from env
 const DOMAIN = import.meta.env.DEV
     ? import.meta.env.VITE_API_DOMAIN_DEV
@@ -64,7 +72,12 @@ api.interceptors.response.use(
             return Promise.reject(err);
         }
 
-        // if we get a 401 and haven’t already tried to refresh...
+        // Skip token refresh if logged out
+        if (isLoggedOut) {
+            return Promise.reject(err);
+        }
+
+        // if we get a 401 and haven't already tried to refresh...
         if (err.response?.status === 401 && !originalReq._retry) {
             originalReq._retry = true;
 
