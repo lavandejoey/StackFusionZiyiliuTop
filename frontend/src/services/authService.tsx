@@ -1,7 +1,6 @@
 // /StackFusionZiyiliuTop/frontend/src/services/authService.tsx
-import api from "./axios";
-import Paths from "@/constants/Paths";
 import {type UserModel} from "@/types/User";
+import {AuthAPI} from "@/services/axios";
 
 /** Payload for signing up a new user */
 export interface SignupPayload {
@@ -23,65 +22,52 @@ interface RefreshResponse {
 }
 
 /** Log in with email & password; stores token & returns profile */
-export async function login(
-    email: string,
-    password: string
-): Promise<LoginResponse> {
-    const response = await api.post<{ data: LoginResponse }>(
-        `${Paths.Auth.Base}${Paths.Auth.Login}`,
-        {},
-        {params: {email, password}}
-    );
+export async function apiLogin(email: string, password: string): Promise<LoginResponse> {
+    const response = await AuthAPI.login({email, password});
     const {accessToken, user} = response.data.data;
     sessionStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_KEY, accessToken);
     return {accessToken, user};
 }
 
 /** Log out (clears server‐side cookie + client token) */
-export async function logout(): Promise<void> {
-    await api.post(`${Paths.Auth.Base}${Paths.Auth.Logout}`);
+export async function apiLogout(): Promise<void> {
+    await AuthAPI.logout();
     sessionStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
 }
 
 /** Refresh the access token via the HTTP‐only cookie */
-export async function refresh(): Promise<RefreshResponse> {
-    const response = await api.post<{ data: RefreshResponse }>(
-        `${Paths.Auth.Base}${Paths.Auth.Refresh}`
-    );
+export async function apiRefreshToken(): Promise<RefreshResponse> {
+    const response = await AuthAPI.refreshToken();
     const {accessToken} = response.data.data;
     sessionStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_KEY, accessToken);
     return {accessToken};
 }
 
-/** Fetch the current user’s profile */
-export async function getMe(): Promise<UserModel> {
-    const response = await api.get<{ data: UserModel }>(
-        `${Paths.Auth.Base}${Paths.Auth.Me}`
-    );
-    return response.data.data;
+/** Fetch the current user's profile */
+export async function apiGetMe(): Promise<UserModel> {
+    const response = await AuthAPI.me();
+    const {user} = response.data.data;
+    return user;
 }
 
 /** Sign up & immediately log in; stores token & returns profile */
-export async function signup(
-    payload: SignupPayload
-): Promise<LoginResponse> {
-    const response = await api.post<{ data: LoginResponse }>(
-        `${Paths.Auth.Base}${Paths.Auth.Signup}`,
-        {}, // no body
-        {params: payload}
-    );
+export async function apiSignup(payload: SignupPayload): Promise<LoginResponse> {
+    const response = await AuthAPI.signup(payload);
     const {accessToken, user} = response.data.data;
     sessionStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_KEY, accessToken);
     return {accessToken, user};
 }
 
 /** Check if an e-mail is already registered */
-async function emailExists(email: string): Promise<boolean> {
-    const response = await api.get<{ data: { exists: boolean } }>(
-        `${Paths.Auth.Base}${Paths.Auth.Exists}`,
-        {params: {email}}
-    );
-    return response.data.data.exists;
+export async function apiEmailExists(email: string): Promise<boolean> {
+    const response = await AuthAPI.exists({email});
+    const {exists} = response.data.data;
+    return exists;
 }
 
-export {emailExists as apiEmailExists};
+/** Check if a user with the given UUID exists */
+export async function apiUserExists(uuid: string): Promise<boolean> {
+    const response = await AuthAPI.exists({uuid});
+    const {exists} = response.data.data;
+    return exists;
+}

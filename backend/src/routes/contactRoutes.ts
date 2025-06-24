@@ -1,18 +1,14 @@
 // /StackFusionZiyiliuTop/backend/src/routes/contactRoutes.ts
 import xss from "xss";
 import rateLimit from "express-rate-limit";
-import {Router, Request, Response} from "express";
+import {Request, Response, Router} from "express";
 import {body, validationResult} from "express-validator";
 import {sendEmail} from "@src/common/util/postmark";
 import {errorResponse, successResponse} from "@src/common/util/response";
-import {
-    CONTACT_RATE_LIMIT_WINDOW_MS,
-    NO_REPLY_EMAIL,
-    CONTACT_EMAIL,
-    DOMAIN,
-} from "@src/common/constants/ENV";
+import {CONTACT_EMAIL, CONTACT_RATE_LIMIT_WINDOW_MS, DOMAIN, NO_REPLY_EMAIL} from "@src/common/constants/ENV";
 import httpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import logger from "jet-logger";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 
 export const contactRouter = Router();
 contactRouter.use(
@@ -30,7 +26,7 @@ contactRouter.use(
  *  Response 200: {"success": true}
  */
 contactRouter.post(
-    "/",
+    ENDPOINTS.contacts.submit,
     [
         body("surname").trim().notEmpty().withMessage("Surname is required"),
         body("first_name").trim().notEmpty().withMessage("First name is required"),
@@ -76,7 +72,7 @@ contactRouter.post(
 
             res
                 .status(httpStatusCodes.OK)
-                .send(successResponse(req, res, "Message sent successfully."));
+                .send(successResponse(req, res, {success: true}, "Message sent successfully!"));
         } catch (err) {
             logger.err(`sendEmail error: ${err}`);
             res

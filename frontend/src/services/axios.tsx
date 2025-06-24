@@ -1,14 +1,16 @@
 // /StackFusionZiyiliuTop/frontend/src/services/axios.tsx
 import axios, {
-    type AxiosInstance,
-    type AxiosResponse,
     type AxiosError,
-    type InternalAxiosRequestConfig,
+    type AxiosInstance,
     type AxiosRequestHeaders,
+    type AxiosResponse,
+    type InternalAxiosRequestConfig,
 } from 'axios';
-import {refresh as refreshService} from '@/services/authService';
-import Paths from "@/constants/Paths";
+import {apiRefreshToken} from "@/services/authService";
+import type {ContactFormPayload} from "@/services/apiService";
 
+// Prefix for all API calls
+const API_PREFIX = `/api/${import.meta.env.VITE_API_VERSION}`;
 // grab the VITE key once
 const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY;
 
@@ -16,8 +18,7 @@ const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY;
 const DOMAIN = import.meta.env.DEV
     ? import.meta.env.VITE_API_DOMAIN_DEV
     : import.meta.env.VITE_API_DOMAIN_PROD;
-const VERSION = import.meta.env.VITE_API_VERSION;
-const BASE_URL = `${DOMAIN}/api/${VERSION}`;
+const BASE_URL = `${DOMAIN}${API_PREFIX}`;
 
 // Create the axios instance
 const api: AxiosInstance = axios.create({
@@ -59,7 +60,7 @@ api.interceptors.response.use(
         };
 
         // if we get a 401 on the refresh endpoint, don't try to refresh again
-        if (originalReq.url === `${Paths.Auth.Base}${Paths.Auth.Refresh}`) {
+        if (originalReq.url === `/auth/refresh` && err.response?.status === 401) {
             return Promise.reject(err);
         }
 
@@ -87,7 +88,7 @@ api.interceptors.response.use(
             console.debug('[axios] 401 received, calling refresh()');
 
             return new Promise((resolve, reject) => {
-                refreshService()
+                apiRefreshToken()
                     .then((res) => {
                         const newToken = res.accessToken;
                         console.debug('[axios] refresh succeeded, new token:', newToken);
@@ -118,4 +119,62 @@ api.interceptors.response.use(
     }
 );
 
-export default api;
+// Auth endpoints
+export const AuthAPI = {
+    // POST /api/v1/auth/login
+    login: ({email, password}: { email: string; password: string }) =>
+        api.post(`/auth/login`, {}, {params: {email, password}}),
+    logout: (): Promise<void> =>
+        api.post(`/auth/logout`),
+    refreshToken: () =>
+        api.post(`/auth/refresh`),
+    me: () =>
+        api.get(`/auth/me`),
+    signup: ({email, password, first_name, last_name}: {
+        email: string;
+        password: string;
+        first_name: string;
+        last_name: string
+    }) =>
+        api.post(`/auth/signup`, {}, {params: {email, password, first_name, last_name}}),
+    exists: (params: { email?: string; uuid?: string }) =>
+        api.get(`/auth/exists`, {params}),
+};
+
+// User endpoints
+export const UsersAPI = {
+    list: () =>
+        api.get(`/users`),
+    listAll: () =>
+        api.get(`/users/all`),
+    getByUuid: (uuid: string) =>
+        api.get(`/users/${uuid}`),
+    getByEmail: (email: string) =>
+        api.get(`/users/${email}`),
+};
+
+// Contact endpoints
+export const ContactsAPI = {
+    submit: (data: ContactFormPayload) =>
+        api.post(`/contacts/send_mail`, data),
+};
+
+// Blog endpoints
+export const BlogsAPI = {
+    homeList: () =>
+        api.get(`/blogs`),
+    pages: (id: string)=>
+        api.get(`/blogs/pages/${id}`),
+    blockChildren: (block_id: string) =>
+        api.get(`/blogs/blocks/${block_id}/children`),
+    database: (id: string) =>
+        api.get(`/blogs/database/${id}`),
+    queryDatabase: (id: string, payload: {filter?: object, sorts?: object[]}) =>
+        api.post(`/blogs/database/${id}/query`, payload),
+};
+
+// Proxy endpoints
+export const ProxyAPI = {
+    config: (email: string) =>
+        api.get(`/proxy/config`, {params: {email}}),
+};

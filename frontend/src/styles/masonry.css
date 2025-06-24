@@ -1,11 +1,28 @@
+/* ---- Base masonry setup ---- */
 .masonry {
+    /* start with up to 3 columns */
     column-count: 3;
     column-gap: 1rem;
 }
 
+/* ensure cards never break across columns */
 .masonry .card {
     break-inside: avoid;
-    margin-bottom: 1rem;
-    /* Safari / older Blink: */
     -webkit-column-break-inside: avoid;
+    margin-bottom: 1rem;
+}
+
+/* ---- Responsiveness: cap columns as the viewport shrinks ---- */
+@media (max-width: 992px) {
+    /* tablet / small desktop: 2 columns */
+    .masonry {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 576px) {
+    /* phone: 1 column */
+    .masonry {
+        column-count: 1;
+    }
 }

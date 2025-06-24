@@ -1,18 +1,6 @@
 // /StackFusionZiyiliuTop/backend/src/common/util/mysql2Config.ts
-import mysql, {
-    Pool,
-    PoolConnection,
-    RowDataPacket,
-    ResultSetHeader,
-    FieldPacket,
-} from "mysql2/promise";
-import {
-    DB_HOST,
-    DB_NAME,
-    DB_PASSWORD,
-    DB_PORT,
-    DB_USER,
-} from "@src/common/constants/ENV";
+import mysql, {FieldPacket, Pool, PoolConnection, ResultSetHeader, RowDataPacket} from "mysql2/promise";
+import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "@src/common/constants/ENV";
 import logger from "jet-logger";
 
 class MySQL {

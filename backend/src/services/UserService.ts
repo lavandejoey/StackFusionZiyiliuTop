@@ -5,7 +5,7 @@ import {isUuidV4} from "@src/common/util/validators";
 import {isEmail} from "jet-validators";
 import {hashPassword} from "@src/common/util/argon2";
 import JwtService from "@src/services/JwtService";
-import {UserRoleEnum, UserModel, UserCreateModel, UserStatusEnum} from "@src/types/users";
+import {UserCreateModel, UserModel, UserRoleEnum, UserStatusEnum} from "@src/types/users";
 import {redisClient} from "@src/common/util/redisClient";
 import {REFRESH_TOKEN_PREFIX} from "@src/common/constants/ENV";
 import crypto from "crypto";
@@ -112,7 +112,7 @@ class UserServiceImpl implements UserService {
     }
 
     /******************** Profile ********************/
-    public async getSelfProfile(userId?: string, email?: string):Promise<UserModel & { roles: UserRoleEnum[] }> {
+    public async getSelfProfile(userId?: string, email?: string): Promise<UserModel & { roles: UserRoleEnum[] }> {
         if (!userId && !email) throw new Error("User ID or email is required");
         let user: UserModel | null;
 

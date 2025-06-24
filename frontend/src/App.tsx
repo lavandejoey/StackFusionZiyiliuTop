@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/frontend/src/App.tsx
-import {Routes, Route, Navigate, Outlet, useLocation} from "react-router-dom";
+import {Navigate, Outlet, Route, Routes, useLocation} from "react-router-dom";
 import {Container, Spinner} from "react-bootstrap";
 import {useAuth} from "@/contexts/useAuth";
 import {AuthProvider} from "@/contexts/AuthProvider";
@@ -37,7 +37,7 @@ export default function App() {
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/auth" element={<AuthPage/>}/>
                 <Route path="/blog" element={<BlogList/>}/>
-                <Route path="/blog/:pageId" element={<BlogPost/>}/>
+                <Route path="/blog/:id" element={<BlogPost/>}/>
 
                 {/* protected routes */}
                 <Route element={<RequireAuth/>}>

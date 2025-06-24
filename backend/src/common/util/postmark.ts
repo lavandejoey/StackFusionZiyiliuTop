@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/common/util/postmark.ts
-import {POSTMARK_API_TOKEN, NO_REPLY_EMAIL, CONTACT_EMAIL} from "@src/common/constants/ENV";
+import {CONTACT_EMAIL, NO_REPLY_EMAIL, POSTMARK_API_TOKEN} from "@src/common/constants/ENV";
 import {ServerClient} from "postmark";
 import {ContactMail} from "@src/types/mail";
 

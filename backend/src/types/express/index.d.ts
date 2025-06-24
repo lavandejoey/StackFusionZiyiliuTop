@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/types/express/index.d.ts
-import {UserModel, AuthUser} from "@src/types/users";
+import {AuthUser, UserModel} from "@src/types/users";
 
 declare module "express-serve-static-core" {
     interface Request extends Request {

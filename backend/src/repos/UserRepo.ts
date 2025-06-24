@@ -1,11 +1,5 @@
 // /StackFusionZiyiliuTop/backend/src/repos/UserRepo.ts
-import {
-    UserModel,
-    UserRoleEnum,
-    UserRow,
-    UserRoleMappingRow,
-    PasswordRow, UserCreateModel,
-} from "@src/types/users";
+import {PasswordRow, UserCreateModel, UserModel, UserRoleEnum, UserRoleMappingRow, UserRow} from "@src/types/users";
 import {verifyPassword} from "@src/common/util/argon2";
 import {default as dbClient} from "@src/common/util/mysql2Config";
 

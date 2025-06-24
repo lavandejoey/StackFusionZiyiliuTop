@@ -51,5 +51,5 @@ export type UserRoleMappingRow = RowDataPacket & UserRoleMappingModel;
 export type PasswordRow = RowDataPacket & { password_hash: string };
 
 export interface AuthUser {
-  uuid: string;
+    uuid: string;
 }

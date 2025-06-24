@@ -2,12 +2,12 @@
 import {Router} from "express";
 import UserService from "@src/services/UserService";
 import JwtService from "@src/services/JwtService";
-import Paths from "@src/common/constants/Paths";
+import jwtService from "@src/services/JwtService";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 import {REFRESH_TOKEN_PREFIX} from "@src/common/constants/ENV";
 import {errorResponse, successResponse} from "@src/common/util/response";
 import {isEmail} from "jet-validators";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
-import jwtService from "@src/services/JwtService";
 import {requireUser} from "@src/common/middlewares/authJWT";
 import {UserCreateModel, UserModel} from "@src/types/users";
 import {isUuidV4} from "@src/common/util/validators";
@@ -19,7 +19,7 @@ export const authRouter = Router();
  * POST /api/${API_VERSION}/auth/login?email=${email}&password=${password}
  * @return {object} : {accessToken: string, user: UserModel}
  */
-authRouter.post(Paths.Auth.Login, async (req, res) => {
+authRouter.post(ENDPOINTS.auth.login, async (req, res) => {
     try {
         // Input Validation
         const {email, password} = req.query as { email?: string, password?: string };
@@ -47,9 +47,9 @@ authRouter.post(Paths.Auth.Login, async (req, res) => {
  * POST /api/${API_VERSION}/auth/logout
  * @return {void}
  */
-authRouter.post(Paths.Auth.Logout, (req, res) => {
+authRouter.post(ENDPOINTS.auth.logout, (req, res) => {
     JwtService.clearRefreshTokenCookie(res);
-    res.status(204).send(); // No Content
+    res.status(HttpStatusCodes.NO_CONTENT);
 });
 
 /**
@@ -57,12 +57,12 @@ authRouter.post(Paths.Auth.Logout, (req, res) => {
  * POST /api/${API_VERSION}/auth/refresh
  * @return {object} : {accessToken: string}
  */
-authRouter.post(Paths.Auth.Refresh, async (req, res) => {
+authRouter.post(ENDPOINTS.auth.refreshToken, async (req, res) => {
     try {
         const cookies = req.cookies as Record<string, string>;
         const tokenValue = cookies[REFRESH_TOKEN_PREFIX] ?? "";
         if (!tokenValue) {
-            res.status(401)
+            res.status(HttpStatusCodes.UNAUTHORIZED)
                 .send(errorResponse(req, res, "Login failed", "Invalid or missing refresh token"));
             return;
         }
@@ -70,10 +70,10 @@ authRouter.post(Paths.Auth.Refresh, async (req, res) => {
         const {accessToken, refreshToken} = await JwtService.rotateRefreshToken(tokenValue);
         // Set the new refresh token cookie
         JwtService.setRefreshTokenCookie(res, refreshToken);
-        res.status(200).send(successResponse(req, res, {accessToken}));
+        res.status(HttpStatusCodes.OK).send(successResponse(req, res, {accessToken}));
     } catch (err) {
         res.clearCookie(REFRESH_TOKEN_PREFIX);
-        res.status(401).send(errorResponse(req, res, "Login failed", (err as Error).message));
+        res.status(HttpStatusCodes.UNAUTHORIZED).send(errorResponse(req, res, "Login failed", (err as Error).message));
     }
 });
 
@@ -82,7 +82,7 @@ authRouter.post(Paths.Auth.Refresh, async (req, res) => {
  * GET /api/${API_VERSION}/auth/me
  * @return {UserModel} The user's profile.
  */
-authRouter.get(Paths.Auth.Me, requireUser, async (req, res) => {
+authRouter.get(ENDPOINTS.auth.me, requireUser, async (req, res) => {
     try {
         // by jwt in header
         const token = req.headers.authorization?.split(" ")?.[1];
@@ -110,7 +110,7 @@ authRouter.get(Paths.Auth.Me, requireUser, async (req, res) => {
  * email=${email}&password=${password}&first_name=${first_name}&last_name=${last_name}
  * @return {object} : {accessToken: string, user: UserModel}
  */
-authRouter.post(Paths.Auth.Signup, async (req, res) => {
+authRouter.post(ENDPOINTS.auth.signup, async (req, res) => {
     try {
         // Input Validation
         const {email, password, first_name, last_name} = req.query as {
@@ -153,7 +153,7 @@ authRouter.post(Paths.Auth.Signup, async (req, res) => {
  * GET /api/${API_VERSION}/auth/exists?uuid=${uuid}
  * @return {object} : {exists: boolean}
  */
-authRouter.get(Paths.Auth.Exists, async (req, res) => {
+authRouter.get(ENDPOINTS.auth.exists, async (req, res) => {
     try {
         const {email, uuid} = req.query as { email?: string, uuid?: string };
 

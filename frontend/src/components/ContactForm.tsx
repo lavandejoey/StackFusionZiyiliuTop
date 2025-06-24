@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import "@/styles/ContactForm.css";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Button, Alert} from "react-bootstrap";
+import {Alert, Button} from "react-bootstrap";
 import {sendContactForm as apiMailingMessage} from "@/services/apiService";
 
 interface FormData {

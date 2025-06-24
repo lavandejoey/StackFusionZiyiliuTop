@@ -1,12 +1,9 @@
 // /StackFusionZiyiliuTop/frontend/src/components/AuthForm.tsx
 import "@/styles/AuthForm.css";
-import {useRef, useState, useEffect, type FormEvent, useMemo,} from "react";
+import {type FormEvent, useEffect, useMemo, useRef, useState,} from "react";
 import {useNavigate} from "react-router-dom";
-import {SwitchTransition, CSSTransition} from "react-transition-group";
-import {
-    Alert, Button, Col, FloatingLabel, Form,
-    Row, Spinner, Tab, Tabs,
-} from "react-bootstrap";
+import {CSSTransition, SwitchTransition} from "react-transition-group";
+import {Alert, Button, Col, FloatingLabel, Form, Row, Spinner, Tab, Tabs,} from "react-bootstrap";
 import debounce from "lodash.debounce";
 import {useAuth} from "@/contexts/useAuth";
 import {apiEmailExists} from "@/services/authService";

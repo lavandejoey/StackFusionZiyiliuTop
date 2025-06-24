@@ -1,10 +1,11 @@
-// /StackFusionZiyiliuTop/backend/src/api/v1/v2rayRouter.ts
+// /StackFusionZiyiliuTop/backend/src/routes/v2rayRoutes.ts
 import {Request, Response, Router} from "express";
 import YAML from "yaml";
 import UserService from "@src/services/UserService";
 import {errorResponse} from "@src/common/util/response";
 import {UserRoleEnum, UserStatusEnum} from "@src/types/users";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 
 export const proxyRouter = Router();
 const SERVER_LIST: { name: string, server: string }[] = [
@@ -14,14 +15,12 @@ const SERVER_LIST: { name: string, server: string }[] = [
 
 /** Retrieve the Proxy Config by Email
  * GET /api/v1/proxy/config?email=xxx@xxx.com
- * GET /api/v1/proxy/config/:email
  * @param email: string
  */
-proxyRouter.get(["/config", "config/:email"], async (req: Request, res: Response) => {
+proxyRouter.get(ENDPOINTS.proxy.config, async (req: Request, res: Response) => {
     // Process Request Body (x-www-form-urlencoded) or Query Params (?email=xxx&uuid=xxx)
     const email: string = typeof req.query?.email === "string" ? req.query.email : req.params.email ?? "";
-    if (email === "") res.status(HttpStatusCodes.BAD_REQUEST)
-        .send(errorResponse(req, res, "Email is required"));
+    if (email === "") res.status(HttpStatusCodes.BAD_REQUEST).send(errorResponse(req, res, "Email is required"));
 
     try {
         const user = await UserService.getSelfProfile(undefined, email);

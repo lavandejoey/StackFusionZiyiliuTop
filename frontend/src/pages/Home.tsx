@@ -1,8 +1,8 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/Home.tsx
 import React from "react";
-import PageHead from "@/components/PageHead.tsx";
-import MainLayout from "@/components/MainLayout.tsx";
-import {useTypewriter, Cursor} from "react-simple-typewriter";
+import PageHead from "@/components/PageHead";
+import MainLayout from "@/components/MainLayout";
+import {Cursor, useTypewriter} from "react-simple-typewriter";
 import {useTranslation} from "react-i18next";
 
 const Home: React.FC = () => {

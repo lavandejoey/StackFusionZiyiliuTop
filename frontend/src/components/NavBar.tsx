@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/frontend/src/components/Navbar.tsx
-import {Navbar, Nav, Button} from "react-bootstrap";
+import {Button, Nav, Navbar} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSignOutAlt, faUser} from "@fortawesome/free-solid-svg-icons";
 import AnnotatedText from "@/components/AnnotatedText";

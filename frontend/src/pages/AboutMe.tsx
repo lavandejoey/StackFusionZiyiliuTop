@@ -4,8 +4,14 @@ import {useTranslation} from "react-i18next";
 import {Col, Container, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-    type IconDefinition,
-    faEnvelope, faPhone, faCalendarAlt, faMapMarkerAlt, faBook, faCircle, faBriefcase
+    faBook,
+    faBriefcase,
+    faCalendarAlt,
+    faCircle,
+    faEnvelope,
+    faMapMarkerAlt,
+    faPhone,
+    type IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
 import {cvData as cv} from "@/assets/cvData.ts";
 import PageHead from "@/components/PageHead";

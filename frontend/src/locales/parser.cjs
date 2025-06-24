@@ -20,7 +20,7 @@ for (const file of jsonFiles) {
     const filePath = path.join(localeDir, file);
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     Object.keys(data).forEach(key => existingKeys.add(key));
-    mapFileJson.push({ file, data });
+    mapFileJson.push({file, data});
 }
 console.log(`Loaded ${existingKeys.size} unique existing keys.`);
 console.timeEnd('Load Existing Locales');
@@ -62,13 +62,19 @@ console.timeEnd('Extract Translation Keys');
 
 // Update locale JSONs: add missing, remove obsolete
 console.time('Update Locale Files');
-for (const { file, data } of mapFileJson) {
+for (const {file, data} of mapFileJson) {
     let added = 0, removed = 0;
     for (const key of allKeys) {
-        if (!data.hasOwnProperty(key)) { data[key] = ''; added++; }
+        if (!data.hasOwnProperty(key)) {
+            data[key] = '';
+            added++;
+        }
     }
     Object.keys(data).forEach(key => {
-        if (!allKeys.has(key)) { delete data[key]; removed++; }
+        if (!allKeys.has(key)) {
+            delete data[key];
+            removed++;
+        }
     });
     fs.writeFileSync(path.join(localeDir, file), JSON.stringify(data, null, 4));
     console.log(`📄 ${file}: +${added}, -${removed}`);
@@ -98,14 +104,16 @@ const getOrder = key => {
     }
     return priorityGroups.length;
 };
-for (const { file, data } of mapFileJson) {
+for (const {file, data} of mapFileJson) {
     const sortedKeys = Array.from(Object.keys(data)).sort((a, b) => {
         const oa = getOrder(a), ob = getOrder(b);
         if (oa !== ob) return oa - ob;
         return a.localeCompare(b);
     });
     const sortedData = {};
-    sortedKeys.forEach(k => { sortedData[k] = data[k]; });
+    sortedKeys.forEach(k => {
+        sortedData[k] = data[k];
+    });
     fs.writeFileSync(path.join(localeDir, file), JSON.stringify(sortedData, null, 4));
     console.log(`🔃 ${file}: grouped and sorted (${sortedKeys.length} keys).`);
 }

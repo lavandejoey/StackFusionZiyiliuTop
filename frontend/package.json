@@ -16,7 +16,7 @@
     "clean": "rm -rf ./dist && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "dev": "NODE_OPTIONS=\"--no-deprecation\" vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,10 +24,12 @@
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "better-react-mathjax": "^2.3.0",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.1.0",
     "jet-logger": "^2.0.1",
     "lodash.debounce": "^4.0.8",
+    "mermaid": "^11.7.0",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",

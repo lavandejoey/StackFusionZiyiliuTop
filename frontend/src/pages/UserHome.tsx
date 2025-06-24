@@ -1,9 +1,9 @@
 // src/pages/UserHome.tsx
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {getUserByUuid} from "@/services/apiService";
-import MainLayout from "@/components/MainLayout.tsx";
-import PageHead from "@/components/PageHead.tsx";
+import {getUserByUuid} from "@/services/userService";
+import MainLayout from "@/components/MainLayout";
+import PageHead from "@/components/PageHead";
 import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 import {useAuth} from "@/contexts/useAuth";
 import type {UserModel} from "@/types/User.ts";

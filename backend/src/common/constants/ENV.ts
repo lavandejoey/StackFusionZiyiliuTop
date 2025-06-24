@@ -2,7 +2,7 @@
 /* eslint-disable n/no-process-env */
 import path from "path";
 import dotenv from "dotenv";
-import {cleanEnv, str, num, port, email} from "envalid";
+import {cleanEnv, email, num, port, str} from "envalid";
 
 export enum NodeEnvs {
     Dev = "development",

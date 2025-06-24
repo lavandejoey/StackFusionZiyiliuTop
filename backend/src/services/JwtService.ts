@@ -7,12 +7,12 @@ import {
     ACCESS_TOKEN_EXPIRY_MS,
     DOMAIN as JWT_ISSUER,
     NODE_ENV,
-    SECRET_KEY as JWT_SECRET_KEY,
     REFRESH_TOKEN_EXPIRY_MS,
     REFRESH_TOKEN_PREFIX,
+    SECRET_KEY as JWT_SECRET_KEY,
 } from "@src/common/constants/ENV";
 import {TokenPayload} from "@src/types/token";
-import Paths from "@src/common/constants/Paths";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 
 
 class JwtService {
@@ -26,7 +26,7 @@ class JwtService {
         secure: NODE_ENV === "production",
         sameSite: "lax" as const,
         domain: JWT_ISSUER,
-        path: `${Paths.Base}${Paths.Auth.Base}${Paths.Auth.Refresh}`,
+        path: `${ENDPOINTS.base}${ENDPOINTS.auth.base}${ENDPOINTS.auth.refreshToken}`,
         maxAge: REFRESH_TOKEN_EXPIRY_MS,
     };
 

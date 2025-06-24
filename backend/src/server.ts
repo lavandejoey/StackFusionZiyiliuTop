@@ -7,11 +7,9 @@ import cors from "cors";
 
 import BaseRouter from "@src/routes";
 
-import Paths from "@src/common/constants/Paths";
-import {FRONTEND_DOMAIN_DEV, FRONTEND_DOMAIN_PROD, NODE_ENV} from "@src/common/constants/ENV";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
+import {FRONTEND_DOMAIN_DEV, FRONTEND_DOMAIN_PROD, NODE_ENV, NodeEnvs} from "@src/common/constants/ENV";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
-import {RouteError} from "@src/common/util/route-errors";
-import {NodeEnvs} from "@src/common/constants/ENV";
 import {attachReqId, errorResponse} from "@src/common/util/response";
 import cookieParser from "cookie-parser";
 
@@ -47,23 +45,21 @@ if (NODE_ENV === NodeEnvs.Production) {
 }
 
 // Add APIs, must be after middleware
-app.use(Paths.Base, BaseRouter);
+app.use(ENDPOINTS.base, BaseRouter);
 
 // Add error handler
-app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
+app.use((err: Error & { status?: number }, req: Request, res: Response, next: NextFunction) => {
     if (NODE_ENV !== NodeEnvs.Test.valueOf()) {
         logger.err(err, true);
     }
-    let status = HttpStatusCodes.BAD_REQUEST;
-    if (err instanceof RouteError) {
-        status = err.status;
-        res.status(status).json({error: err.message});
-    }
+    res.status(err.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse(
+        req, res, err.message, err,
+    ));
     return next(err);
 });
 
 // Nav to users pg by default
-app.get(["/", "/api"], (_: Request, res: Response) => res.redirect(Paths.Base));
+app.get(["/", "/api"], (_: Request, res: Response) => res.redirect(ENDPOINTS.base));
 // Catch-all for 404s
 app.use((req: Request, res: Response) => {
     res.status(HttpStatusCodes.NOT_FOUND).send(errorResponse(

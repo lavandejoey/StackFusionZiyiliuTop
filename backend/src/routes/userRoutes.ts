@@ -1,12 +1,12 @@
 // /StackFusionZiyiliuTop/backend/src/routes/userRoutes.ts
 import {Router} from "express";
-import Paths from "@src/common/constants/Paths";
 import {requireOwner} from "@src/common/middlewares/authJWT";
 import UserService from "@src/services/UserService";
 import {errorResponse, successResponse} from "@src/common/util/response";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import {UserModel, UserRoleEnum} from "@src/types/users";
 import {isUuidV4} from "@src/common/util/validators";
+import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 
 export const userRouter = Router();
 
@@ -17,7 +17,7 @@ export const userRouter = Router();
  * @returns {UserModel} - The user data.
  */
 userRouter.get(
-    Paths.Users.GetByUuid,
+    ENDPOINTS.users.getByUuid,
     requireOwner("uuid", [UserRoleEnum.USER_MANAGER, UserRoleEnum.ADMIN]),
     async (req, res) => {
         const userId = req.params.uuid;

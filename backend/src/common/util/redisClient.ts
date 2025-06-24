@@ -4,8 +4,8 @@ import logger from "jet-logger";
 import {
     REDIS_LOCAL_HOST,
     REDIS_LOCAL_PORT,
-    REDIS_USER,
     REDIS_PASSWORD,
+    REDIS_USER,
     SECRET_KEY as REDIS_SECRET_KEY,
 } from "@src/common/constants/ENV";
 

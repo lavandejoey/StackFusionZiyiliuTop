@@ -4,7 +4,7 @@ import PageHead from '@/components/PageHead';
 import MainLayout from '@/components/MainLayout';
 import ContactForm from '@/components/ContactForm';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGithub, faLinkedin, faWhatsapp, faInstagram} from "@fortawesome/free-brands-svg-icons";
+import {faGithub, faInstagram, faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
 
 const Contact: React.FC = () => {
