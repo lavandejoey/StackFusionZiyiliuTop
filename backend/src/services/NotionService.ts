@@ -1,13 +1,6 @@
 // backend/src/services/NotionService.ts
 
-import {
-    Client,
-    collectPaginatedAPI,
-    isFullBlock,
-    isFullDatabase,
-    isFullPage,
-    isFullUser,
-} from "@notionhq/client";
+import {Client, collectPaginatedAPI, isFullBlock, isFullDatabase, isFullPage, isFullUser} from "@notionhq/client";
 import type {
     AppendBlockChildrenParameters,
     AppendBlockChildrenResponse,
@@ -29,7 +22,9 @@ import type {
     UpdatePageResponse,
     UserObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import {NOTION_API_KEY} from "@src/common/constants/ENV";
+import {NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS} from "@src/common/constants/ENV";
+import {redisGet, redisSet} from "@src/common/util/redisClient";
+import logger from "jet-logger";
 
 const notion = new Client({auth: NOTION_API_KEY});
 
@@ -40,16 +35,54 @@ interface PaginatedPropertyResponse {
     next_cursor: string | null;
 }
 
+/**
+ * Cache helper functions
+ */
+const getCacheKey = (method: string, params: Record<string, unknown>): string => {
+    return `notion:${method}:${JSON.stringify(params)}`;
+};
+
+const getFromCache = async <T>(cacheKey: string): Promise<T | null> => {
+    try {
+        const cachedData = await redisGet(cacheKey);
+        if (cachedData) {
+            logger.info(`Cache hit for ${cacheKey}`);
+            return JSON.parse(cachedData) as T;
+        }
+    } catch (error) {
+        logger.err(`Error getting from cache: ${error}`);
+    }
+    return null;
+};
+
+const setToCache = async <T>(cacheKey: string, data: T): Promise<void> => {
+    try {
+        await redisSet(cacheKey, JSON.stringify(data), NOTION_CACHE_EXPIRY_SECONDS);
+        logger.info(`Cached data for ${cacheKey}`);
+    } catch (error) {
+        logger.err(`Error setting cache: ${error}`);
+    }
+};
+
 const NotionService = {
     /******************** BLOCKS ********************/
     /** Retrieve a single full block */
     async getBlock(
         params: GetBlockParameters,
     ): Promise<BlockObjectResponse> {
+        const cacheKey = getCacheKey("getBlock", params);
+        const cachedData = await getFromCache<BlockObjectResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const res = await notion.blocks.retrieve(params);
         if (!isFullBlock(res)) {
             throw new Error("Notion returned a partial block");
         }
+
+        await setToCache(cacheKey, res);
         return res;
     },
 
@@ -57,18 +90,30 @@ const NotionService = {
     async listAllBlockChildren(
         params: GetBlockParameters,
     ): Promise<BlockObjectResponse[]> {
+        const cacheKey = getCacheKey("listAllBlockChildren", params);
+        const cachedData = await getFromCache<BlockObjectResponse[]>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const items = await collectPaginatedAPI(
             notion.blocks.children.list,
             {...params, page_size: 100},
         );
-        return items.filter(isFullBlock);
+        const result = items.filter(isFullBlock);
+
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /** Append children to a block */
-    appendBlockChildren(
+    async appendBlockChildren(
         params: AppendBlockChildrenParameters,
     ): Promise<AppendBlockChildrenResponse> {
-        return notion.blocks.children.append(params);
+        // Write operations aren't cached, but we should invalidate related cache entries
+        const response = await notion.blocks.children.append(params);
+        return response;
     },
 
     /******************** PAGES ********************/
@@ -76,24 +121,49 @@ const NotionService = {
     async getPageInfo(
         params: GetPageParameters,
     ): Promise<PageObjectResponse> {
+        const cacheKey = getCacheKey("getPageInfo", params);
+        const cachedData = await getFromCache<PageObjectResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const res = await notion.pages.retrieve(params);
         if (!isFullPage(res)) {
             throw new Error("Notion returned a partial page");
         }
+
+        await setToCache(cacheKey, res);
         return res;
     },
 
     /** Retrieve a single page property item */
-    getPageProperty(
+    async getPageProperty(
         params: GetPagePropertyParameters,
     ) {
-        return notion.pages.properties.retrieve(params);
+        const cacheKey = getCacheKey("getPageProperty", params);
+        const cachedData = await getFromCache(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
+        const result = await notion.pages.properties.retrieve(params);
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /** Fetch *all* items of a paginated page property */
     async getPagePropertyAll(
         params: GetPagePropertyParameters,
     ): Promise<PropertyItemObjectResponse[]> {
+        const cacheKey = getCacheKey("getPagePropertyAll", params);
+        const cachedData = await getFromCache<PropertyItemObjectResponse[]>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const first = (await notion.pages.properties.retrieve(
             params,
         )) as PaginatedPropertyResponse | PropertyItemObjectResponse;
@@ -113,23 +183,28 @@ const NotionService = {
                 if (!next.has_more) break;
             }
 
+            await setToCache(cacheKey, all);
             return all;
         }
 
-        return [first];
+        const result = [first];
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /** Create a new page in a database */
-    createPage(
+    async createPage(
         params: CreatePageParameters,
     ): Promise<CreatePageResponse> {
+        // Write operations aren't cached
         return notion.pages.create(params);
     },
 
     /** Update an existing page */
-    updatePage(
+    async updatePage(
         params: UpdatePageParameters,
     ): Promise<UpdatePageResponse> {
+        // Write operations aren't cached
         return notion.pages.update(params);
     },
 
@@ -138,35 +213,72 @@ const NotionService = {
     async getDatabase(
         params: GetDatabaseParameters,
     ): Promise<DatabaseObjectResponse> {
+        const cacheKey = getCacheKey("getDatabase", params);
+        const cachedData = await getFromCache<DatabaseObjectResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const res = await notion.databases.retrieve(params);
         if (!isFullDatabase(res)) {
             throw new Error("Notion returned a partial database");
         }
+
+        await setToCache(cacheKey, res);
         return res;
     },
 
     /** Query a database with filters and sorts */
-    queryDatabase(
+    async queryDatabase(
         params: QueryDatabaseParameters,
     ): Promise<SearchResponse> {
-        return notion.databases.query(params);
+        const cacheKey = getCacheKey("queryDatabase", params);
+        const cachedData = await getFromCache<SearchResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
+        const result = await notion.databases.query(params);
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /** Fetch *all* pages in a database via pagination */
     async queryDatabaseAll(
         params: QueryDatabaseParameters,
     ): Promise<PageObjectResponse[]> {
+        const cacheKey = getCacheKey("queryDatabaseAll", params);
+        const cachedData = await getFromCache<PageObjectResponse[]>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const pages = await collectPaginatedAPI(
             notion.databases.query,
             {...params, page_size: 100},
         );
-        return pages.filter(isFullPage);
+        const result = pages.filter(isFullPage);
+
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /******************** SEARCH ********************/
     /** Basic search endpoint */
-    search(params: SearchParameters): Promise<SearchResponse> {
-        return notion.search(params);
+    async search(params: SearchParameters): Promise<SearchResponse> {
+        const cacheKey = getCacheKey("search", params);
+        const cachedData = await getFromCache<SearchResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
+        const result = await notion.search(params);
+        await setToCache(cacheKey, result);
+        return result;
     },
 
     /******************** USERS ********************/
@@ -174,10 +286,19 @@ const NotionService = {
     async getUser(
         params: GetUserParameters,
     ): Promise<UserObjectResponse> {
+        const cacheKey = getCacheKey("getUser", params);
+        const cachedData = await getFromCache<UserObjectResponse>(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
         const res = await notion.users.retrieve(params);
         if (!isFullUser(res)) {
             throw new Error("Notion returned a partial user");
         }
+
+        await setToCache(cacheKey, res);
         return res;
     },
 };

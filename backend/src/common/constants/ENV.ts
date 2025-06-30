@@ -67,6 +67,7 @@ const env = cleanEnv(process.env, {
     DEFAULT_MODEL: str({default: ""}),
     NOTION_API_KEY: str({default: ""}),
     NOTION_ROOT_BLOG_LIST: str({default: ""}),
+    NOTION_CACHE_EXPIRY_SECONDS: num({default: 3600}),
 });
 
 export const {
@@ -102,4 +103,5 @@ export const {
     DEFAULT_MODEL,
     NOTION_API_KEY,
     NOTION_ROOT_BLOG_LIST,
+    NOTION_CACHE_EXPIRY_SECONDS,
 } = env;
