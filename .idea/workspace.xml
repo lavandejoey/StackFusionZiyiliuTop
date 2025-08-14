@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/fr.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +40,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/node_modules/@types/express-serve-static-core/index.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/react-helmet-async/lib/Provider.d.ts" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es5.d.ts" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
@@ -62,6 +62,7 @@
     &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.parser.ts.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
@@ -69,7 +70,8 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/frontend/src/pages&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;//wsl.localhost/Ubuntu-22.04/home/zliu/StackFusionZiyiliuTop&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -163,9 +165,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.lint:all" />
         <item itemvalue="npm.dev:all" />
         <item itemvalue="npm.build:all" />
-        <item itemvalue="npm.lint:all" />
         <item itemvalue="Node.js.frontend &gt; parser.cjs" />
       </list>
     </recent_temporary>
@@ -199,6 +201,13 @@
       <workItem from="1750352932495" duration="17675000" />
       <workItem from="1750417106213" duration="11532000" />
       <workItem from="1750728288704" duration="36515000" />
+      <workItem from="1751307421125" duration="1551000" />
+      <workItem from="1751309014958" duration="229000" />
+      <workItem from="1751309261358" duration="1228000" />
+      <workItem from="1751613491767" duration="3255000" />
+      <workItem from="1751974636052" duration="593000" />
+      <workItem from="1755186739047" duration="60000" />
+      <workItem from="1755186821142" duration="2618000" />
     </task>
     <servers />
   </component>

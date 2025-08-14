@@ -19,14 +19,17 @@ const PageHead: React.FC<PageHeadProps> = ({
             <title>{title}</title>
             {/* Meta charset */}
             <meta charSet="utf-8"/>
+            {/* Sogou SEO */}
+            <meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+            <meta name="sogou_site_verification" content={import.meta.env.VITE_SOUGOU_VERIFY_CODE}/>
+            {/* Home Page */}
             {/* Author link */}
             <link rel="author" href="/about-me"/>
-
             {/* Alternate language links for SEO */}
-            <link rel="alternate" hrefLang="en" href="/frontend/public?lang=en"/>
-            <link rel="alternate" hrefLang="fr" href="/frontend/public?lang=fr"/>
-            <link rel="alternate" hrefLang="zh-CN" href="/frontend/public?lang=zh-CN"/>
-            <link rel="alternate" hrefLang="zh-HK" href="/frontend/public?lang=zh-HK"/>
+            <link rel="alternate" hrefLang="en" href="?lang=en"/>
+            <link rel="alternate" hrefLang="fr" href="?lang=fr"/>
+            <link rel="alternate" hrefLang="zh-CN" href="?lang=zh-CN"/>
+            <link rel="alternate" hrefLang="zh-HK" href="?lang=zh-HK"/>
 
             {/* Favicon */}
             <link rel="icon" href="/images/favicon.ico" type="image/x-icon"/>

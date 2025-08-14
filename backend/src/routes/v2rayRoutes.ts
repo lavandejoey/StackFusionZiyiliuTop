@@ -11,9 +11,10 @@ export const proxyRouter = Router();
 const SERVER_LIST: { name: string, server: string }[] = [
     {name: "ZLiu US proxy", server: "us.ziyiliu.top"},
     {name: "ZLiu DE proxy", server: "de.ziyiliu.top"},
+    {name: "ZLiu CN proxy", server: "cn.ziyiliu.top"},
 ];
 
-/** Retrieve the Proxy Config by Email
+/** Retrieve the Proxy Config by Email (Available for Users on Clash / Shadowrocket)
  * GET /api/v1/proxy/config?email=xxx@xxx.com
  * @param email: string
  */
@@ -85,9 +86,16 @@ function generateClashYaml(email: string, uuid: string, alterId: number) {
         }),
         "proxy-groups": [{
             name: "ZLiu Proxy" + " " + email,
-            type: "relay",
-            proxies: SERVER_LIST.map((server) =>
-                server.name + " " + email.slice(0, email.indexOf("@"))),
+            type: "select",
+            proxies: SERVER_LIST.map((server) => server.name + " " + email.slice(0, email.indexOf("@"))),
+        }, {
+            name: "ZLiu Auto " + email,
+            type: "url-test",
+            url: "https://www.gstatic.com/generate_204",
+            interval: 300,
+            proxies: SERVER_LIST
+                .filter((s) => /US|DE/.test(s.name))
+                .map((s) => s.name + " " + email.slice(0, email.indexOf("@"))),
         }],
         mode: "Rule",
         "rule-providers": {
@@ -201,7 +209,7 @@ function generateClashYaml(email: string, uuid: string, alterId: number) {
             "RULE-SET,proxy," + "ZLiu Proxy" + " " + email,
             "GEOIP,LAN,DIRECT",
             "GEOIP,CN,DIRECT",
-            "DOMAIN-SUFFIX,.cn,DIRECT",
+            "DOMAIN-SUFFIX,.cn," + "ZLiu CN proxy" + " " + email.slice(0, email.indexOf("@")),
             "MATCH," + "ZLiu Proxy" + " " + email,
         ],
     };
