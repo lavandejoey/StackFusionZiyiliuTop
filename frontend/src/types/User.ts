@@ -15,7 +15,7 @@ export interface UserModel {
 }
 
 /**
- * Possible states for a user’s account.
+ * Possible states for a user's account.
  */
 export const UserStatus = {
     ACTIVE: "active",

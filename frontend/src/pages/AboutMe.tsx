@@ -69,11 +69,11 @@ interface InfoItem {
 
 interface InfoSectionProps {
     title: string,
-    icon: IconDefinition;
-    data: InfoItem[];
+    icon: IconDefinition,
+    data: InfoItem[],
     circleId: string,
     logoClass: string,
-    t: (key: string) => string;
+    t: (key: string) => string,
 }
 
 const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, logoClass, t}) => {
@@ -117,7 +117,7 @@ const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, l
                     <Row>
                         <Col xs={{span: 1}}
                              className="d-flex justify-content-start align-items-center d-none d-sm-block">
-                            <FontAwesomeIcon icon={faCircle} size="2xs" className={circleId} style={{zIndex: 99}}/>
+                            <FontAwesomeIcon icon={faCircle} color={"gray"} size="2xs" className={circleId} style={{zIndex: 99}}/>
                         </Col>
                         <Col xs={{span: 12}} md={{span: 10}} xl={{span: 8}}
                              className="d-sm-flex justify-content-between align-items-center">
@@ -274,11 +274,11 @@ const AboutMe: React.FC = () => {
                                 const [key, iconClass, hrefPrefix] = field;
                                 const value = cvData.contact[key as keyof typeof cvData.contact];
                                 return (
-                                    <li key={index} className="row my-4">
-                                        <div className="col-3 d-flex justify-content-center align-items-center">
+                                    <li key={index} className="row my-2">
+                                        <div className="col-2 d-flex justify-content-end align-items-center">
                                             <FontAwesomeIcon icon={iconClass}/>
                                         </div>
-                                        <div className="col-9">
+                                        <div className="col-10">
                                             <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
                                                 {hrefPrefix ? (
                                                     <a className="contact-link" href={hrefPrefix + value}
@@ -307,8 +307,9 @@ const AboutMe: React.FC = () => {
                 >
                     <Container>
                         <h2 className="mb-3">{t("About Me")}</h2>
-                        <p style={{textAlign: "justify"}}>{cvData.aboutMe1}</p>
-                        <p style={{textAlign: "justify"}}>{cvData.aboutMe2}</p>
+                        {cvData.aboutMes.map((about, index) => (
+                            <p key={index} style={{textAlign: "justify"}}>{about}</p>
+                        ))}
                     </Container>
                     {/*Education Section*/}
                     <InfoSection
@@ -391,8 +392,9 @@ const AboutMe: React.FC = () => {
                     >
                         <Container>
                             <h2 className={"mb-3"}>{t("About Me")}</h2>
-                            <p style={{textAlign: "justify"}}>{cvData.aboutMe1}</p>
-                            <p style={{textAlign: "justify"}}>{cvData.aboutMe2}</p>
+                            {cvData.aboutMes.map((about, index) => (
+                                <p key={index} style={{textAlign: "justify"}}>{about}</p>
+                            ))}
                         </Container>
                     </Container>
                     {/*Education Section*/}

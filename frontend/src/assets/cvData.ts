@@ -1,16 +1,14 @@
 // /StackFusionZiyiliuTop/frontend/src/assets/cvData.tsx
 export const cvData = (t: (key: string) => string) => ({
     // Concatenate the about me parts into a single string.
-    aboutMe1: [
-        t("I'm currently pursuing the Master's degree in Data and AI at the IP Paris."),
-        t("My background in Intelligence and Robotics, with a BEng from East China University of Science and Technology, includes research experience in SLAM using computer vision."),
-        t("I am passionate about making AI more transparent and interpretable, which drives my interest in Explainable AI and Computer Vision."),
-    ].join(" "),
-
-    aboutMe2: [
-        t("Proficient in Python, C++, Rust, SQL Query, MATLAB, I also have experience with TensorFlow and PyTorch or dealing full stack development works under Linux environment."),
-        t("I am proficient in English, Mandarin and Cantonese, and currently learning French and Italian to expand my international profile."),
-    ].join(" "),
+    aboutMes: [[
+        t("I am currently a Master's student in Data and AI at Institut Polytechnique de Paris."),
+        t("I'm interested in Computer Vision, Explainable AI and large-scale models."),
+    ].join(" "), [
+        t("Alongside my studies in algorithms and AI, I have also worked on various development projects, such as multimodal RAG, large-scale model LoRA, full-stack web development and cloud computing."),
+    ].join(" "), [
+        t("I am fluent in English, Mandarin, and Cantonese, and currently learning French and Italian to further broaden my international profile."),
+    ].join(" ")],
 
     // Contact information for your CV.
     contact: {

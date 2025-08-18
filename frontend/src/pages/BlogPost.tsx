@@ -145,7 +145,7 @@ export default function BlogPost() {
                     <MathJaxProvider>
                         <div className="blog-post">
                             {/* Header with title and cover */}
-                            <Card className="border-0 mb-5">
+                            <Card className="border-0">
                                 {coverImage && (
                                     <div className="artistic-card-img">
                                         <Card.Img

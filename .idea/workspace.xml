@@ -5,10 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/PageHead.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/cvData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/assets/cvData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/locales/zh-HK.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/types/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/types/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,59 +60,60 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Node.js.backend &gt; NotionService.ts.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.frontend &gt; parser.cjs.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.parser.ts.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;//wsl.localhost/Ubuntu-22.04/home/zliu/StackFusionZiyiliuTop&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.backend &gt; build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; clean.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; dev.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; dev:hot.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; lint --fix.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; prestart.executor&quot;: &quot;Run&quot;,
-    &quot;npm.backend &gt; start.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.clean-install.executor&quot;: &quot;Run&quot;,
-    &quot;npm.dev:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.dev:hot.executor&quot;: &quot;Run&quot;,
-    &quot;npm.frontend &gt; build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.frontend &gt; clean.executor&quot;: &quot;Run&quot;,
-    &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
-    &quot;npm.frontend &gt; lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.frontend &gt; preview.executor&quot;: &quot;Run&quot;,
-    &quot;npm.install:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.parse:locales.executor&quot;: &quot;Run&quot;,
-    &quot;npm.start.executor&quot;: &quot;Run&quot;,
-    &quot;npm.type-check.executor&quot;: &quot;Run&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.localhost:35835.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.backend > NotionService.ts.executor": "Run",
+    "Node.js.frontend > parser.cjs.executor": "Run",
+    "Node.js.parser.js.executor": "Run",
+    "Node.js.parser.ts.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu-22.04/home/zliu/StackFusionZiyiliuTop",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.backend > build.executor": "Run",
+    "npm.backend > clean.executor": "Run",
+    "npm.backend > dev.executor": "Run",
+    "npm.backend > dev:hot.executor": "Run",
+    "npm.backend > lint --fix.executor": "Run",
+    "npm.backend > lint.executor": "Run",
+    "npm.backend > prestart.executor": "Run",
+    "npm.backend > start.executor": "Run",
+    "npm.build.executor": "Run",
+    "npm.build:all.executor": "Run",
+    "npm.clean-install.executor": "Run",
+    "npm.dev:all.executor": "Run",
+    "npm.dev:hot.executor": "Run",
+    "npm.frontend > build.executor": "Run",
+    "npm.frontend > clean.executor": "Run",
+    "npm.frontend > dev.executor": "Run",
+    "npm.frontend > lint.executor": "Run",
+    "npm.frontend > preview.executor": "Run",
+    "npm.install:all.executor": "Run",
+    "npm.lint.executor": "Run",
+    "npm.lint:all.executor": "Run",
+    "npm.parse:locales.executor": "Run",
+    "npm.start.executor": "Run",
+    "npm.type-check.executor": "Run",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/frontend/src/pages" />
@@ -123,52 +130,16 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev:all">
-    <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/frontend/src/locales/parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
+  <component name="RunManager" selected="Node.js.frontend &gt; parser.cjs">
+    <configuration name="localhost:35835" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:35835/">
       <method v="2" />
     </configuration>
-    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build:all" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+    <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" path-to-node="wsl://Ubuntu-22.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" nameIsGenerated="true" path-to-js-file="parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
-    <configuration name="dev:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev:all" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="lint:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="lint:all" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Node.js.frontend &gt; parser.cjs" />
-      <item itemvalue="npm.build:all" />
-      <item itemvalue="npm.dev:all" />
-      <item itemvalue="npm.lint:all" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.lint:all" />
-        <item itemvalue="npm.dev:all" />
-        <item itemvalue="npm.build:all" />
-        <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+        <item itemvalue="JavaScript Debug.localhost:35835" />
       </list>
     </recent_temporary>
   </component>
@@ -207,7 +178,8 @@
       <workItem from="1751613491767" duration="3255000" />
       <workItem from="1751974636052" duration="593000" />
       <workItem from="1755186739047" duration="60000" />
-      <workItem from="1755186821142" duration="2618000" />
+      <workItem from="1755186821142" duration="5775000" />
+      <workItem from="1755520004119" duration="12566000" />
     </task>
     <servers />
   </component>

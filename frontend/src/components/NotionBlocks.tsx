@@ -225,7 +225,7 @@ const Heading1: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     if (block.type !== "heading_1") return null;
     const id = createHeadingId(block.heading_1.rich_text);
     return (
-        <h1 id={id} className="mt-4 mb-3">
+        <h1 id={id} className="mt-4 mb-2">
             <RichText richText={block.heading_1.rich_text}/>
         </h1>
     );
@@ -235,7 +235,7 @@ const Heading2: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     if (block.type !== "heading_2") return null;
     const id = createHeadingId(block.heading_2.rich_text);
     return (
-        <h2 id={id} className="mt-4 mb-3">
+        <h2 id={id} className="mt-4 mb-2">
             <RichText richText={block.heading_2.rich_text}/>
         </h2>
     );
