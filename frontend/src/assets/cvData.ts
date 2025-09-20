@@ -91,5 +91,5 @@ export const cvData = (t: (key: string) => string) => ({
             logoAlt: "Institute of Software, Chinese Academy of Sciences (ISCAS) Logo",
             logoTitle: "Institute of Software, Chinese Academy of Sciences (ISCAS)",
         },
-    ]
+    ],
 });

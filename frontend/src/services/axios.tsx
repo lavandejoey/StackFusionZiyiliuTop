@@ -191,3 +191,9 @@ export const ProxyAPI = {
     config: (email: string) =>
         api.get(`/proxy/config`, {params: {email}}),
 };
+
+// GitHub Repo endpoints
+export const ReposAPI = {
+    fetch: () =>
+        api.get(`/repos`),
+}

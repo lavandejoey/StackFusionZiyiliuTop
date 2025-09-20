@@ -59,4 +59,10 @@ export const ENDPOINTS = {
         // GET /api/v1/proxy/config?email=xxx@xxx.com
         config: "/config",
     },
+
+    repos: {
+        base: "/repos",
+        // GET /api/${API_VERSION}/repos
+        all: "/",
+    },
 } as const;

@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/AboutMe.tsx
-import React, {useEffect} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Col, Container, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -16,44 +16,103 @@ import {
 import {cvData as cv} from "@/assets/cvData.ts";
 import PageHead from "@/components/PageHead";
 import MainLayout from "@/components/MainLayout";
+import {RepoCard, type RepoProps} from "@/components/RepoCard";
+import {fetchRepos} from "@/services/apiService";
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+
+/* =========================
+ * Geometry & SVG utilities
+ * ========================= */
+const getRect = (el: Element | null): DOMRect | null => {
+    if (!el) return null;
+    const rect = (el as HTMLElement).getBoundingClientRect?.();
+    if (!rect) return null;
+    if (rect.width === 0 && rect.height === 0) return null;
+    const style = window.getComputedStyle(el as Element);
+    if (style.visibility === "hidden" || style.display === "none") return null;
+    return rect;
+};
+
+const sizeOverlaySvg = (svg: SVGSVGElement | null, host: HTMLElement | null) => {
+    if (!svg || !host) return;
+    // 使用像素尺寸，避免仅有 CSS 百分比导致实际渲染为 0×0 的情况
+    svg.setAttribute("width", String(host.clientWidth));
+    svg.setAttribute("height", String(host.scrollHeight));
+};
+
+const clearSvgLines = (svg: SVGSVGElement | null) => {
+    if (!svg) return;
+    while (svg.lastChild) svg.removeChild(svg.lastChild);
+};
 
 // Create a line between two elements (icon and circle) in the timeline.
 const createLineBetweenElements = (
-    iconElement: HTMLElement, circleElement: HTMLElement, svgElement: SVGSVGElement
+    iconElement: HTMLElement | SVGGraphicsElement,
+    circleElement: HTMLElement | SVGGraphicsElement,
+    svgElement: SVGSVGElement
 ) => {
-    const iconRect = iconElement.getBoundingClientRect();
-    const circleRect = circleElement.getBoundingClientRect();
-    const svgRect = svgElement.getBoundingClientRect();
+    const iconRect = getRect(iconElement);
+    const circleRect = getRect(circleElement);
+    const svgRect = getRect(svgElement);
 
-    // Calculate vertical positions relative to the SVG container
-    const iconBottomY = iconRect.bottom - svgRect.top;
-    const circleCenterY = circleRect.top + circleRect.height / 2 - svgRect.top;
-    const circleX = circleRect.left + circleRect.width / 2 - svgRect.left;
+    if (!iconRect || !circleRect || !svgRect) {
+        // 尺寸未就绪，跳过
+        return;
+    }
+
+    // Start point: Bottom-center of the icon
+    // const x1 = (iconRect.left + iconRect.width / 2) - svgRect.left;
+    const x1 = (circleRect.left + circleRect.width / 2) - svgRect.left;
+    const y1 = iconRect.bottom - svgRect.top;
+
+    // End point: Center of the circle
+    const x2 = (circleRect.left + circleRect.width / 2) - svgRect.left;
+    const y2 = (circleRect.top + circleRect.height / 2) - svgRect.top;
 
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", String(circleX));
-    line.setAttribute("x2", String(circleX));
-    line.setAttribute("y1", String(iconBottomY));
-    line.setAttribute("y2", String(circleCenterY));
+    line.setAttribute("x1", String(x1));
+    line.setAttribute("y1", String(y1));
+    line.setAttribute("x2", String(x2));
+    line.setAttribute("y2", String(y2));
     line.setAttribute("stroke", "gray");
     line.setAttribute("stroke-width", "1");
+    line.setAttribute("vector-effect", "non-scaling-stroke"); // 缩放时线宽不变
 
     svgElement.appendChild(line);
 };
 
+// Process timeline section (education or internships) independently
+const processTimelineSection = (
+    iconElement: (HTMLElement | SVGGraphicsElement | null),
+    circles: NodeListOf<HTMLElement | SVGGraphicsElement>,
+    svgElement: SVGSVGElement | null,
+) => {
+    if (!svgElement) return;
+    if (!iconElement) return;
+
+    // 过滤不可见/零尺寸的圆点
+    const visible = Array.from(circles).filter(c => !!getRect(c));
+    if (visible.length === 0) return;
+
+    const lastCircle = visible[visible.length - 1];
+
+    try {
+        createLineBetweenElements(iconElement, lastCircle, svgElement);
+    } catch (error) {
+        console.error("Error creating line between elements:", error);
+    }
+};
+
 // Process timeline for either large or small screens.
 const processTimeline = ({bookIcon, internIcon, educationCircles, internshipCircles, svg}: {
-    bookIcon: HTMLElement | null; internIcon: HTMLElement | null;
-    educationCircles: NodeListOf<HTMLElement>; internshipCircles: NodeListOf<HTMLElement>;
+    bookIcon: (HTMLElement | SVGGraphicsElement | null);
+    internIcon: (HTMLElement | SVGGraphicsElement | null);
+    educationCircles: NodeListOf<HTMLElement | SVGGraphicsElement>;
+    internshipCircles: NodeListOf<HTMLElement | SVGGraphicsElement>;
     svg: SVGSVGElement | null;
 }) => {
-    if (!bookIcon || educationCircles.length === 0 || !internIcon || internshipCircles.length === 0 || !svg) {
-        console.error("Required timeline elements not found.");
-        return;
-    }
-    // Draw a line from the bottom of the icon to the last circle of each timeline.
-    createLineBetweenElements(bookIcon, educationCircles[educationCircles.length - 1], svg);
-    createLineBetweenElements(internIcon, internshipCircles[internshipCircles.length - 1], svg);
+    processTimelineSection(bookIcon, educationCircles, svg);
+    processTimelineSection(internIcon, internshipCircles, svg);
 };
 
 interface InfoItem {
@@ -73,15 +132,13 @@ interface InfoSectionProps {
     data: InfoItem[],
     circleId: string,
     logoClass: string,
+    sizeSuffix: string,
     t: (key: string) => string,
 }
 
-const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, logoClass, t}) => {
-    // Determine the correct icon id based on title and circleId suffix.
-    const iconId =
-        title === "Education"
-            ? (circleId.includes("lg") ? "book-icon-lg" : "book-icon-sm")
-            : (circleId.includes("lg") ? "briefcase-icon-lg" : "briefcase-icon-sm");
+const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, logoClass, sizeSuffix, t}) => {
+    const iconId = `${circleId === "education-circle" ? "book" : "briefcase"}-icon${sizeSuffix}`;
+    const circleClass = `${circleId === "education-circle" ? "education" : "internship"}-circle${sizeSuffix}`;
 
     return (
         <Container>
@@ -117,7 +174,13 @@ const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, l
                     <Row>
                         <Col xs={{span: 1}}
                              className="d-flex justify-content-start align-items-center d-none d-sm-block">
-                            <FontAwesomeIcon icon={faCircle} color={"gray"} size="2xs" className={circleId} style={{zIndex: 99}}/>
+                            <FontAwesomeIcon
+                                icon={faCircle}
+                                color={"gray"}
+                                size="2xs"
+                                className={circleClass}
+                                style={{zIndex: 99}}
+                            />
                         </Col>
                         <Col xs={{span: 12}} md={{span: 10}} xl={{span: 8}}
                              className="d-sm-flex justify-content-between align-items-center">
@@ -146,11 +209,11 @@ const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, l
 const adjustFixedContainerWidth = () => {
     const parentElement = document.querySelector('.d-none.d-lg-block');
     const leftSidebar = document.querySelector('.fixed-container');
-    const rightContent = document.querySelector('.dynamic-content-container');
+    const rightContentElements = document.querySelectorAll('.dynamic-content-container');
 
-    if (parentElement && leftSidebar && rightContent) {
-        const parentWidth = parentElement.clientWidth;
-        const style = getComputedStyle(parentElement);
+    if (parentElement && leftSidebar && rightContentElements.length > 0) {
+        const parentWidth = (parentElement as HTMLElement).clientWidth;
+        const style = getComputedStyle(parentElement as Element);
         const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
         const availableWidth = parentWidth - padding;
 
@@ -159,12 +222,202 @@ const adjustFixedContainerWidth = () => {
         const gap = Math.min(50, availableWidth * 0.05);
         const rightWidth = availableWidth - sidebarWidth - gap;
 
-        (rightContent as HTMLElement).style.width = `${rightWidth}px`;
-        (rightContent as HTMLElement).style.marginLeft = `${sidebarWidth + gap}px`;
+        // Apply the calculated width and margin to all right content containers
+        rightContentElements.forEach((rightContent) => {
+            (rightContent as HTMLElement).style.width = `${rightWidth}px`;
+            (rightContent as HTMLElement).style.marginLeft = `${sidebarWidth + gap}px`;
+        });
         (leftSidebar as HTMLElement).style.width = `${sidebarWidth}px`;
     } else {
-        console.error("Required layout elements not found.");
+        // console.warn("Required layout elements not found.");
     }
+};
+
+// Add a new component for the main content sections
+const MainContent: React.FC<{
+    t: (key: string) => string;
+    cvData: any;
+    sizeSuffix: string;
+}> = ({t, cvData, sizeSuffix}) => {
+    const [repos, setRepos] = useState<RepoProps[]>([]);
+
+    useEffect(() => {
+        const loadRepos = async () => {
+            try {
+                const fetchedRepos = await fetchRepos();
+                setRepos(fetchedRepos);
+            } catch (error) {
+                console.error("Failed to fetch repos:", error);
+            }
+        };
+
+        loadRepos();
+    }, []);
+
+    return (
+        <>
+            {/* About Me, Education, Internships Container */}
+            <Container
+                className="px-3 px-lg-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary mb-4"
+                style={{zIndex: 0}}
+            >
+                <Container>
+                    <h2 className="mb-3">{t("About Me")}</h2>
+                    {cvData.aboutMes.map((about: string, index: number) => (
+                        <p key={index} style={{textAlign: "justify"}}>{about}</p>
+                    ))}
+                </Container>
+                {/*Education Section*/}
+                <InfoSection
+                    title={t("Education")}
+                    icon={faBook}
+                    data={cvData.educations}
+                    circleId="education-circle"
+                    logoClass="school-logo"
+                    sizeSuffix={sizeSuffix}
+                    t={t}
+                />
+                {/*Internships Section*/}
+                <InfoSection
+                    title={t("Internships")}
+                    icon={faBriefcase}
+                    data={cvData.internships}
+                    circleId="internship-circle"
+                    logoClass="company-logo"
+                    sizeSuffix={sizeSuffix}
+                    t={t}
+                />
+            </Container>
+
+            {/* Portfolio Section */}
+            <Container
+                className="px-3 px-lg-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary"
+                style={{zIndex: 0}}
+            >
+                <Container>
+                    <h2 className="mb-3">{t("Portfolio")}</h2>
+                    <ResponsiveMasonry
+                        columnsCountBreakPoints={{350: 1, 1024: 2, 1440: 3}}
+                        className="masonry-grid"
+                    >
+                        <Masonry>
+                            {repos.map((repo) => (
+                                <RepoCard {...repo} key={repo.url}/>
+                            ))}
+                        </Masonry>
+                    </ResponsiveMasonry>
+                </Container>
+            </Container>
+        </>
+    );
+};
+
+// Add a new component for the contact sidebar/header
+const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: boolean }> = ({
+                                                                                                 cvData,
+                                                                                                 contactFields,
+                                                                                                 isMobile = false
+                                                                                             }) => {
+    return (
+        <Container
+            className={`${isMobile ?
+                'rounded-5 bg-white bg-opacity-0 border border-primary px-3 py-4 mt-4 mb-4' :
+                'rounded-5 bg-white bg-opacity-0 border border-primary p-2 position-fixed fixed-container'}`}>
+            {isMobile ? (
+                // Mobile layout
+                <Row className="my-2 mx-3">
+                    <Col xs={{span: 4}} className="d-flex justify-content-center align-items-center">
+                        <img className="rounded-4" src={cvData.contact.portraitSrc}
+                             alt={cvData.contact.portraitAlt}
+                             style={{scale: 1.2, objectFit: "cover", width: "80px", height: "80px"}}
+                        />
+                    </Col>
+                    <Col xs={{span: 8}}
+                         className="d-flex flex-column justify-content-center align-items-center">
+                        <h2 title={cvData.contact.name}>{cvData.contact.name}</h2>
+                        <p className="my-0 py-0">{cvData.contact.title}</p>
+                    </Col>
+                </Row>
+            ) : (
+                // Desktop layout
+                <Container>
+                    <Container className="my-5 d-flex justify-content-center align-items-center">
+                        <img className="rounded-4" src={cvData.contact.portraitSrc}
+                             alt={cvData.contact.portraitAlt}
+                             style={{scale: 1.2, objectFit: "cover", width: "120px", height: "120px"}}
+                        />
+                    </Container>
+                    <Container className="text-center mb-3">
+                        <h2 title={cvData.contact.name}>{cvData.contact.name}</h2>
+                        <p className="my-0 py-0">{cvData.contact.title}</p>
+                    </Container>
+                </Container>
+            )}
+
+            <Container className="d-flex justify-content-center align-items-center">
+                <hr className="w-75"/>
+            </Container>
+
+            {isMobile ? (
+                // Mobile contact layout
+                <Container>
+                    <ul className="row d-flex justify-content-between align-items-center m-0 p-0">
+                        {contactFields.map((field, index) => {
+                            const [key, iconClass, hrefPrefix] = field;
+                            const value = cvData.contact[key as keyof typeof cvData.contact];
+                            return (
+                                <Col xs={{span: 12}} sm={{span: 6}} key={index} className="my-1">
+                                    <Row>
+                                        <Col xs={{span: 2}}
+                                             className="d-flex justify-content-center align-items-center">
+                                            <FontAwesomeIcon icon={iconClass}/>
+                                        </Col>
+                                        <Col xs={{span: 10}}>
+                                            <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
+                                                {hrefPrefix ? (
+                                                    <a className="contact-link" href={hrefPrefix + value}
+                                                       style={{textDecoration: "none"}}>
+                                                        {value}
+                                                    </a>
+                                                ) : (value)}
+                                            </p>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            );
+                        })}
+                    </ul>
+                </Container>
+            ) : (
+                // Desktop contact layout
+                <Container className="d-flex justify-content-center align-items-center">
+                    <ul className="container m-auto p-auto">
+                        {contactFields.map((field, index) => {
+                            const [key, iconClass, hrefPrefix] = field;
+                            const value = cvData.contact[key as keyof typeof cvData.contact];
+                            return (
+                                <li key={index} className="row my-2">
+                                    <div className="col-2 d-flex justify-content-end align-items-center">
+                                        <FontAwesomeIcon icon={iconClass}/>
+                                    </div>
+                                    <div className="col-10">
+                                        <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
+                                            {hrefPrefix ? (
+                                                <a className="contact-link" href={hrefPrefix + value}
+                                                   style={{textDecoration: "none"}}>
+                                                    {value}
+                                                </a>
+                                            ) : (value)}
+                                        </p>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </Container>
+            )}
+        </Container>
+    );
 };
 
 // AboutMe component
@@ -176,69 +429,89 @@ const AboutMe: React.FC = () => {
         ["birthday", faCalendarAlt, null], ["location", faMapMarkerAlt, null],
     ];
 
-    useEffect(() => {
-        // Adjust container widths immediately
+    // Stage 1: Adjust container widths synchronously after the layout is known.
+    // This runs on every render, ensuring the layout is always up-to-date.
+    useLayoutEffect(() => {
         adjustFixedContainerWidth();
+    });
 
-        // Function to process both large and small timeline layouts.
-        const processAllTimelines = () => {
-            // Process large screen timeline
-            processTimeline({
-                bookIcon: document.querySelector("#book-icon-lg"),
-                internIcon: document.querySelector("#briefcase-icon-lg"),
-                educationCircles: document.querySelectorAll(".education-circle-lg") as NodeListOf<HTMLElement>,
-                internshipCircles: document.querySelectorAll(".internship-circle-lg") as NodeListOf<HTMLElement>,
-                svg: document.querySelector("#timeline-line-lg") as SVGSVGElement | null,
+    // Stage 2: Draw timeline lines after the component has been painted.
+    useEffect(() => {
+        const svgLg = document.querySelector("#timeline-line-lg") as SVGSVGElement | null;
+        const svgSm = document.querySelector("#timeline-line-sm") as SVGSVGElement | null;
+
+        const desktopHost = document.querySelector(".dynamic-content-container") as HTMLElement | null;
+        const mobileHost = document.querySelector(".d-lg-none") as HTMLElement | null;
+
+        // 尺寸观察，宿主变化时同步 SVG 尺寸并重画
+        const roList: ResizeObserver[] = [];
+        if (desktopHost && svgLg) {
+            const ro = new ResizeObserver(() => {
+                sizeOverlaySvg(svgLg, desktopHost);
+                requestAnimationFrame(processAllTimelines); // 下一帧测量
             });
-            // Process small screen timeline
-            // processTimeline({
-            //     bookIcon: document.querySelector("#book-icon-sm"),
-            //     internIcon: document.querySelector("#briefcase-icon-sm"),
-            //     educationCircles: document.querySelectorAll(".education-circle-sm") as NodeListOf<HTMLElement>,
-            //     internshipCircles: document.querySelectorAll(".internship-circle-sm") as NodeListOf<HTMLElement>,
-            //     svg: document.querySelector("#timeline-line-sm") as SVGSVGElement | null,
-            // });
-        };
+            ro.observe(desktopHost);
+            roList.push(ro);
+        }
+        if (mobileHost && svgSm) {
+            const ro = new ResizeObserver(() => {
+                sizeOverlaySvg(svgSm, mobileHost);
+                requestAnimationFrame(processAllTimelines);
+            });
+            ro.observe(mobileHost);
+            roList.push(ro);
+        }
 
-        // Run timeline processing after the component mounts.
-        document.addEventListener("DOMContentLoaded", processAllTimelines);
-        processAllTimelines();
+        // 统一的重绘函数，带 0 尺寸保护
+        function processAllTimelines() {
+            if (svgLg) clearSvgLines(svgLg);
+            if (svgSm) clearSvgLines(svgSm);
 
-        // On window resize, adjust layout and redraw timeline lines.
+            // 保护：若 SVG 仍未有尺寸，直接跳过本轮
+            const svgLgRect = svgLg ? getRect(svgLg) : null;
+            const svgSmRect = svgSm ? getRect(svgSm) : null;
+
+            // 大屏
+            if (svgLg && svgLgRect) {
+                processTimeline({
+                    bookIcon: document.querySelector("#book-icon-lg") as (HTMLElement | SVGGraphicsElement | null),
+                    internIcon: document.querySelector("#briefcase-icon-lg") as (HTMLElement | SVGGraphicsElement | null),
+                    educationCircles: document.querySelectorAll(".education-circle-lg") as NodeListOf<HTMLElement | SVGGraphicsElement>,
+                    internshipCircles: document.querySelectorAll(".internship-circle-lg") as NodeListOf<HTMLElement | SVGGraphicsElement>,
+                    svg: svgLg,
+                });
+            }
+            // 小屏
+            if (svgSm && svgSmRect) {
+                processTimeline({
+                    bookIcon: document.querySelector("#book-icon-sm") as (HTMLElement | SVGGraphicsElement | null),
+                    internIcon: document.querySelector("#briefcase-icon-sm") as (HTMLElement | SVGGraphicsElement | null),
+                    educationCircles: document.querySelectorAll(".education-circle-sm") as NodeListOf<HTMLElement | SVGGraphicsElement>,
+                    internshipCircles: document.querySelectorAll(".internship-circle-sm") as NodeListOf<HTMLElement | SVGGraphicsElement>,
+                    svg: svgSm,
+                });
+            }
+        }
+
+        // 初始：先同步一次 SVG 像素尺寸，再到下一帧测量
+        sizeOverlaySvg(svgLg, desktopHost || null);
+        sizeOverlaySvg(svgSm, mobileHost || null);
+        const raf = requestAnimationFrame(processAllTimelines);
+
         const handleResize = () => {
             adjustFixedContainerWidth();
-            const svg = document.querySelector("#timeline-line-lg") || document.querySelector("#timeline-line-sm");
-            if (svg) {
-                while (svg.lastChild) {
-                    svg.removeChild(svg.lastChild);
-                }
-                processTimeline({
-                    bookIcon: document.querySelector("#book-icon-lg"),
-                    internIcon: document.querySelector("#briefcase-icon-lg"),
-                    educationCircles: document.querySelectorAll(".education-circle-lg") as NodeListOf<HTMLElement>,
-                    internshipCircles: document.querySelectorAll(".internship-circle-lg") as NodeListOf<HTMLElement>,
-                    svg: svg as SVGSVGElement | null,
-                });
-                // processTimeline({
-                //     bookIcon: document.querySelector("#book-icon-sm"),
-                //     internIcon: document.querySelector("#briefcase-icon-sm"),
-                //     educationCircles: document.querySelectorAll(".education-circle-sm") as NodeListOf<HTMLElement>,
-                //     internshipCircles: document.querySelectorAll(".internship-circle-sm") as NodeListOf<HTMLElement>,
-                //     svg: document.querySelector("#timeline-line-sm") as SVGSVGElement | null,
-                // });
-            } else {
-                console.error("SVG element not found on resize.");
-            }
+            sizeOverlaySvg(svgLg, desktopHost || null);
+            sizeOverlaySvg(svgSm, mobileHost || null);
+            requestAnimationFrame(processAllTimelines);
         };
+        window.addEventListener("resize", handleResize);
 
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup event listeners on component unmount.
         return () => {
-            window.removeEventListener('resize', handleResize);
-            document.removeEventListener("DOMContentLoaded", processAllTimelines);
+            window.removeEventListener("resize", handleResize);
+            cancelAnimationFrame(raf);
+            roList.forEach(ro => ro.disconnect());
         };
-    }, []);
+    }, [t, cvData]); // 语言/数据变化时重画
 
     // --- Render the AboutMe page content ---
     return (
@@ -247,179 +520,45 @@ const AboutMe: React.FC = () => {
                 title={t("About LIU Ziyi - AI Researcher at Institut Polytechnique de Paris")}
                 description="Learn about LIU Ziyi. Expertise in Machine Learning, Computer Vision, Trustworthy AI, and more."
             />
+
             {/* Desktop View */}
-            <div className="d-none d-lg-block m-5 px-5">
-                {/*Left sidebar*/}
-                <Container
-                    className="py-3 position-fixed fixed-container rounded-5 bg-white bg-opacity-0 border border-primary"
-                >
-                    <Container className="d-flex flex-wrap align-content-around">
-                        <Container className={"my-5 d-flex justify-content-center align-items-center"}>
-                            <img className={"rounded-4"} src={cvData.contact.portraitSrc}
-                                 alt={cvData.contact.portraitAlt}
-                                 style={{scale: 1.2, objectFit: "cover", width: "120px", height: "120px"}}
-                            />
-                        </Container>
-                        <Container className={"d-flex flex-column justify-content-center align-items-center"}>
-                            <h1 title={cvData.contact.name}>{cvData.contact.name}</h1>
-                            <p className={"my-0 py-0"}>{cvData.contact.title}</p>
-                        </Container>
-                    </Container>
-                    <Container className="d-flex justify-content-center align-items-center">
-                        <hr className="w-75"/>
-                    </Container>
-                    <Container className="d-flex justify-content-center align-items-center">
-                        <ul className="container m-auto p-auto">
-                            {contactFields.map((field, index) => {
-                                const [key, iconClass, hrefPrefix] = field;
-                                const value = cvData.contact[key as keyof typeof cvData.contact];
-                                return (
-                                    <li key={index} className="row my-2">
-                                        <div className="col-2 d-flex justify-content-end align-items-center">
-                                            <FontAwesomeIcon icon={iconClass}/>
-                                        </div>
-                                        <div className="col-10">
-                                            <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
-                                                {hrefPrefix ? (
-                                                    <a className="contact-link" href={hrefPrefix + value}
-                                                       style={{textDecoration: "none"}}>
-                                                        {value}
-                                                    </a>
-                                                ) : (value)}
-                                            </p>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </Container>
-                </Container>
-                {/* Right Content */}
-                <svg id="timeline-line-lg"
-                     style={{
-                         position: "absolute", width: "100%", height: "100%",
-                         top: 0, left: 0, zIndex: 1, pointerEvents: "none"
-                     }}
-                ></svg>
-                <Container
-                    className="dynamic-content-container px-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary"
-                    style={{zIndex: 0}}
-                >
-                    <Container>
-                        <h2 className="mb-3">{t("About Me")}</h2>
-                        {cvData.aboutMes.map((about, index) => (
-                            <p key={index} style={{textAlign: "justify"}}>{about}</p>
-                        ))}
-                    </Container>
-                    {/*Education Section*/}
-                    <InfoSection
-                        title="Education"
-                        icon={faBook}
-                        data={cvData.educations}
-                        circleId="education-circle-lg"
-                        logoClass="school-logo"
-                        t={t}
+            <div className="d-none d-lg-block mx-lg-5 mt-5 mb-1 px-5" style={{position: "relative"}}>
+                {/* Left sidebar */}
+                <ContactSection cvData={cvData} contactFields={contactFields}/>
+
+                {/* Right Content - now with dynamic-content-container class */}
+                <div className="dynamic-content-container" style={{position: "relative"}}>
+                    {/* Timeline SVG for desktop */}
+                    <svg id="timeline-line-lg"
+                         style={{
+                             position: "absolute", width: "100%", height: "100%",
+                             top: 0, left: 0, zIndex: 1, pointerEvents: "none"
+                         }}
                     />
-                    {/*Internships Section*/}
-                    <InfoSection
-                        title="Internships"
-                        icon={faBriefcase}
-                        data={cvData.internships}
-                        circleId="internship-circle-lg"
-                        logoClass="company-logo"
-                        t={t}
-                    />
-                </Container>
+                    <MainContent t={t} cvData={cvData} sizeSuffix="-lg"/>
+                </div>
             </div>
+
             {/* Mobile View */}
             <div className="d-lg-none my-4 mx-3" style={{position: "relative"}}>
-                {/*<div className="d-lg-none my-4 mx-3">*/}
                 <Row>
-                    {/*Upper content*/}
-                    <Container className="rounded-5 bg-white bg-opacity-0 border border-primary px-3 py-4 mt-4">
-                        <Row className={"my-2 mx-3"}>
-                            <Col xs={{span: 4}} className="d-flex justify-content-center align-items-center">
-                                <img className={"rounded-4"} src={cvData.contact.portraitSrc}
-                                     alt={cvData.contact.portraitAlt}
-                                     style={{scale: 1.2, objectFit: "cover", width: "80px", height: "80px"}}
-                                />
-                            </Col>
-                            <Col xs={{span: 8}}
-                                 className="d-flex flex-column justify-content-center align-items-center">
-                                <h1 title={cvData.contact.name}>{cvData.contact.name}</h1>
-                                <p className={"my-0 py-0"}>{cvData.contact.title}</p>
-                            </Col>
-                        </Row>
-                        <Container className={"d-flex justify-content-center align-items-center"}>
-                            <hr className="w-75"/>
-                        </Container>
-                        <ul className="row d-flex justify-content-between align-items-center m-0 p-0">
-                            {contactFields.map((field, index) => {
-                                const [key, iconClass, hrefPrefix] = field;
-                                const value = cvData.contact[key as keyof typeof cvData.contact];
-                                return (
-                                    <Col xs={{span: 12}} sm={{span: 6}} key={index} className="my-1">
-                                        <Row>
-                                            <Col xs={{span: 2}}
-                                                 className="d-flex justify-content-center align-items-center">
-                                                <FontAwesomeIcon icon={iconClass}/>
-                                            </Col>
-                                            <Col xs={{span: 10}}>
-                                                <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
-                                                    {hrefPrefix ? (
-                                                        <a className="contact-link" href={hrefPrefix + value}
-                                                           style={{textDecoration: "none"}}>
-                                                            {value}
-                                                        </a>
-                                                    ) : (value)}
-                                                </p>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                );
-                            })}
-                        </ul>
-                    </Container>
-                    {/*About Me and Sections*/}
+                    {/* Contact section for mobile */}
+                    <ContactSection cvData={cvData} contactFields={contactFields} isMobile={true}/>
+
+                    {/* Timeline SVG for mobile */}
                     <svg id="timeline-line-sm"
                          style={{
                              position: "absolute", width: "100%", height: "100%",
                              top: 0, left: 0, zIndex: 1, pointerEvents: "none"
-                         }}></svg>
-                    <Container
-                        className="rounded-5 bg-white bg-opacity-0 border border-primary px-3 py-4 mt-4"
-                        style={{zIndex: 0}}
-                    >
-                        <Container>
-                            <h2 className={"mb-3"}>{t("About Me")}</h2>
-                            {cvData.aboutMes.map((about, index) => (
-                                <p key={index} style={{textAlign: "justify"}}>{about}</p>
-                            ))}
-                        </Container>
-                    </Container>
-                    {/*Education Section*/}
-                    <InfoSection
-                        title="Education"
-                        icon={faBook}
-                        data={cvData.educations}
-                        circleId="education-circle-sm"
-                        logoClass="school-logo"
-                        t={t}
+                         }}
                     />
-                    {/*Internships Section*/}
-                    <InfoSection
-                        title="Internships"
-                        icon={faBriefcase}
-                        data={cvData.internships}
-                        circleId="internship-circle-sm"
-                        logoClass="company-logo"
-                        t={t}
-                    />
+
+                    {/* Main content for mobile */}
+                    <MainContent t={t} cvData={cvData} sizeSuffix="-sm"/>
                 </Row>
             </div>
         </MainLayout>
     );
 };
-
 
 export default AboutMe;

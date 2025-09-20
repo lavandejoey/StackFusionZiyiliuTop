@@ -31,9 +31,12 @@
   },
   "homepage": "https://github.com/lavandejoey/StackFusionZiyiliuTop#readme",
   "devDependencies": {
+    "@types/react-responsive-masonry": "^2.6.0",
     "concurrently": "^9.1.2"
   },
   "dependencies": {
-    "cheerio": "^1.1.0"
+    "@octokit/core": "^7.0.3",
+    "cheerio": "^1.1.0",
+    "react-responsive-masonry": "^2.7.1"
   }
 }
