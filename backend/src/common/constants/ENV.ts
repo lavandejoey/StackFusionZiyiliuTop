@@ -3,11 +3,38 @@
 import path from "path";
 import dotenv from "dotenv";
 import {cleanEnv, email, num, port, str} from "envalid";
+import {z} from "zod";
+import logger from "jet-logger";
+
+const RepoSchema = z.object({
+    platform: z.literal('github'),
+    owner: z.string().min(1),
+    name: z.string().min(1),
+    pinned: z.boolean().optional(),
+});
+
+const InitialReposSchema = z.array(RepoSchema);
 
 export enum NodeEnvs {
     Dev = "development",
     Test = "test",
     Production = "production"
+}
+
+// parse the JSON string safely
+function parseJsonEnv<T>(value: string | undefined, name: string, schema: z.ZodType<T>): T {
+    if (!value) throw new Error(`Missing env var: ${name}`);
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(value);
+    } catch (e) {
+        throw new Error(`Env var ${name} is not valid JSON: ${(e as Error).message}`);
+    }
+    const result = schema.safeParse(parsed);
+    if (!result.success) {
+        throw new Error(`Env var ${name} failed validation: ${result.error.toString()}`);
+    }
+    return result.data;
 }
 
 // Choose the right file based on NODE_ENV (defaults to “development”)
@@ -66,10 +93,23 @@ const env = cleanEnv(process.env, {
     ANTHROPIC_API_KEY: str({default: ""}),
     DEFAULT_MODEL: str({default: ""}),
     NOTION_API_KEY: str({default: ""}),
-    NOTION_ROOT_BLOG_LIST: str({default: ""}),
     NOTION_CACHE_EXPIRY_SECONDS: num({default: 3600}),
     GITHUB_ACCESS_TOKEN: str({default: ""}),
+
+    // Content
+    NOTION_ROOT_BLOG_LIST: str({default: ""}),
+    GITHUB_REPO_LIST: str({default: "[]"}),
 });
+
+export const GITHUB_REPO_LIST = (() => {
+    try {
+        const parsed = JSON.parse(env.GITHUB_REPO_LIST);
+        return InitialReposSchema.parse(parsed);
+    } catch (err) {
+        logger.err("Failed to parse GITHUB_REPO_LIST: " + (err as Error).message);
+        return [];
+    }
+})();
 
 export const {
     NODE_ENV,

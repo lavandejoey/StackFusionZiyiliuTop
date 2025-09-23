@@ -3,7 +3,7 @@ import {Octokit} from "@octokit/core";
 import {redisClient} from "@src/common/util/redisClient";
 import {RepoProps} from "@src/types/repo";
 import logger from "jet-logger";
-import {GITHUB_ACCESS_TOKEN} from "@src/common/constants/ENV";
+import {GITHUB_ACCESS_TOKEN, GITHUB_REPO_LIST} from "@src/common/constants/ENV";
 
 const octokit = new Octokit({
     auth: GITHUB_ACCESS_TOKEN,
@@ -12,45 +12,7 @@ const octokit = new Octokit({
 const CACHE_KEY = "github-repos";
 const CACHE_EXPIRATION = 24 * 60 * 60; // 24 hours in seconds
 
-const initialRepos: Omit<RepoProps, 'url' | 'visibility'>[] = [
-    {
-        platform: "github",
-        owner: "lavandejoey",
-        name: "StackFusionZiyiliuTop",
-        pinned: true,
-    },
-    {
-        platform: "github",
-        owner: "lavandejoey",
-        name: "MobileRAG",
-        pinned: true,
-    },
-    {
-        platform: "github",
-        owner: "lavandejoey",
-        name: "SATNET",
-    },
-    {
-        platform: "github",
-        owner: "lavandejoey",
-        name: "ECUSTThesisLatex",
-    },
-    {
-        platform: "github",
-        owner: "llada60",
-        name: "Kaggle.Sub-event_Detection_in_Twitter_streams",
-    },
-    {
-        platform: "github",
-        owner: "lavandejoey",
-        name: "FakeParts2",
-    },
-    {
-        platform: "github",
-        owner: "hi-paris",
-        name: "FakeParts",
-    }
-];
+const initialRepos: Omit<RepoProps, 'url' | 'visibility'>[] = GITHUB_REPO_LIST;
 
 async function fetchRepoDetails(owner: string, repo: string): Promise<Partial<RepoProps>> {
     try {
