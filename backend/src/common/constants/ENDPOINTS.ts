@@ -65,4 +65,10 @@ export const ENDPOINTS = {
         // GET /api/${API_VERSION}/repos
         all: "/",
     },
+
+    analytics: {
+        base: "/analytics",
+        track: "/track",
+        briefing: "/briefing",
+    },
 } as const;

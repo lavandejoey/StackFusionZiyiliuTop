@@ -262,7 +262,7 @@ const MainContent: React.FC<{
                 style={{zIndex: 0}}
             >
                 <Container>
-                    <h2 className="mb-3">{t("About Me")}</h2>
+                    <h2 className="d-none mb-3">{t("About Me")}</h2>
                     {cvData.aboutMes.map((about: string, index: number) => (
                         <p key={index} style={{textAlign: "justify"}}>{about}</p>
                     ))}

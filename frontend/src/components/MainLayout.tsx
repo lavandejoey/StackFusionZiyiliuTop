@@ -1,8 +1,10 @@
-// /StackFusionZiyiliuTop/frontend/src/layouts/MainLayout.tsx
-import React from "react";
+// /StackFusionZiyiliuTop/frontend/src/components/MainLayout.tsx
+import React, {useEffect} from "react";
+import {useLocation} from "react-router-dom";
 import NavBar from "@/components/NavBar.tsx"
 import Alerts from "@/components/Alerts.tsx"
 import Footer from "@/components/Footer.tsx"
+import {trackVisit} from "@/services/analyticsService.tsx";
 
 interface MainLayoutProps {
     activePage?: string,
@@ -14,6 +16,13 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({activePage, info, error, success, warning, children}) => {
+    const location = useLocation();
+
+    useEffect(() => {
+        // Track the page visit whenever the pathname changes.
+        trackVisit(location.pathname);
+    }, [location.pathname]);
+
     return (
         <>
             <div className={"phoframe user-select-none"}></div>

@@ -9,6 +9,7 @@ import {blogRouter} from "@src/routes/blogRoutes";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import {API_VERSION} from "@src/common/constants/ENV";
 import {repoRouter} from "@src/routes/repoRoutes";
+import {analyticsRouter} from "@src/routes/analyticsRoutes";
 
 /******************************************************************************
  Setup
@@ -31,6 +32,7 @@ apiRouter.use(ENDPOINTS.proxy.base, proxyRouter);
 apiRouter.use(ENDPOINTS.contacts.base, contactRouter);
 apiRouter.use(ENDPOINTS.blogs.base, blogRouter);
 apiRouter.use(ENDPOINTS.repos.base, repoRouter);
+apiRouter.use(ENDPOINTS.analytics.base, analyticsRouter);
 
 /******************************************************************************
  Export default

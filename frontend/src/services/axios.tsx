@@ -176,24 +176,45 @@ export const ContactsAPI = {
 export const BlogsAPI = {
     homeList: () =>
         api.get(`/blogs`),
-    pages: (id: string)=>
+    pages: (id: string) =>
         api.get(`/blogs/pages/${id}`),
     blockChildren: (block_id: string) =>
         api.get(`/blogs/blocks/${block_id}/children`),
     database: (id: string) =>
         api.get(`/blogs/database/${id}`),
-    queryDatabase: (id: string, payload: {filter?: object, sorts?: object[]}) =>
+    queryDatabase: (id: string, payload: { filter?: object, sorts?: object[] }) =>
         api.post(`/blogs/database/${id}/query`, payload),
 };
 
 // Proxy endpoints
 export const ProxyAPI = {
-    config: (email: string) =>
-        api.get(`/proxy/config`, {params: {email}}),
+    config: (email: string) => api.get(`/proxy/config`, {params: {email}}),
 };
 
 // GitHub Repo endpoints
 export const ReposAPI = {
-    fetch: () =>
-        api.get(`/repos`),
+    fetch: () => api.get(`/repos`),
 }
+
+// Analytics endpoints
+export type TrackVisitPayload = {
+    ts: string;
+    path: string;
+    url: string;
+    referrer: string | null;
+    ua: string;
+};
+
+export type BriefingData = {
+    pv_today: number;
+    uv_today: number;
+    pv_7d: number;
+    uv_7d: number;
+    top_paths_today: string;
+    top_ref_today: string;
+};
+
+export const AnalyticsAPI = {
+    track: (data: TrackVisitPayload) => api.post(`/analytics/track`, data),
+    briefing: () => api.get(`/analytics/briefing`),
+};
