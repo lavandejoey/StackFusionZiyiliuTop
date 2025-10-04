@@ -32,6 +32,9 @@ export const ENDPOINTS = {
         getByUuid: "/:uuid",
         // GET /api/${API_VERSION}/users/:email TODO
         getByEmail: "/:email",
+
+        // GET /api/${API_VERSION}/users/:uuid/roles
+        listRolesByUserUuid: "/:uuid/roles",
     },
 
     contacts: {

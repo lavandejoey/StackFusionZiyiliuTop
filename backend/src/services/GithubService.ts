@@ -83,7 +83,7 @@ export async function getProcessedRepos(): Promise<RepoProps[]> {
 
     if (redisClient) {
         await redisClient.set(CACHE_KEY, JSON.stringify(sortedRepos), "EX", CACHE_EXPIRATION);
-        logger.info("Saved to cache");
+        // logger.info("Saved to cache");
     }
 
     return sortedRepos;

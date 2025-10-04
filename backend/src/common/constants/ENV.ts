@@ -1,54 +1,26 @@
 // /StackFusionZiyiliuTop/backend/src/common/constants/ENV.ts
 /* eslint-disable n/no-process-env */
+// src/common/constants/ENV.ts
 import path from "path";
 import dotenv from "dotenv";
-import {cleanEnv, email, num, port, str} from "envalid";
+import {cleanEnv, str, num, email} from "envalid";
+import {port} from "envalid/dist/validators";
 import {z} from "zod";
 import logger from "jet-logger";
 
-const RepoSchema = z.object({
-    platform: z.literal('github'),
-    owner: z.string().min(1),
-    name: z.string().min(1),
-    pinned: z.boolean().optional(),
-});
+export enum NodeEnvs { Dev = "development", Test = "test", Production = "production" }
 
-const InitialReposSchema = z.array(RepoSchema);
+// -----------------------------------------------------------------------------
+// 1. Load .env
+// -----------------------------------------------------------------------------
+dotenv.config({path: path.resolve(process.cwd(), ".env")});
 
-export enum NodeEnvs {
-    Dev = "development",
-    Test = "test",
-    Production = "production"
-}
-
-// parse the JSON string safely
-function parseJsonEnv<T>(value: string | undefined, name: string, schema: z.ZodType<T>): T {
-    if (!value) throw new Error(`Missing env var: ${name}`);
-    let parsed: unknown;
-    try {
-        parsed = JSON.parse(value);
-    } catch (e) {
-        throw new Error(`Env var ${name} is not valid JSON: ${(e as Error).message}`);
-    }
-    const result = schema.safeParse(parsed);
-    if (!result.success) {
-        throw new Error(`Env var ${name} failed validation: ${result.error.toString()}`);
-    }
-    return result.data;
-}
-
-// Choose the right file based on NODE_ENV (defaults to “development”)
-const mode = process.env.NODE_ENV ?? NodeEnvs.Dev;
-const envFileName = `.env.${mode}`;
-
-// Load it from your project root
-dotenv.config({
-    path: path.resolve(process.cwd(), envFileName),
-});
-
-const env = cleanEnv(process.env, {
+// -----------------------------------------------------------------------------
+// 2. Parse basic environment variables with envalid
+// -----------------------------------------------------------------------------
+export const env = cleanEnv(process.env, {
     // general
-    NODE_ENV: str({default: NodeEnvs.Dev}),
+    NODE_ENV: str({choices: Object.values(NodeEnvs), default: "development"}),
     PORT: port({default: 3000}),
     API_VERSION: str({default: "v1"}),
     AUTHOR: str({default: "N/A"}),
@@ -98,19 +70,58 @@ const env = cleanEnv(process.env, {
 
     // Content
     NOTION_ROOT_BLOG_LIST: str({default: ""}),
-    GITHUB_REPO_LIST: str({default: "[]"}),
+    GITHUB_REPO_LIST: str({default: "[]" /* will be parsed by Zod below */}),
 });
 
+// -----------------------------------------------------------------------------
+// 3. Define Zod schema for complex JSON envs
+// -----------------------------------------------------------------------------
+const RepoSchema = z.object({
+    platform: z.literal("github"),
+    owner: z.string().min(1),
+    name: z.string().min(1),
+    pinned: z.boolean().optional(),
+});
+const RepoArraySchema = z.array(RepoSchema);
+
+// -----------------------------------------------------------------------------
+// 4. Utility: safe JSON parsing for env vars
+// -----------------------------------------------------------------------------
+function parseJsonEnv<T>(
+    value: string | undefined,
+    name: string,
+    schema: z.ZodType<T>
+): T {
+    if (!value) throw new Error(`Missing env var: ${name}`);
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(value);
+    } catch (err) {
+        throw new Error(`Env var ${name} is not valid JSON: ${(err as Error).message}`);
+    }
+    const result = schema.safeParse(parsed);
+    if (!result.success) {
+        throw new Error(`Env var ${name} failed validation: ${result.error.message}`);
+    }
+    return result.data;
+}
+
+// -----------------------------------------------------------------------------
+// 5. Parse GITHUB_REPO_LIST
+// -----------------------------------------------------------------------------
 export const GITHUB_REPO_LIST = (() => {
     try {
-        const parsed = JSON.parse(env.GITHUB_REPO_LIST);
-        return InitialReposSchema.parse(parsed);
+        const parsed = parseJsonEnv(env.GITHUB_REPO_LIST, "GITHUB_REPO_LIST", RepoArraySchema);
+        return parsed;
     } catch (err) {
         logger.err("Failed to parse GITHUB_REPO_LIST: " + (err as Error).message);
         return [];
     }
 })();
 
+// -----------------------------------------------------------------------------
+// 6. Export convenience vars
+// -----------------------------------------------------------------------------
 export const {
     NODE_ENV,
     PORT,

@@ -40,6 +40,9 @@ interface UserService {
         pager: { offset: number, limit: number },
         callerRoles: UserRoleEnum[]
     ): Promise<UserModel[]>;
+
+    // Return the list of role IDs assigned to a user
+    getUserRoles(uuid: string): Promise<UserRoleEnum[]>;
 }
 
 class UserServiceImpl implements UserService {
@@ -148,6 +151,12 @@ class UserServiceImpl implements UserService {
     public async listAllUsers(pager: { offset: number, limit: number }, callerRoles: UserRoleEnum[]) {
         if (!callerRoles.includes(UserRoleEnum.ADMIN)) throw new Error("Unauthorized");
         return UserRepo.listUsers(pager.offset, pager.limit);
+    }
+
+    // Return the list of role IDs assigned to a user
+    public async getUserRoles(uuid: string): Promise<UserRoleEnum[]> {
+        if (!isUuidV4(uuid)) throw new TypeError("Invalid user ID");
+        return UserRepo.listRolesByUserUuid(uuid);
     }
 }
 
