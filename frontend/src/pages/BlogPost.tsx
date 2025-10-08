@@ -1,31 +1,41 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogPost.tsx
-import React, {useCallback, useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {type JSX, useCallback, useEffect, useState} from "react";
+import {useParams, Link} from "react-router-dom";
 import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
-import {type BlogPostResponse, getBlogPostBasic} from "@/services/blogService";
+import {
+    type BlogPostResponse,
+    getBlogPostBasic,
+    getBlogPostParents,
+    type BlogParent
+} from "@/services/blogService";
 import NotionBlocks, {TableOfContents} from "@/components/NotionBlocks";
 import MathJaxProvider from "@/components/MathJaxProvider";
 
 export default function BlogPost() {
     const {id} = useParams<{ id: string }>();
     const [data, setData] = useState<BlogPostResponse | null>(null);
+    const [parents, setParents] = useState<BlogParent[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showToc, setShowToc] = useState(true);
 
     // Load blog post data with the optimized basic approach
-    const loadBlogPost = useCallback(async (pageId: string) => {
+    const loadBlogPostAndParents = useCallback(async (pageId: string) => {
         setLoading(true);
         setError(null);
 
         try {
             // Use getBlogPostBasic instead of getBlogPost for better performance
-            const post = await getBlogPostBasic(pageId);
+            const [post, postParents] = await Promise.all([
+                getBlogPostBasic(pageId),
+                getBlogPostParents(pageId)
+            ]);
             setData(post);
+            setParents(postParents);
         } catch (err) {
-            console.error(`Failed to fetch blog post: ${err}`);
+            console.error(`Failed to fetch blog post or parents: ${err}`);
             setError("Failed to load blog post. Please try again later.");
         } finally {
             setLoading(false);
@@ -36,72 +46,81 @@ export default function BlogPost() {
         if (!id) return;
 
         // Load blog post when component mounts or id changes
-        loadBlogPost(id);
+        loadBlogPostAndParents(id);
 
         return () => {
             // Clean up any pending operations if needed
         };
-    }, [id, loadBlogPost]);
+    }, [id, loadBlogPostAndParents]);
 
     // Check if we have any headings in the content
     // If we don't, we won't show the TOC
     useEffect(() => {
-        if (data?.blocks) {
-            const hasHeadings = data.blocks.some(block =>
+        if (data?.type === "page" && data.data.blocks) {
+            const hasHeadings = data.data.blocks.some(block =>
                 block.type === "heading_1" ||
                 block.type === "heading_2" ||
                 block.type === "heading_3"
             );
             setShowToc(hasHeadings);
+        } else {
+            setShowToc(false);
         }
-    }, [data?.blocks]);
+    }, [data]);
 
     // Helper function to safely get the title from Notion page properties
     const extractTitle = (): string => {
-        if (!data?.page || !data.page.properties) return "Untitled";
-        const titleProp = Object.values(data.page.properties).find(
-            (prop) => prop.type === "title"
-        );
-        if (
-            titleProp &&
-            titleProp.type === "title" &&
-            titleProp.title.length > 0
-        ) {
-            return titleProp.title[0].plain_text;
+        if (!data) return "Untitled";
+
+        if (data.type === "page") {
+            const page = data.data.page;
+            const titleProp = Object.values(page.properties).find(prop => prop.type === "title");
+            if (titleProp && titleProp.type === "title" && titleProp.title.length > 0) {
+                return titleProp.title[0].plain_text;
+            }
+        } else if (data.type === "database") {
+            const db = data.data.database;
+            if (db.title.length > 0) {
+                return db.title[0].plain_text;
+            }
         }
+
         return "Untitled";
     }
 
     // Extract the cover image URL if it exists
     const getCoverImage = (): string | undefined => {
-        if (!data?.page?.cover) return undefined;
+        if (!data) return undefined;
+        const entity = data.type === "page" ? data.data.page : data.data.database;
+        if (!entity.cover) return undefined;
 
-        return data.page.cover.type === "external"
-            ? data.page.cover.external.url
-            : data.page.cover.file.url;
+        return entity.cover.type === "external"
+            ? entity.cover.external.url
+            : entity.cover.file.url;
     };
 
     // Extract page icon if it exists
     const getPageIcon = (): React.ReactNode => {
-        if (!data?.page?.icon) return null;
+        if (!data) return null;
+        const entity = data.type === "page" ? data.data.page : data.data.database;
+        if (!entity.icon) return null;
 
-        if (data.page.icon.type === "emoji") {
-            return <span style={{fontSize: "2rem"}}>{data.page.icon.emoji}</span>;
+        if (entity.icon.type === "emoji") {
+            return <span style={{fontSize: "2rem"}}>{entity.icon.emoji}</span>;
         }
 
-        // Handle external or file type icons
-        if (data.page.icon.type === "external") {
+        if (entity.icon.type === "external") {
             return (
                 <img
-                    src={data.page.icon.external.url}
+                    src={entity.icon.external.url}
                     alt="Page icon"
                     style={{width: 36, height: 36, objectFit: "cover", borderRadius: 4}}
                 />
             );
-        } else if (data.page.icon.type === "file") {
+        } else if (entity.icon.type === "file") {
             return (
                 <img
-                    src={data.page.icon.file.url}
+                    src={entity.icon.file.url}
                     alt="Page icon"
                     style={{width: 36, height: 36, objectFit: "cover", borderRadius: 4}}
                 />
@@ -123,6 +142,74 @@ export default function BlogPost() {
     const coverImage = getCoverImage();
     const icon = getPageIcon();
 
+    const renderDatabaseView = () => {
+        if (data?.type !== "database") return null;
+        const {pages} = data.data;
+
+        return (
+            <div className="table-responsive">
+                <table className="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col" style={{width: "2rem"}}></th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Last Updated</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {pages.map(page => {
+                        const titleProp = Object.values(page.properties).find(p => p.type === "title");
+                        const title = (titleProp && titleProp.type === "title" && titleProp.title.length > 0)
+                            ? titleProp.title[0].plain_text
+                            : "Untitled";
+
+                        return (
+                            <tr key={page.id}>
+                                <td>
+                                    {page.icon && page.icon.type === "emoji" && (
+                                        <span>{page.icon.emoji}</span>
+                                    )}
+                                </td>
+                                <td>
+                                    <Link to={`/blog/${page.id}`} className="text-decoration-none">
+                                        {title}
+                                    </Link>
+                                </td>
+                                <td>{formatDate(page.last_edited_time)}</td>
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+    const renderParentIcon = (parent: BlogParent): JSX.Element => {
+        const parentIcon = 'icon' in parent ? parent.icon : null;
+        if (!parentIcon) return <></>
+
+        if (parentIcon.type === "emoji") {
+            return <span className="me-1">{parentIcon.emoji}</span>;
+        }
+
+        const iconStyle: React.CSSProperties = {
+            width: 18,
+            height: 18,
+            objectFit: "cover",
+            borderRadius: 3,
+            verticalAlign: "text-bottom",
+        };
+
+        if (parentIcon.type === "external") {
+            return <img src={parentIcon.external.url} alt="Icon" className="me-1" style={iconStyle}/>;
+        } else if (parentIcon.type === "file") {
+            return <img src={parentIcon.file.url} alt="Icon" className="me-1" style={iconStyle}/>;
+        }
+
+        return <></>;
+    };
+
     return (
         <MainLayout>
             <PageHead title={extractTitle()}/>
@@ -134,7 +221,7 @@ export default function BlogPost() {
                 ) : error ? (
                     <div className="alert alert-danger">
                         {error}
-                        <Button variant={"link"} onClick={() => id && loadBlogPost(id)}>
+                        <Button variant={"link"} onClick={() => id && loadBlogPostAndParents(id)}>
                             <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>
                             &nbsp;Retry
                         </Button>
@@ -144,6 +231,42 @@ export default function BlogPost() {
                 ) : (
                     <MathJaxProvider>
                         <div className="blog-post">
+                            {/* Breadcrumb navigation */}
+                            <nav aria-label="breadcrumb" className="mb-3">
+                                <ol className="breadcrumb mb-0" style={{fontSize: "0.9rem"}}>
+                                    {parents.map((parent) => {
+                                        if (parent.object === 'database') return null;
+
+                                        let title = "Untitled";
+                                        if ('properties' in parent && 'title' in parent.properties && parent.properties.title.type === 'title' && parent.properties.title.title.length > 0) {
+                                            title = parent.properties.title.title[0].plain_text;
+                                        } else if ('title' in parent && Array.isArray(parent.title) && parent.title.length > 0) {
+                                            title = parent.title[0].plain_text;
+                                        }
+
+                                        return (
+                                            <li key={parent.id} className="breadcrumb-item">
+                                                <Link to={`/blog/${parent.id}`} className="text-decoration-none">
+                                                    {renderParentIcon(parent)}
+                                                    {title}
+                                                </Link>
+                                            </li>
+                                        );
+                                    })}
+                                    <li className="breadcrumb-item active" aria-current="page">
+                                        <span style={{
+                                            maxWidth: "400px",
+                                            display: "inline-block",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                            verticalAlign: "middle"
+                                        }}>
+                                            {extractTitle()}
+                                        </span>
+                                    </li>
+                                </ol>
+                            </nav>
                             {/* Header with title and cover */}
                             <Card className="border-0">
                                 {coverImage && (
@@ -166,7 +289,8 @@ export default function BlogPost() {
                                         <h1 className="mb-0">{extractTitle()}</h1>
                                     </div>
                                     <p className="text-muted">
-                                        Last updated on {formatDate(data.page.last_edited_time)}
+                                        Last updated
+                                        on {formatDate(data.type === "page" ? data.data.page.last_edited_time : data.data.database.last_edited_time)}
                                     </p>
                                 </Card.Body>
                             </Card>
@@ -175,13 +299,17 @@ export default function BlogPost() {
                             <Row>
                                 {/* Main content column */}
                                 <Col lg={showToc ? 9 : 12} className="blog-main-content">
-                                    <NotionBlocks blocks={data.blocks}/>
+                                    {data.type === "page" ? (
+                                        <NotionBlocks blocks={data.data.blocks}/>
+                                    ) : (
+                                        renderDatabaseView()
+                                    )}
                                 </Col>
 
                                 {/* Table of Contents sidebar */}
                                 {showToc && (
                                     <Col lg={3} className="d-none d-lg-block">
-                                        <TableOfContents blocks={data.blocks}/>
+                                        <TableOfContents blocks={data.type === "page" ? data.data.blocks : []}/>
                                     </Col>
                                 )}
                             </Row>

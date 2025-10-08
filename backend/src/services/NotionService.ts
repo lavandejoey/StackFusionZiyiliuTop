@@ -22,7 +22,7 @@ import type {
     UpdatePageResponse,
     UserObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import {NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS} from "@src/common/constants/ENV";
+import {NODE_ENV, NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS} from "@src/common/constants/ENV";
 import {redisGet, redisSet} from "@src/common/util/redisClient";
 import logger from "jet-logger";
 
@@ -206,6 +206,52 @@ const NotionService = {
     ): Promise<UpdatePageResponse> {
         // Write operations aren't cached
         return notion.pages.update(params);
+    },
+
+    /** Retrieve all parents of a page */
+    async getPageParents(
+        pageId: string,
+    ): Promise<(PageObjectResponse | DatabaseObjectResponse)[]> {
+        const parents: (PageObjectResponse | DatabaseObjectResponse)[] = [];
+        let currentParent: PageObjectResponse['parent'] | DatabaseObjectResponse['parent'] | null = null;
+
+        // The initial ID could be a page or a database. We need to find its parent.
+        try {
+            const page = await this.getPageInfo({page_id: pageId});
+            currentParent = page.parent;
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            if (error.code === 'object_not_found' && error.message.includes('is a database, not a page')) {
+                try {
+                    const db = await this.getDatabase({database_id: pageId});
+                    currentParent = db.parent;
+                } catch (dbError) {
+                    logger.err(`Could not retrieve database ${pageId}: ${dbError}`);
+                    return [];
+                }
+            } else {
+                logger.err(`Could not retrieve page ${pageId}: ${error}`);
+                return [];
+            }
+        }
+
+        // Now traverse up from the first parent
+        for (let i = 0; i < 10 && currentParent; i++) {
+            if (currentParent.type === "page_id") {
+                const parentPageInfo = await this.getPageInfo({page_id: currentParent.page_id});
+                parents.unshift(parentPageInfo);
+                currentParent = parentPageInfo.parent;
+            } else if (currentParent.type === "database_id") {
+                const parentDbInfo = await this.getDatabase({database_id: currentParent.database_id});
+                parents.unshift(parentDbInfo);
+                currentParent = parentDbInfo.parent;
+            } else { // workspace or other
+                currentParent = null;
+            }
+        }
+
+        return parents;
     },
 
     /******************** DATABASES ********************/

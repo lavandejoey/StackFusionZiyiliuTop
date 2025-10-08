@@ -11,7 +11,7 @@
     "install:all": "npm install",
     "lint:all": "npm run lint --workspace backend && npm run lint --workspace frontend",
     "dev:all": "concurrently \"npm run dev:hot --workspace backend\" \"npm run dev --workspace frontend\"",
-    "build:all": "npm run build --workspace backend && npm run build --workspace frontend",
+    "build:all": "concurrently \"npm run build --workspace backend\" \"npm run build --workspace frontend\"",
     "start": "concurrently \"npm run start --workspace backend\" \"npm run preview --workspace frontend\""
   },
   "repository": {

@@ -12,6 +12,7 @@ export interface UserModel {
     status: UserStatusValue; // "active" | "inactive"
     created_at: Date;
     updated_at: Date;
+    role: UserRole | null;
 }
 
 /**

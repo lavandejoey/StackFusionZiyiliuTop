@@ -1,7 +1,13 @@
 // src/contexts/AuthProvider.tsx
 import {type ReactNode, useEffect, useState} from "react";
 import {AuthContext} from "./useAuth";
-import {apiGetMe, apiLogin as loginService, apiLogout as logoutService, apiSignup as signupService,} from "@/services/authService";
+import {
+    apiGetMe,
+    apiLogin as loginService,
+    apiLogout as logoutService,
+    apiSignup as signupService,
+} from "@/services/authService";
+import {getUserRoles} from "@/services/userService";
 import type {UserModel} from "@/types/User.ts";
 import {setLoggedOut} from "@/services/axios";
 
@@ -13,6 +19,9 @@ export function AuthProvider({children}: { children: ReactNode }) {
         (async () => {
             try {
                 const me = await apiGetMe();
+                // getUserRoles
+                const roles = await getUserRoles(me.uuid);
+                me.role = roles?.[0] ?? null;
                 setUser(me);
             } catch {
                 sessionStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);

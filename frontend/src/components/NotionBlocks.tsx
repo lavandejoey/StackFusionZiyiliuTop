@@ -10,6 +10,8 @@ import type {
     RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 import {MathJax} from "better-react-mathjax";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faGrip, faTable} from "@fortawesome/free-solid-svg-icons";
 
 // Helper function to render rich text blocks with proper formatting
 const RichText: React.FC<{ richText: RichTextItemResponse[] }> = ({richText}) => {
@@ -215,7 +217,7 @@ const AsyncChildBlocks: React.FC<{
 const Paragraph: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     if (block.type !== "paragraph") return null;
     return (
-        <p className="mb-4">
+        <p className="mb-1">
             <RichText richText={block.paragraph.rich_text}/>
         </p>
     );
@@ -469,6 +471,15 @@ const Image: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
+const ChildIcon: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+    if (block.type !== "child_database") return null;
+    // TODO
+    // Return a database icon
+    return (
+        <i className="bi bi-table"></i>
+    );
+}
+
 // Table of Contents component
 interface TOCItem {
     id: string;
@@ -665,9 +676,45 @@ const ListWrapper: React.FC<{
 const Equation: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     if (block.type !== "equation") return null;
     return (
-        <div className="my-4 text-center">
-            <MathJax>{`$$${block.equation.expression}$$`}</MathJax>
-        </div>
+        <>
+            <style>{`
+                .mathjax-wrapper {
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    max-width: 95%;
+                    display: block;
+                    scrollbar-width: thin;
+                    scrollbar-color: var(--bs-border-color) transparent;
+                }
+
+                /* Left/right shadow indicators */
+                .mathjax-wrapper::before,
+                .mathjax-wrapper::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    width: 1.5rem;
+                    pointer-events: none;
+                    transition: opacity 0.2s ease;
+                }
+
+                .mathjax-wrapper::before {
+                    left: 0;
+                    background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+                    opacity: 0;
+                }
+
+                .mathjax-wrapper::after {
+                    right: 0;
+                    background: linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent);
+                    opacity: 0;
+                }
+            `}</style>
+            <div className="my-1 text-center position-relative mathjax-wrapper">
+                <MathJax>{`$$${block.equation.expression}$$`}</MathJax>
+            </div>
+        </>
     );
 };
 
@@ -725,7 +772,7 @@ const ColumnList: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     }
 
     return (
-        <Row className="column-list d-flex flex-nowrap mb-4">
+        <Row className="column-list mb-4">
             {columnBlocks.map((columnBlock) => (
                 <Col
                     key={columnBlock.id}
@@ -755,17 +802,13 @@ const getColumnWidth = (columnBlock: BlockObjectResponse, totalColumns: number):
     return defaultColWidth;
 };
 
-const Column: React.FC<{ block: BlockObjectResponse; }> = ({block}) => {
+const Column: React.FC<{ block: BlockObjectResponse, }> = ({block}) => {
     if (block.type !== "column") return null;
 
     return (
         <>
             {block.has_children ? (
-                <AsyncChildBlocks
-                    parentId={block.id}
-                    initiallyExpanded={true}
-                    customClassName="p-0"
-                />
+                <AsyncChildBlocks parentId={block.id} initiallyExpanded={true} customClassName="p-0"/>
             ) : (
                 <div style={{minHeight: "50px", color: "#ccc", textAlign: "center"}}>
                     Empty column
@@ -967,7 +1010,7 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         container: {
             borderRadius: '8px',
             border: '1px solid #e0e0e0',
-            padding: '1.5rem',
+            padding: '1rem',
             background: '#fff',
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
             marginBottom: '1rem',
@@ -1085,8 +1128,23 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                 if (!mounted) return;
                 setDatabase(databaseData);
 
-                // Then query database entries
-                const entriesData = await queryDatabase(databaseId);
+                // Look for a ranking property (Rank, Order, Sort Order, etc.)
+                const rankProperty = Object.entries(databaseData.properties).find(
+                    ([name, prop]) =>
+                        prop.type === 'number' &&
+                        (name.toLowerCase() === 'rank' ||
+                            name.toLowerCase() === 'order' ||
+                            name.toLowerCase() === 'sort order' ||
+                            name.toLowerCase() === 'sort')
+                );
+
+                // Build sorts array - prioritize manual ranking if available
+                const sorts = rankProperty
+                    ? [{property: rankProperty[0], direction: 'ascending'}]
+                    : [{timestamp: 'created_time', direction: 'ascending'}];
+
+                // Then query database entries with sorting
+                const entriesData = await queryDatabase(databaseId, {sorts});
 
                 if (!mounted) return;
                 setEntries(entriesData.results);
@@ -1210,8 +1268,8 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         ];
 
         return (
-            <Table striped bordered hover responsive className="mb-4">
-                <thead className="table-light">
+            <Table responsive size="sm" className="m-auto db-table">
+                <thead>
                 <tr>
                     {orderedColumns.map(propId => (
                         <th key={propId} className="text-nowrap">
@@ -1225,8 +1283,8 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                     <tr
                         key={entry.id}
                         className="db-table-row"
-                        style={{cursor: 'pointer'}}
                         onClick={() => (window.location.href = getPageUrl(entry))}
+                        style={{cursor: 'pointer'}}
                     >
                         {orderedColumns.map(propId => (
                             <td key={propId} className="text-nowrap">
@@ -1236,6 +1294,62 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                     </tr>
                 ))}
                 </tbody>
+                <style type="text/css">{`
+/* Base table: no heavy borders, neutral bg */
+.db-table {
+  background: var(--bs-body-bg);
+  border-collapse: separate;        /* needed for clean thin rules */
+  border-spacing: 0;                /* no gaps */
+  --db-grid: var(--bs-border-color-translucent, rgba(0,0,0,.08));
+}
+
+/* Header: subtle bottom rule, no fill */
+.db-table thead th {
+  font-weight: 600;
+  background: transparent;
+  color: var(--bs-body-color);
+  border: 0;
+  border-bottom: 1px solid var(--db-grid);
+  padding-top: .40rem;
+  padding-bottom: .55rem;
+  white-space: nowrap;
+}
+
+/* Cells: only hairline row separators + light vertical dividers */
+.db-table tbody td {
+  border: 0;
+  border-bottom: 1px solid var(--db-grid);
+  padding-top: .55rem;
+  padding-bottom: .5rem;
+  vertical-align: middle;
+}
+
+/* Vertical dividers: thinner and subtle */
+.db-table thead th,
+.db-table tbody td {
+  border-right: 1px solid var(--db-grid);
+}
+.db-table thead th:last-child,
+.db-table tbody td:last-child {
+  border-right: 0;
+}
+
+/* Row hover: very soft */
+.db-table tbody tr:hover td {
+  background: var(--bs-secondary-bg-subtle, rgba(var(--bs-secondary-rgb, 108,117,125), .06));
+}
+
+/* Remove outer frame look */
+.db-table > :not(caption) > * > * {
+  box-shadow: none;   /* cancels Bootstrap table group shadows if any */
+}
+
+/* Tighten typography a touch for that Notion-like feel */
+.db-table {
+  font-size: .95rem;
+  line-height: 1.25rem;
+}
+`}</style>
             </Table>
         );
     };
@@ -1265,27 +1379,6 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                         )}
                         <div style={styles.galleryContent}>
                             <h4>{getPrimaryProperty(entry)}</h4>
-                        </div>
-                    </a>
-                ))}
-            </div>
-        );
-    };
-
-    const renderListView = () => {
-        if (!database || entries.length === 0) return <div>No items to display</div>;
-
-        return (
-            <div style={styles.list}>
-                {entries.map(entry => (
-                    <a
-                        key={entry.id}
-                        href={getPageUrl(entry)}
-                        style={styles.listItem}
-                        className="db-list-item"
-                    >
-                        <div className={"lead"}>
-                            {getPrimaryProperty(entry)}
                         </div>
                     </a>
                 ))}
@@ -1332,40 +1425,51 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 
     return (
         <div style={styles.container}>
-            <div className="database-header mb-3">
-                <h3 style={styles.title}>
-                    <i className="bi bi-table me-2"></i>
-                    {block.child_database.title}
-                </h3>
+            <div className="database-header">
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <div className="d-flex align-items-center flex-grow-1 overflow-hidden">
+                        <h3 className="h5 mb-0 text-truncate d-flex align-items-center">
+                            <ChildIcon block={block}/>
+                            <span className="ms-2"><p className="lead m-auto">{block.child_database.title}</p>                                </span>
+                        </h3>
+                    </div>
 
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="database-views">
-                        <div className="btn-group" role="group">
+                    <div className="ms-auto">
+                        {/* track */}
+                        <div className="d-inline-flex bg-body-tertiary rounded-pill p-1 gap-1" role="group"
+                             aria-label="View type">
+                            {/* table */}
                             <button
                                 type="button"
-                                className={`btn ${viewType === 'table' ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                aria-pressed={viewType === 'table'}
+                                aria-label="Table view"
+                                className={[
+                                    'border-0 rounded-2 px-3 py-2 d-inline-flex align-items-center justify-content-center',
+                                    viewType === 'table'
+                                        ? 'bg-primary text-white'
+                                        : 'bg-transparent text-body'
+                                ].join(' ')}
                                 onClick={() => setViewType('table')}
                             >
-                                <i className="bi bi-table me-1"></i> Table
+                                <FontAwesomeIcon icon={faTable}/>
                             </button>
+
+                            {/* gallery */}
                             <button
                                 type="button"
-                                className={`btn ${viewType === 'gallery' ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                aria-pressed={viewType === 'gallery'}
+                                aria-label="Gallery view"
+                                className={[
+                                    'border-0 rounded-2 px-3 py-2 d-inline-flex align-items-center justify-content-center',
+                                    viewType === 'gallery'
+                                        ? 'bg-primary text-white'
+                                        : 'bg-transparent text-body'
+                                ].join(' ')}
                                 onClick={() => setViewType('gallery')}
                             >
-                                <i className="bi bi-grid-3x3-gap me-1"></i> Gallery
-                            </button>
-                            <button
-                                type="button"
-                                className={`btn ${viewType === 'list' ? 'btn-primary' : 'btn-outline-secondary'}`}
-                                onClick={() => setViewType('list')}
-                            >
-                                <i className="bi bi-list-ul me-1"></i> List
+                                <FontAwesomeIcon icon={faGrip}/>
                             </button>
                         </div>
-                    </div>
-                    <div className="database-entries-count">
-                        <small className="text-muted">{entries.length} items</small>
                     </div>
                 </div>
             </div>
@@ -1373,7 +1477,6 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
             <div className="database-content">
                 {viewType === 'table' && renderTableView()}
                 {viewType === 'gallery' && renderGalleryView()}
-                {viewType === 'list' && renderListView()}
             </div>
         </div>
     );

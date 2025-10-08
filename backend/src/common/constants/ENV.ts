@@ -20,7 +20,7 @@ dotenv.config({path: path.resolve(process.cwd(), ".env")});
 // -----------------------------------------------------------------------------
 export const env = cleanEnv(process.env, {
     // general
-    NODE_ENV: str({choices: Object.values(NodeEnvs), default: "development"}),
+    NODE_ENV: str({choices: Object.values(NodeEnvs), default: NodeEnvs.Dev}),
     PORT: port({default: 3000}),
     API_VERSION: str({default: "v1"}),
     AUTHOR: str({default: "N/A"}),

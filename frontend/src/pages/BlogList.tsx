@@ -1,6 +1,7 @@
 // /frontend/src/pages/BlogList.tsx
 import "@/styles/masonry.css"
-import React, {useEffect, useState} from "react";
+import React from "react";
+import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Card, Col, Container, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";

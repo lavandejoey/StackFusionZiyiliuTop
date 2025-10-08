@@ -2,10 +2,19 @@
 import type {BlockObjectResponse, DatabaseObjectResponse, PageObjectResponse,} from "@notionhq/client";
 import {BlogsAPI} from "@/services/axios";
 
-export interface BlogPostResponse {
-    page: PageObjectResponse;
-    blocks: BlockObjectResponse[];
-}
+export type BlogPostResponse = {
+    type: "page";
+    data: {
+        page: PageObjectResponse;
+        blocks: BlockObjectResponse[];
+    };
+} | {
+    type: "database";
+    data: {
+        database: DatabaseObjectResponse;
+        pages: PageObjectResponse[];
+    };
+};
 
 export interface DatabaseQueryResponse {
     results: PageObjectResponse[];
@@ -22,6 +31,18 @@ export async function getAllBlogPages(): Promise<PageObjectResponse[]> {
     return response.data.data as PageObjectResponse[];
 }
 
+export type BlogParent = PageObjectResponse | DatabaseObjectResponse;
+
+/**
+ * Fetches parents of a single blog post by its ID.
+ * GET /api/${version}/blog/pages/:id/parents
+ */
+export async function getBlogPostParents(pageId: string): Promise<BlogParent[]> {
+    const response = await BlogsAPI.parents(pageId);
+    if (!response.data || !response.data.data)
+        throw new Error(`Failed to fetch parents for blog post with ID ${pageId}`);
+    return response.data.data as BlogParent[];
+}
 
 /**
  * Fetches a single blog post by its ID with only root level blocks.
@@ -29,19 +50,11 @@ export async function getAllBlogPages(): Promise<PageObjectResponse[]> {
  * This is a more performant initial load without retrieving all nested blocks.
  */
 export async function getBlogPostBasic(pageId: string): Promise<BlogPostResponse> {
-    const pageResponse = await BlogsAPI.pages(pageId);
-    if (!pageResponse.data || !pageResponse.data.data)
+    const response = await BlogsAPI.pages(pageId);
+    if (!response.data || !response.data.data)
         throw new Error(`Failed to fetch blog post with ID ${pageId}`);
 
-    const blocksResponse = await BlogsAPI.blockChildren(pageId);
-    if (!blocksResponse.data || !blocksResponse.data.data)
-        throw new Error(`Failed to fetch blocks for blog post with ID ${pageId}`);
-
-    // Only return the first level blocks without fetching children
-    return {
-        page: pageResponse.data.data.page as PageObjectResponse,
-        blocks: blocksResponse.data.data as BlockObjectResponse[],
-    };
+    return response.data.data as BlogPostResponse;
 }
 
 /**
@@ -74,10 +87,15 @@ export async function getDatabase(databaseId: string): Promise<DatabaseObjectRes
  */
 export async function queryDatabase(
     databaseId: string,
-    filter?: object,
-    sorts?: object[]
+    options?: {
+        filter?: object;
+        sorts?: object[];
+    }
 ): Promise<DatabaseQueryResponse> {
-    const response = await BlogsAPI.queryDatabase(databaseId, {filter, sorts});
+    const response = await BlogsAPI.queryDatabase(databaseId, {
+        filter: options?.filter,
+        sorts: options?.sorts
+    });
     if (!response.data || !response.data.data)
         throw new Error(`Failed to query database with ID ${databaseId}`);
 

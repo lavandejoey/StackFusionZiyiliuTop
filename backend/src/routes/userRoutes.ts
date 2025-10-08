@@ -73,14 +73,18 @@ userRouter.get(
  * @returns {UserModel[]} - The list of users with their roles.
  */
 userRouter.get(
-    ENDPOINTS.users.list,
+    [...ENDPOINTS.users.list],
     requireOwner(null, [UserRoleEnum.ADMIN]),
     async (req, res) => {
         const offset = parseInt(req.query.offset as string) || 0;
         const limit = parseInt(req.query.limit as string) || 20;
 
         try {
-            const users: UserModel[] = await UserService.listAllUsers({offset, limit}, req.user!.roles);
+            if (!req.user?.roles) {
+                res.status(HttpStatusCodes.FORBIDDEN).send(errorResponse(req, res, "Forbidden"));
+                return;
+            }
+            const users: UserModel[] = await UserService.listAllUsers({offset, limit}, req.user.roles);
             res.status(HttpStatusCodes.OK).send(successResponse(req, res, users));
         } catch (err) {
             res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)

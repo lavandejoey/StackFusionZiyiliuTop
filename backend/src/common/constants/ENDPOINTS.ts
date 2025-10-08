@@ -49,6 +49,8 @@ export const ENDPOINTS = {
         homeList: "/",
         // GET /api/${API_VERSION}/blogs/pages/:id
         pages: "/pages/:id",
+        // GET /api/${API_VERSION}/blogs/pages/:id/parents
+        parents: "/pages/:id/parents",
         // GET /api/${API_VERSION}/blogs/blocks/:block_id/children
         blockChildren: "/blocks/:block_id/children",
         // GET /api/${API_VERSION}/blogs/database/:id

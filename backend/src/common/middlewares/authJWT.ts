@@ -66,7 +66,7 @@ export const _requireRoleAnd = (allowedRoles: UserRoleEnum[]): RequestHandler =>
     };
 
 export const requireOwner = (
-    key: string,
+    key: string | null,
     excRoles: UserRoleEnum[],
 ): RequestHandler => async (req, res, next) => {
     // 1) Authenticate via Bearer token
@@ -88,16 +88,31 @@ export const requireOwner = (
     }
 
     const requesterId = payload.sub;
+
+    // Fetch roles and attach to req.user
+    let roles: UserRoleEnum[];
+    try {
+        roles = await UserService.getUserRoles(requesterId);
+    } catch (e) {
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+            .send(errorResponse(req, res, "Error fetching user roles", (e as Error).message));
+        return;
+    }
+    req.user = { uuid: requesterId, roles: roles };
+
     // Bypass check if user has any of the exception roles
     if (excRoles.length > 0) {
-        try {
-            const hasRole = await UserService.hasRolesOr(requesterId, excRoles);
-            if (hasRole) return next();
-        } catch (err) {
-            res.status(HttpStatusCodes.FORBIDDEN)
-                .send(errorResponse(req, res, "Forbidden", (err as Error).message));
-            return;
+        const hasRole = roles.some(role => excRoles.includes(role));
+        if (hasRole) {
+            return next();
         }
+    }
+
+    // Handle null key for non-privileged users
+    if (key === null) {
+        res.status(HttpStatusCodes.FORBIDDEN)
+            .send(errorResponse(req, res, "Forbidden"));
+        return;
     }
 
     // 3) Extract the resource identifier

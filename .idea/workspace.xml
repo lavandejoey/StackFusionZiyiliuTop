@@ -5,11 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MainLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AboutMe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/common/constants/ENDPOINTS.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/constants/ENDPOINTS.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/common/middlewares/authJWT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/middlewares/authJWT.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/routes/userRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/userRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/services/NotionService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/services/NotionService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/types/users.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/types/users.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/contexts/AuthProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/contexts/AuthProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Admin.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Admin.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/services/axios.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/axios.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/blogService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/blogService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/userService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/userService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/types/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/types/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +37,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -65,6 +83,7 @@
     "Node.js.parser.ts.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
     "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
@@ -73,7 +92,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "//wsl.localhost/Ubuntu-22.04/home/zliu/StackFusionZiyiliuTop/frontend/src/pages",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu-24.04/home/zliu/StackFusionZiyiliuTop",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -104,7 +123,7 @@
     "npm.start.executor": "Run",
     "npm.type-check.executor": "Run",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -125,11 +144,21 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev:all">
+  <component name="RunManager" selected="npm.frontend &gt; build">
     <configuration name="localhost:35835" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:35835/">
       <method v="2" />
     </configuration>
     <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" path-to-node="wsl://Ubuntu-22.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" nameIsGenerated="true" path-to-js-file="parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
+      <method v="2" />
+    </configuration>
+    <configuration name="backend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <envs />
       <method v="2" />
     </configuration>
     <configuration name="dev:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -138,12 +167,31 @@
       <scripts>
         <script value="dev:all" />
       </scripts>
-      <node-interpreter value="wsl://Ubuntu-22.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="frontend &gt; build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JavaScript Debug.localhost:35835" />
+      <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+      <item itemvalue="npm.backend &gt; build" />
+      <item itemvalue="npm.frontend &gt; build" />
+      <item itemvalue="npm.dev:all" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.frontend &gt; build" />
+        <item itemvalue="npm.backend &gt; build" />
         <item itemvalue="npm.dev:all" />
         <item itemvalue="JavaScript Debug.localhost:35835" />
       </list>
@@ -152,7 +200,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
       </set>
     </attachedChunks>
   </component>
@@ -189,7 +237,13 @@
       <workItem from="1757578091825" duration="13000" />
       <workItem from="1758400541038" duration="8113000" />
       <workItem from="1758717899710" duration="5642000" />
-      <workItem from="1758741974299" duration="15879000" />
+      <workItem from="1758741974299" duration="16287000" />
+      <workItem from="1758899118778" duration="1200000" />
+      <workItem from="1758901311374" duration="6705000" />
+      <workItem from="1759152504554" duration="2499000" />
+      <workItem from="1759591684442" duration="12653000" />
+      <workItem from="1759680453602" duration="1787000" />
+      <workItem from="1759750137236" duration="17128000" />
     </task>
     <servers />
   </component>
@@ -206,5 +260,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/backend" />
+    </ignored-roots>
   </component>
 </project>

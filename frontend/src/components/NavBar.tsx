@@ -7,17 +7,27 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {themeColours} from "@/styles/theme";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/contexts/useAuth";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
+import {UserRole} from "@/types/User";
 
 export default function NavBar({activePage}: { activePage?: string }) {
     const {user, logout} = useAuth(); // Removed loading from destructuring
     const {t} = useTranslation();
+    const location = useLocation();
+    // Consider the user to be "on their page" if the pathname (without query or trailing slash)
+    // exactly matches `/users/{uuid}`. This guards against trailing slashes or query params.
+    const isCurrentUserPage = user ? (() => {
+        const raw = location.pathname.split('?')[0];
+        return raw.replace(/\/+$/, '') === `/users/${user.uuid}`;
+    })() : false;
+    // /admin/*
+    const isCurrentAdminPage = location.pathname.startsWith('/admin');
 
-    const NavigationItems = [
+    const NavigationItems: Array<{ name: string; path: string; text?: string; textKey?: string }> = [
         {name: "Home", path: "/", text: "ZLiu's"},
-        {name: "About Me", path: "/about-me", text: t("About Me")},
-        {name: "Contact", path: "/contact", text: t("Contact")},
-        {name: "Blog", path: "/blog", text: t("Blog")},
+        {name: "About Me", path: "/about-me", textKey: "About Me"},
+        {name: "Contact", path: "/contact", textKey: "Contact"},
+        {name: "Blog", path: "/blog", textKey: "Blog"},
     ];
 
     return (
@@ -35,7 +45,7 @@ export default function NavBar({activePage}: { activePage?: string }) {
                                 }`}
                             >
                                 <AnnotatedText
-                                    text={it.text}
+                                    text={String(it.text ?? t(it.textKey ?? ""))}
                                     show={activePage === it.name}
                                     color={themeColours.quinary}
                                 />
@@ -47,15 +57,48 @@ export default function NavBar({activePage}: { activePage?: string }) {
                     <div className="ms-auto d-flex justify-content-center align-items-center">
                         {user ? (
                             <>
-                                <Link
-                                    to={`/users/${user.uuid}`}
-                                    className="btn btn-outline-primary mx-auto me-md-2"
-                                    aria-label="Account"
-                                    title={`${user.first_name} ${user.last_name}`}
-                                >
-                                    <FontAwesomeIcon icon={faUser}/>
-                                    <span className="d-none d-md-inline ms-1">{user.first_name}</span>
-                                </Link>
+                                {/* User profile button: render a non-clickable element when already on the user's page */}
+                                {isCurrentUserPage ? (
+                                    <span
+                                        className="btn btn-outline-primary mx-auto me-md-2 disabled"
+                                        aria-label="Account"
+                                        title={`${user?.first_name} ${user?.last_name}`}
+                                        aria-disabled="true"
+                                        role="button"
+                                        tabIndex={-1}
+                                    >
+                                        <FontAwesomeIcon icon={faUser}/>
+                                        <span className="d-none d-md-inline ms-1">{String(user?.first_name)}</span>
+                                    </span>
+                                ) : (
+                                    <Link
+                                        to={`/users/${user.uuid}`}
+                                        className="btn btn-outline-primary mx-auto me-md-2"
+                                        aria-label="Account"
+                                        title={`${user.first_name} ${user.last_name}`}
+                                    >
+                                        <FontAwesomeIcon icon={faUser}/>
+                                        <span className="d-none d-md-inline ms-1">{String(user.first_name)}</span>
+                                    </Link>
+                                )}
+
+                                {/* Admin button shown only to admin users */}
+                                {user.role === UserRole.ADMIN && (isCurrentAdminPage ? (
+                                    <Link
+                                        to="/admin"
+                                        className="btn btn-outline-secondary mx-auto me-md-2 disabled"
+                                        aria-label="Admin"
+                                        title="Admin"
+                                    >Admin</Link>
+                                ) : (
+                                    <Link
+                                        to="/admin"
+                                        className="btn btn-outline-secondary mx-auto me-md-2"
+                                        aria-label="Admin"
+                                        title="Admin"
+                                    >Admin</Link>
+                                ))}
+
                                 <Button
                                     variant="outline-danger"
                                     className="mx-auto me-md-2"
@@ -74,7 +117,7 @@ export default function NavBar({activePage}: { activePage?: string }) {
                                 title="Sign in"
                             >
                                 <FontAwesomeIcon icon={faSignInAlt}/>
-                                <span className="d-none d-md-inline ms-1">{t("Sign in")}</span>
+                                <span className="d-none d-md-inline ms-1">{String(t("Sign in"))}</span>
                             </Link>
                         )}
                         <LanguageSwitcher/>

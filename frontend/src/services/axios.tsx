@@ -158,12 +158,15 @@ export const AuthAPI = {
 export const UsersAPI = {
     list: () =>
         api.get(`/users`),
-    listAll: () =>
-        api.get(`/users/all`),
+    listAll: (params?: { offset?: number; limit?: number }) =>
+        api.get(`/users/all`, {params}),
     getByUuid: (uuid: string) =>
         api.get(`/users/${uuid}`),
     getByEmail: (email: string) =>
         api.get(`/users/${email}`),
+    // GET /api/{version}/users/:uuid/roles
+    getRoles: (uuid: string) =>
+        api.get(`/users/${uuid}/roles`),
 };
 
 // Contact endpoints
@@ -178,6 +181,8 @@ export const BlogsAPI = {
         api.get(`/blogs`),
     pages: (id: string) =>
         api.get(`/blogs/pages/${id}`),
+    parents: (id: string) =>
+        api.get(`/blogs/pages/${id}/parents`),
     blockChildren: (block_id: string) =>
         api.get(`/blogs/blocks/${block_id}/children`),
     database: (id: string) =>

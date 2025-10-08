@@ -32,6 +32,7 @@ export interface UserModel {
     status: UserStatusEnum;
     created_at: Date;
     updated_at: Date;
+    roles?: UserRoleEnum[];
 }
 
 export interface RoleModel {
@@ -52,4 +53,5 @@ export type PasswordRow = RowDataPacket & { password_hash: string };
 
 export interface AuthUser {
     uuid: string;
+    roles?: UserRoleEnum[];
 }
