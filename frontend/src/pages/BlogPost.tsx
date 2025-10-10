@@ -1,7 +1,7 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogPost.tsx
-import {type JSX, useCallback, useEffect, useState} from "react";
+import React, {type JSX, useCallback, useEffect, useState} from "react";
 import {useParams, Link} from "react-router-dom";
-import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
+import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/services/blogService";
 import NotionBlocks, {TableOfContents} from "@/components/NotionBlocks";
 import MathJaxProvider from "@/components/MathJaxProvider";
+import type {DatabaseObjectResponse, PageObjectResponse} from "@notionhq/client";
 
 export default function BlogPost() {
     const {id} = useParams<{ id: string }>();
@@ -46,7 +47,7 @@ export default function BlogPost() {
         if (!id) return;
 
         // Load blog post when component mounts or id changes
-        loadBlogPostAndParents(id);
+        loadBlogPostAndParents(id).then(r => r);
 
         return () => {
             // Clean up any pending operations if needed
@@ -99,36 +100,68 @@ export default function BlogPost() {
             : entity.cover.file.url;
     };
 
-    // Extract page icon if it exists
-    const getPageIcon = (): React.ReactNode => {
-        if (!data) return null;
-        const entity = data.type === "page" ? data.data.page : data.data.database;
-        if (!entity.icon) return null;
+    function renderIcon(
+        icon: PageObjectResponse["icon"] | DatabaseObjectResponse["icon"],
+        opts?: { variant?: "inline" | "display"; size?: number; className?: string }
+    ): JSX.Element | null {
+        if (!icon) return null;
 
-        if (entity.icon.type === "emoji") {
-            return <span style={{fontSize: "2rem"}}>{entity.icon.emoji}</span>;
+        const variant = opts?.variant ?? "inline";
+        // display: fixed px size (default 36); inline: 1em, baseline aligned
+        const px = opts?.size ?? 36;
+        const isInline = variant === "inline";
+
+        const baseStyle: React.CSSProperties = isInline
+            ? {
+                display: "inline-block",
+                width: "1em",
+                height: "1em",
+                lineHeight: 1,
+                verticalAlign: "-0.125em", // baseline align with text
+            }
+            : {
+                display: "inline-block",
+                width: px,
+                height: px,
+                lineHeight: 1,
+                verticalAlign: "middle",
+            };
+
+        const className = opts?.className ?? "";
+
+        if ("type" in (icon as any) && (icon as any).type === "emoji") {
+            const emo = (icon as any).emoji as string;
+            return (
+                <span
+                    className={className}
+                    style={{...baseStyle, fontSize: isInline ? "1em" : px}}
+                    aria-hidden="true"
+                >
+        {emo}
+      </span>
+            );
         }
 
-        if (entity.icon.type === "external") {
-            return (
-                <img
-                    src={entity.icon.external.url}
-                    alt="Page icon"
-                    style={{width: 36, height: 36, objectFit: "cover", borderRadius: 4}}
-                />
-            );
-        } else if (entity.icon.type === "file") {
-            return (
-                <img
-                    src={entity.icon.file.url}
-                    alt="Page icon"
-                    style={{width: 36, height: 36, objectFit: "cover", borderRadius: 4}}
-                />
-            );
-        }
+        const url =
+            (icon as any).type === "external"
+                ? (icon as any).external?.url
+                : (icon as any).file?.url;
 
-        return null;
-    };
+        if (!url) return null;
+
+        return (
+            <img
+                className={className}
+                src={url}
+                alt=""
+                style={{
+                    ...baseStyle,
+                    objectFit: "cover",
+                    borderRadius: isInline ? 2 : 8,
+                }}
+            />
+        );
+    }
 
     // Format the last edited date
     const formatDate = (iso: string): string => {
@@ -138,10 +171,7 @@ export default function BlogPost() {
             day: "numeric",
         });
     };
-
     const coverImage = getCoverImage();
-    const icon = getPageIcon();
-
     const renderDatabaseView = () => {
         if (data?.type !== "database") return null;
         const {pages} = data.data;
@@ -185,35 +215,10 @@ export default function BlogPost() {
         );
     };
 
-    const renderParentIcon = (parent: BlogParent): JSX.Element => {
-        const parentIcon = 'icon' in parent ? parent.icon : null;
-        if (!parentIcon) return <></>
-
-        if (parentIcon.type === "emoji") {
-            return <span className="me-1">{parentIcon.emoji}</span>;
-        }
-
-        const iconStyle: React.CSSProperties = {
-            width: 18,
-            height: 18,
-            objectFit: "cover",
-            borderRadius: 3,
-            verticalAlign: "text-bottom",
-        };
-
-        if (parentIcon.type === "external") {
-            return <img src={parentIcon.external.url} alt="Icon" className="me-1" style={iconStyle}/>;
-        } else if (parentIcon.type === "file") {
-            return <img src={parentIcon.file.url} alt="Icon" className="me-1" style={iconStyle}/>;
-        }
-
-        return <></>;
-    };
-
     return (
         <MainLayout>
             <PageHead title={extractTitle()}/>
-            <Container className="mt-5">
+            <Row className="container-lg mt-5 mx-0 mx-lg-auto px-0 px-lg-auto">
                 {loading ? (
                     <div className="d-flex justify-content-center">
                         <Spinner animation="border"/>
@@ -229,31 +234,34 @@ export default function BlogPost() {
                 ) : !data ? (
                     <p>Post not found.</p>
                 ) : (
-                    <MathJaxProvider>
-                        <div className="blog-post">
-                            {/* Breadcrumb navigation */}
-                            <nav aria-label="breadcrumb" className="mb-3">
-                                <ol className="breadcrumb mb-0" style={{fontSize: "0.9rem"}}>
-                                    {parents.map((parent) => {
-                                        if (parent.object === 'database') return null;
+                    <Row className="blog-post">
+                        {/* Breadcrumb navigation */}
+                        <nav aria-label="breadcrumb" className="mb-3">
+                            <ol className="breadcrumb mb-0" style={{fontSize: "0.9rem"}}>
+                                {parents.map((parent) => {
+                                    if (parent.object === 'database') return null;
 
-                                        let title = "Untitled";
-                                        if ('properties' in parent && 'title' in parent.properties && parent.properties.title.type === 'title' && parent.properties.title.title.length > 0) {
-                                            title = parent.properties.title.title[0].plain_text;
-                                        } else if ('title' in parent && Array.isArray(parent.title) && parent.title.length > 0) {
-                                            title = parent.title[0].plain_text;
-                                        }
+                                    let title = "Untitled";
+                                    if ('properties' in parent && 'title' in parent.properties && parent.properties.title.type === 'title' && parent.properties.title.title.length > 0) {
+                                        title = parent.properties.title.title[0].plain_text;
+                                    } else if ('title' in parent && Array.isArray(parent.title) && parent.title.length > 0) {
+                                        title = parent.title[0].plain_text;
+                                    }
 
-                                        return (
-                                            <li key={parent.id} className="breadcrumb-item">
-                                                <Link to={`/blog/${parent.id}`} className="text-decoration-none">
-                                                    {renderParentIcon(parent)}
-                                                    {title}
-                                                </Link>
-                                            </li>
-                                        );
-                                    })}
-                                    <li className="breadcrumb-item active" aria-current="page">
+                                    return (
+                                        <li key={parent.id} className="breadcrumb-item">
+                                            <Link to={`/blog/${parent.id}`} className="text-decoration-none">
+                                                {renderIcon(parent.icon, {
+                                                    variant: "inline",
+                                                    size: 16,
+                                                    className: "me-1"
+                                                })}
+                                                {title}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                                <li className="breadcrumb-item active" aria-current="page">
                                         <span style={{
                                             maxWidth: "400px",
                                             display: "inline-block",
@@ -264,43 +272,58 @@ export default function BlogPost() {
                                         }}>
                                             {extractTitle()}
                                         </span>
-                                    </li>
-                                </ol>
-                            </nav>
-                            {/* Header with title and cover */}
-                            <Card className="border-0">
-                                {coverImage && (
-                                    <div className="artistic-card-img">
-                                        <Card.Img
-                                            variant="top"
-                                            src={coverImage}
-                                            style={{
-                                                height: "300px",
-                                                objectFit: "cover",
-                                                objectPosition: "center"
-                                            }}
-                                            alt={extractTitle()}
-                                        />
-                                    </div>
-                                )}
-                                <Card.Body className={coverImage ? "mt-3" : "mt-0"}>
-                                    <div className="d-flex align-items-center mb-2">
-                                        {icon && <div className="me-3">{icon}</div>}
-                                        <h1 className="mb-0">{extractTitle()}</h1>
-                                    </div>
-                                    <p className="text-muted">
-                                        Last updated
-                                        on {formatDate(data.type === "page" ? data.data.page.last_edited_time : data.data.database.last_edited_time)}
-                                    </p>
-                                </Card.Body>
-                            </Card>
+                                </li>
+                            </ol>
+                        </nav>
+                        {/* Header with title and cover */}
+                        <Card className="border-0">
+                            {coverImage && (
+                                <div className="artistic-card-img">
+                                    <Card.Img
+                                        className="img-fluid rounded img-vfade"
+                                        variant="top"
+                                        src={coverImage}
+                                        style={{
+                                            width: "100%",
+                                            maxHeight: "200px",
+                                            aspectRatio: "16/9",
+                                            objectFit: "cover",
+                                            objectPosition: "center"
+                                        }}
+                                        alt={extractTitle()}
+                                    />
+                                </div>
+                            )}
+                            <Card.Body className={coverImage ? "mt-3" : "mt-0"}>
+                                <div className="d-flex align-items-center mb-2">
+                                    {renderIcon(data.type === "page" ? data.data.page.icon : data.data.database.icon, {
+                                        variant: "display",
+                                        size: 48,
+                                        className: "me-3"
+                                    })}
+                                    <h1 className="mb-0">{extractTitle()}</h1>
+                                </div>
+                                <p className="text-muted">
+                                    Last updated
+                                    on {formatDate(data.type === "page" ? data.data.page.last_edited_time : data.data.database.last_edited_time)}
+                                </p>
+                            </Card.Body>
+                        </Card>
 
-                            {/* Two column layout for content and TOC */}
+                        {/* Two column layout for content and TOC */}
+                        <MathJaxProvider>
                             <Row>
                                 {/* Main content column */}
-                                <Col lg={showToc ? 9 : 12} className="blog-main-content">
+                                <Col xs={12} lg={showToc ? 9 : 12} className="blog-main-content">
                                     {data.type === "page" ? (
-                                        <NotionBlocks blocks={data.data.blocks}/>
+                                        <>
+                                            <NotionBlocks blocks={data.data.blocks}/>
+                                            <style>{`
+.notion-content {
+  --indent-step: clamp(0.6rem, 2.4vw, 1.25rem);
+}
+`}</style>
+                                        </>
                                     ) : (
                                         renderDatabaseView()
                                     )}
@@ -313,10 +336,10 @@ export default function BlogPost() {
                                     </Col>
                                 )}
                             </Row>
-                        </div>
-                    </MathJaxProvider>
+                        </MathJaxProvider>
+                    </Row>
                 )}
-            </Container>
+            </Row>
         </MainLayout>
     );
 }

@@ -31,7 +31,7 @@ export default function NavBar({activePage}: { activePage?: string }) {
     ];
 
     return (
-        <Navbar expand="sm" className="navbar-custom" style={{zIndex: 100}}>
+        <Navbar expand="md" className="navbar-custom" style={{zIndex: 100}}>
             <div className="container">
                 <Navbar.Toggle aria-controls="mainNavbarNav"/>
                 <Navbar.Collapse id="mainNavbarNav">

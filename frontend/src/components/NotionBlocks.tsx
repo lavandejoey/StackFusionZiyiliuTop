@@ -1,6 +1,6 @@
 // /frontend/src/components/NotionBlocks.tsx
-import React, {type JSX, useCallback, useEffect, useMemo, useState} from "react";
-import {Card, Col, Row, Spinner, Table} from "react-bootstrap";
+import React, {type JSX, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Card, Col, Container, Row, Spinner, Table} from "react-bootstrap";
 import {getChildBlocks, getDatabase, queryDatabase} from "@/services/blogService";
 import {useTranslation} from 'react-i18next';
 import type {
@@ -11,23 +11,28 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 import {MathJax} from "better-react-mathjax";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGrip, faTable} from "@fortawesome/free-solid-svg-icons";
+import {faClipboard, faGrip, faTable} from "@fortawesome/free-solid-svg-icons";
+import {highlight, languages} from "prismjs";
+import 'prismjs/themes/prism.css';
+// import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/components/prism-python';
 
+// Anchors
+const getBlockRawId = (block: BlockObjectResponse) => block.id.replace(/-/g, '');// match your TOC offset
 // Helper function to render rich text blocks with proper formatting
-const RichText: React.FC<{ richText: RichTextItemResponse[] }> = ({richText}) => {
-    if (!richText || richText.length === 0) return null;
+const RichText = ({richText}: { richText: RichTextItemResponse[] }): JSX.Element => {
+    if (!richText || richText.length === 0) return (<></>);
 
     return (
         <>
             {richText.map((textObject, index) => {
+                if (!textObject) return null;
                 const {type} = textObject;
 
                 if (type === "equation") {
                     const {equation} = textObject;
                     return (
-                        <MathJax inline key={index}>
-                            {`$${equation.expression}$`}
-                        </MathJax>
+                        <MathJax inline key={index}>{`$${equation.expression}$`}</MathJax>
                     );
                 } else if (type === "mention") {
                     const {mention, annotations, plain_text} = textObject;
@@ -51,18 +56,29 @@ const RichText: React.FC<{ richText: RichTextItemResponse[] }> = ({richText}) =>
 
                     // Handle page mentions - redirect to your own domain
                     if (mention.type === "page" && mention.page?.id) {
-                        // Replace notion.so with your domain
-                        const pageId = mention.page.id.replace(/-/g, "");
-                        const href = `/blog/${pageId}`;
+                        let href = "";
+                        try {
+                            const url = new URL(textObject.href || "");
+                            const pathParts = url.pathname.split("/");
+                            // first 32-hex after domain
+                            const mainIdMatch = pathParts.find(p => /^[0-9a-fA-F]{32}$/.test(p));
+                            const mainId = mainIdMatch ? mainIdMatch.replace(/-/g, "") : "";
 
+                            // optional hash id (after #)
+                            const hashMatch = url.hash.match(/[0-9a-fA-F]{32}/);
+                            const hashId = hashMatch ? hashMatch[0].replace(/-/g, "") : "";
+
+                            // construct clean local href
+                            href = `/blog/${mainId}${hashId ? `#${hashId}` : ""}`;
+                        } catch {
+                            // fallback: just in case it's not a valid URL
+                            const roughId = href.match(/[0-9a-fA-F]{32}/)?.[0] ?? mention.page.id.replace(/-/g, "");
+                            href = `/blog/${roughId}`;
+                        }
                         return (
-                            <a key={index} href={href} style={style}>
-                                {plain_text}
-                            </a>
+                            <a key={index} href={href} style={style}>{plain_text}</a>
                         );
                     }
-
-                    // Handle other mention types (user, date, etc.) - simple implementation
                     return <span key={index} style={style}>{plain_text}</span>;
                 } else if (type === "text") {
                     const {
@@ -88,6 +104,22 @@ const RichText: React.FC<{ richText: RichTextItemResponse[] }> = ({richText}) =>
                     };
 
                     if (href) {
+                        // Check if the link is internal and points to a block on the same page
+                        if (href.startsWith("#")) {
+                            return (
+                                <a key={index} href={href}>
+                                    <span style={style}>{plain_text}</span>
+                                </a>
+                            );
+                        }
+                        // Check if the link is an internal link to another page
+                        if (href.startsWith("/")) {
+                            return (
+                                <a key={index} href={`/blog${href}`}>
+                                    <span style={style}>{plain_text}</span>
+                                </a>
+                            );
+                        }
                         return (
                             <a key={index} href={href} target="_blank" rel="noopener noreferrer">
                                 <span style={style}>{plain_text}</span>
@@ -125,7 +157,7 @@ const AsyncChildBlocks: React.FC<{
 }> = ({
           parentId,
           initiallyExpanded = false,
-          customClassName = "ms-4 mt-2",
+          customClassName = "",
       }) => {
     const [childBlocks, setChildBlocks] = useState<BlockObjectResponse[]>([]);
     const [loading, setLoading] = useState(false);
@@ -214,49 +246,62 @@ const AsyncChildBlocks: React.FC<{
 };
 
 // Individual block rendering components
-const Paragraph: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "paragraph") return null;
+const Paragraph = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+    if (block.type !== "paragraph") return <></>;
+    const hasEquation = block.paragraph.rich_text.some(text => text.type === 'equation');
+    const className = hasEquation ? 'my-2' : 'mb-1';
     return (
-        <p className="mb-1">
-            <RichText richText={block.paragraph.rich_text}/>
-        </p>
+        <>
+            <p className={className} id={getBlockRawId(block)}>
+                <RichText richText={block.paragraph.rich_text}/>
+            </p>
+            {block.has_children && (
+                <AsyncChildBlocks parentId={block.id} customClassName="ms-4 mt-2"/>
+            )}
+        </>
     );
 };
 
-const Heading1: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "heading_1") return null;
-    const id = createHeadingId(block.heading_1.rich_text);
+const Heading1 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+    if (block.type !== "heading_1") return <></>;
+    const slugId = createHeadingId(block.heading_1.rich_text);
+    const rawId = getBlockRawId(block);
     return (
-        <h1 id={id} className="mt-4 mb-2">
+        <h1 id={slugId} className="mt-5 mb-3">
+            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
             <RichText richText={block.heading_1.rich_text}/>
         </h1>
     );
 };
 
-const Heading2: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "heading_2") return null;
-    const id = createHeadingId(block.heading_2.rich_text);
+const Heading2 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+    if (block.type !== "heading_2") return <></>;
+    const slugId = createHeadingId(block.heading_2.rich_text);
+    const rawId = getBlockRawId(block);
     return (
-        <h2 id={id} className="mt-4 mb-2">
+        <h2 id={slugId} className="mt-4 mb-2">
+            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
             <RichText richText={block.heading_2.rich_text}/>
         </h2>
     );
 };
 
-const Heading3: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "heading_3") return null;
-    const id = createHeadingId(block.heading_3.rich_text);
+const Heading3 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+    if (block.type !== "heading_3") return <></>;
+    const slugId = createHeadingId(block.heading_3.rich_text);
+    const rawId = getBlockRawId(block);
     return (
-        <h3 id={id} className="mt-3 mb-2">
+        <h3 id={slugId} className="mt-3 mb-2">
+            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
             <RichText richText={block.heading_3.rich_text}/>
         </h3>
     );
 };
 
-const BulletedListItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const BulletedListItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "bulleted_list_item") return null;
     return (
-        <li>
+        <li id={getBlockRawId(block)}>
             <RichText richText={block.bulleted_list_item.rich_text}/>
             {block.has_children && (
                 <AsyncChildBlocks parentId={block.id}/>
@@ -265,10 +310,10 @@ const BulletedListItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => 
     );
 };
 
-const NumberedListItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const NumberedListItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "numbered_list_item") return null;
     return (
-        <li>
+        <li id={getBlockRawId(block)}>
             <RichText richText={block.numbered_list_item.rich_text}/>
             {block.has_children && (
                 <AsyncChildBlocks parentId={block.id}/>
@@ -277,7 +322,7 @@ const NumberedListItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => 
     );
 };
 
-const TodoItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const TodoItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "to_do") return null;
     return (
         <div className="d-flex align-items-center mb-2">
@@ -294,7 +339,7 @@ const TodoItem: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
-const Toggle: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const Toggle = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "toggle") return null;
 
     return (
@@ -309,26 +354,111 @@ const Toggle: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
-const Code: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    // always define state
-    const [copied, setCopied] = useState(false);
+const mapLanguage = (langRaw: string | undefined): string | undefined => {
+    if (!langRaw) return undefined;
+    const lang = langRaw.toLowerCase().trim();
 
-    // compute even before any returns, so hooks all stay in order
-    const codeText =
-        block.type === "code"
-            ? block.code.rich_text.map((t) => t.plain_text).join("")
-            : "";
-    const language =
-        block.type === "code"
-            ? block.code.language?.toLowerCase() || ""
-            : "";
+    const aliases: Record<string, string> = {
+        "plain text": "plaintext",
+        "text": "plaintext",
+        "c++": "cpp",
+        "c#": "csharp",
+        "objective-c": "objectivec",
+        "js": "javascript",
+        "ts": "typescript",
+        "sh": "bash",
+        "shell": "bash",
+        "yml": "yaml",
+        "md": "markdown",
+        "html": "xml",
+        "vue": "xml",
+        "mermaid": "mermaid",
+    };
+    return aliases[lang] ?? lang.replace(/\s+/g, "");
+};
+
+const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+    const mermaidInitialisedRef = useRef(false);
+    const [copied, setCopied] = useState(false);
+    const codeRef = useRef<HTMLElement | null>(null);
+    const mermaidContainerRef = useRef<HTMLDivElement | null>(null);
+
+    if (block.type !== "code") return null;
+
+    const codeText = useMemo(
+        () => block.code.rich_text.map(t => t.plain_text).join(""),
+        [block.code.rich_text]
+    );
+
+    const rawLanguage = block.code.language;
+    const language = mapLanguage(rawLanguage);
     const isMermaid = language === "mermaid";
 
-    // Function to handle copying code to clipboard
-    const handleCopyClick = () => {
-        navigator.clipboard.writeText(codeText)
-            .then(() => setCopied(true))
-            .catch(err => console.error("Failed to copy code:", err));
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        if (isMermaid || !codeRef.current) return;
+
+        const el = codeRef.current;
+        const code = el.textContent || "";
+        const grammar = language && languages[language] || languages.plaintext;
+
+        try {
+            el.innerHTML = highlight(code, grammar, language ?? "plaintext");
+        } catch (e) {
+            console.warn("Prism highlight error:", e);
+        }
+    }, [codeText, language, isMermaid]);
+
+    // Mermaid render
+    useEffect(() => {
+        if (!isMermaid) return;
+
+        (async () => {
+            const mermaid = (await import("mermaid")).default;
+
+            if (!mermaidInitialisedRef.current) {
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: "neutral",
+                    securityLevel: "strict",
+                    fontFamily: "inherit",
+                });
+                mermaidInitialisedRef.current = true;
+            }
+
+            // Clear container before re-rendering
+            if (mermaidContainerRef.current) {
+                mermaidContainerRef.current.removeAttribute("data-processed");
+                mermaidContainerRef.current.innerHTML = codeText;
+            }
+
+            try {
+                // v10+ supports run() which parses `.mermaid` nodes in the subtree
+                await mermaid.run({querySelector: ".mermaid"});
+            } catch (e) {
+                console.error("Mermaid rendering error:", e);
+            }
+        })();
+    }, [isMermaid, codeText]);
+
+    // Copy to clipboard (with fallback)
+    const handleCopyClick = async () => {
+        try {
+            if (navigator?.clipboard?.writeText) {
+                await navigator.clipboard.writeText(codeText);
+            } else {
+                // fallback
+                const ta = document.createElement("textarea");
+                ta.value = codeText;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                ta.remove();
+            }
+            setCopied(true);
+        } catch (err) {
+            console.error("Failed to copy code:", err);
+        }
     };
 
     // reset "Copied!" banner
@@ -338,34 +468,10 @@ const Code: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         return () => clearTimeout(id);
     }, [copied]);
 
-    // initialize Mermaid if needed - combined into a single useEffect
-    useEffect(() => {
-        if (!isMermaid || block.type !== "code") return;
-
-        import("mermaid")
-            .then((m) => {
-                m.default.initialize({
-                    startOnLoad: true,
-                    theme: "neutral",
-                    securityLevel: "loose",
-                    fontFamily: "inherit",
-                });
-                try {
-                    m.default.contentLoaded();
-                } catch (e) {
-                    console.error("Mermaid rendering error:", e);
-                }
-            })
-            .catch(console.error);
-    }, [isMermaid, block.type]);
-
-    // now safe to bail if not a code block
-    if (block.type !== "code") return null;
-
-    // Render Mermaid diagram
+    // Render
     if (isMermaid) {
         return (
-            <div className="mb-4">
+            <div id={getBlockRawId(block)} className="mb-4">
                 <div className="bg-light p-0 rounded position-relative">
                     <div className="d-flex justify-content-between align-items-center p-2 border-bottom">
                         <small className="text-muted">mermaid</small>
@@ -375,13 +481,17 @@ const Code: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                             aria-label="Copy code"
                             title="Copy to clipboard"
                         >
-                            {copied ?
-                                <><i className="bi bi-check-lg"></i> Copied!</> :
-                                <><i className="bi bi-clipboard"></i> Copy</>
-                            }
+                            {copied ? <>
+                                <FontAwesomeIcon icon={faClipboard}/>&nbsp;Copied!
+                            </> : <>
+                                <FontAwesomeIcon icon={faClipboard}/>&nbsp;Copy
+                            </>}
                         </button>
                     </div>
-                    <div className="mermaid p-3 text-center">
+                    <div
+                        ref={mermaidContainerRef}
+                        className="mermaid p-3 text-center"
+                    >
                         {codeText}
                     </div>
                 </div>
@@ -389,43 +499,44 @@ const Code: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         );
     }
 
-
-    // Render regular code block with copy button
+    // Regular highlighted code
     return (
-        <div className="mb-4">
-            <div className="bg-light rounded position-relative">
-                <div className="d-flex justify-content-between align-items-center p-2 border-bottom">
-                    <small className="text-muted">{language || "code"}</small>
+        <Container id={getBlockRawId(block)} className="mb-2 d-flex justify-content-center">
+            <div style={{display: "inline-block", maxWidth: "100%", minWidth: "80%", overflowX: "auto"}}>
+                <Container className="d-flex justify-content-between align-items-center px-3 pb-2 border-bottom">
+                    <small className="text-muted">
+                        {rawLanguage ? rawLanguage[0].toUpperCase() + rawLanguage.slice(1) : "Code"}
+                    </small>
                     <button
                         className="btn btn-sm btn-outline-secondary"
                         onClick={handleCopyClick}
                         aria-label="Copy code"
                         title="Copy to clipboard"
                     >
-                        {copied ?
-                            <><i className="bi bi-check-lg"></i> Copied!</> :
-                            <><i className="bi bi-clipboard"></i> Copy</>
-                        }
+                        <FontAwesomeIcon icon={faClipboard}/>&nbsp;{copied ? "Copied!" : "Copy"}
                     </button>
-                </div>
-                <pre className="p-3 m-0">
-                    <code>{codeText}</code>
-                </pre>
+                </Container>
+                <pre className={`p-2 m-0 bg-body-tertiary language-${language}`}><code
+                    ref={codeRef}
+                    className={`language-${language}`}
+                    style={{display: "inline-block"}}
+                >{codeText}</code></pre>
             </div>
-        </div>
+        </Container>
     );
 };
 
-const Quote: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const Quote = ({block}: { key: string, block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "quote") return null;
     return (
-        <blockquote className="border-start border-3 ps-3 mb-4 fst-italic">
+        <blockquote id={getBlockRawId(block)} className="border-start border-3 ps-3 mb-4 fst-italic">
             <RichText richText={block.quote.rich_text}/>
+            {block.has_children ? <AsyncChildBlocks parentId={block.id}/> : null}
         </blockquote>
     );
 };
 
-const Callout: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const Callout = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "callout") return null;
     return (
         <div className="bg-light p-3 rounded d-flex mb-4">
@@ -439,12 +550,12 @@ const Callout: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
-const Divider: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const Divider = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "divider") return null;
     return <hr className="my-4"/>;
 };
 
-const Image: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const Image = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "image") return null;
 
     const imageUrl =
@@ -457,7 +568,7 @@ const Image: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         : "";
 
     return (
-        <figure className="text-center mb-4">
+        <figure id={getBlockRawId(block)} className="text-center mb-4">
             <img
                 src={imageUrl}
                 alt={caption || "Image"}
@@ -471,7 +582,7 @@ const Image: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
-const ChildIcon: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const ChildIcon = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "child_database") return null;
     // TODO
     // Return a database icon
@@ -488,13 +599,16 @@ interface TOCItem {
 }
 
 // Table of Contents component with fixed positioning and vertical centering
-export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: string }> = ({blocks, title}) => {
+export const TableOfContents = ({blocks, title, isMobile = false}: {
+    blocks: BlockObjectResponse[];
+    title?: string;
+    isMobile?: boolean
+}): JSX.Element | null => {
     const [activeId, setActiveId] = useState<string | null>(null);
     const [scrollPosition, setScrollPosition] = useState(0);
-// Add offset value to account for the fixed border frame
-    const scrollOffset = 40; // Adjust this value based on your border thickness
+    const scrollOffset = 40;
 
-// Extract headings from blocks
+    // Extract headings from blocks
     const headings: TOCItem[] = useMemo(() => {
         return blocks
             .filter(block => ["heading_1", "heading_2", "heading_3"].includes(block.type))
@@ -502,7 +616,7 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
                 const type = block.type as "heading_1" | "heading_2" | "heading_3";
                 const level = parseInt(type.split('_')[1]);
 
-// Type-safe access to rich_text based on heading type
+                // Type-safe access to rich_text based on heading type
                 let richText: RichTextItemResponse[] = [];
                 if (type === "heading_1" && "heading_1" in block) {
                     richText = block.heading_1.rich_text;
@@ -519,7 +633,7 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
             });
     }, [blocks]);
 
-// Track scroll position to apply vertical centering
+    // Track scroll position to apply vertical centering
     useEffect(() => {
         const handleScroll = () => {
             setScrollPosition(window.scrollY);
@@ -529,7 +643,7 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-// Handle intersection observer to highlight active section
+    // Handle intersection observer to highlight active section
     useEffect(() => {
         if (typeof window === 'undefined' || !headings.length) return;
 
@@ -542,14 +656,14 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
                 });
             },
             {
-// Adjust the rootMargin to account for the fixed border frame
-// Format: "top right bottom left"
+                // Adjust the rootMargin to account for the fixed border frame
+                // Format: "top right bottom left"
                 rootMargin: `-${scrollOffset}px 0px -80% 0px`,
                 threshold: 0.1
             }
         );
 
-// Observe all heading elements
+        // Observe all heading elements
         headings.forEach(heading => {
             const element = document.getElementById(heading.id);
             if (element) observer.observe(element);
@@ -567,12 +681,23 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
         return null;
     }
 
-// Calculate the vertical positioning for the TOC
-// When user scrolls down more than 300px, we start vertically centering the TOC
+    // Calculate the vertical positioning for the TOC
+    // When user scrolls down more than 300px, we start vertically centering the TOC
     const shouldCenter = scrollPosition > 200;
 
-    return (
-        <nav className="table-of-contents" style={{
+    const navStyle: React.CSSProperties = isMobile
+        ? {
+            position: 'relative',
+            top: 0,
+            left: 0,
+            right: 0,
+            width: '100%',
+            zIndex: 1000,
+            backgroundColor: 'white',
+            borderBottom: '1px solid #dee2e6',
+            overflowY: 'auto'
+        }
+        : {
             position: 'sticky',
             top: shouldCenter ? '50%' : '2rem',
             transform: shouldCenter ? 'translateY(-50%)' : 'none',
@@ -580,14 +705,17 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
             overflowY: 'auto',
             padding: '1rem',
             borderLeft: '1px solid #dee2e6',
-            transition: 'top 0.3s ease, transform 0.3s ease',
-        }}>
+            transition: 'top 0.3s ease, transform 0.3s ease'
+        };
+
+    return (
+        <nav className="table-of-contents" style={navStyle}>
             <h5 className="mb-3">{title}</h5>
             <ul className="list-unstyled">
                 {headings.map((heading) => (
                     <li
                         key={heading.id}
-                        className="mb-2"
+                        className="mb-2 text-truncate"
                         style={{
                             paddingLeft: `${(heading.level - 1) * 0.75}rem`,
                             fontSize: `${0.95 - (heading.level - 1) * 0.05}rem`,
@@ -623,24 +751,24 @@ export const TableOfContents: React.FC<{ blocks: BlockObjectResponse[], title?: 
 };
 
 // Add a new component for table_of_contents block type
-const TableOfContentsBlock: React.FC<{
+const TableOfContentsBlock = ({block, allBlocks}: {
     block: BlockObjectResponse;
-    allBlocks: BlockObjectResponse[];
-}> = ({block, allBlocks}) => {
+    allBlocks: BlockObjectResponse[]
+}): JSX.Element | null => {
     if (block.type !== "table_of_contents") return null;
 
     return (
         <div className="toc-container d-lg-none">
-            <TableOfContents blocks={allBlocks}/>
+            <TableOfContents blocks={allBlocks} isMobile={true}/>
         </div>
     );
 };
 
 // Special component to handle both list types
-const ListWrapper: React.FC<{
+const ListWrapper = ({blocks, startIndex}: {
     blocks: BlockObjectResponse[];
-    startIndex: number;
-}> = ({blocks, startIndex}) => {
+    startIndex: number
+}): JSX.Element | null => {
     const listType = blocks[startIndex].type;
     const endIndex = blocks.findIndex(
         (block, idx) => idx > startIndex && block.type !== listType
@@ -653,28 +781,31 @@ const ListWrapper: React.FC<{
 
     if (listType === "bulleted_list_item") {
         return (
-            <ul className="mb-4">
-                {listItems.map((block) => (
-                    <BulletedListItem key={block.id} block={block}/>
-                ))}
-            </ul>
+            <div className="list-wrapper">
+                <ul className="my-1">
+                    {listItems.map((block) => (
+                        <BulletedListItem key={block.id} block={block}/>
+                    ))}
+                </ul>
+            </div>
         );
     } else if (listType === "numbered_list_item") {
         return (
-            <ol className="mb-4">
-                {listItems.map((block) => (
-                    <NumberedListItem key={block.id} block={block}/>
-                ))}
-            </ol>
+            <div className="list-wrapper">
+                <ol className="my-1">
+                    {listItems.map((block) => (
+                        <NumberedListItem key={block.id} block={block}/>
+                    ))}
+                </ol>
+            </div>
         );
     }
-
     return null;
 };
 
 // Special component for equation blocks
-const Equation: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-    if (block.type !== "equation") return null;
+const Equation = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+    if (block.type !== "equation") return <></>;
     return (
         <>
             <style>{`
@@ -711,7 +842,7 @@ const Equation: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                     opacity: 0;
                 }
             `}</style>
-            <div className="my-1 text-center position-relative mathjax-wrapper">
+            <div id={getBlockRawId(block)} className="text-center position-relative mathjax-wrapper">
                 <MathJax>{`$$${block.equation.expression}$$`}</MathJax>
             </div>
         </>
@@ -719,7 +850,7 @@ const Equation: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 };
 
 // Special component for column lists and columns
-const ColumnList: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const ColumnList = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
 // always run these hooks
     const [columnBlocks, setColumnBlocks] = useState<BlockObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
@@ -802,7 +933,7 @@ const getColumnWidth = (columnBlock: BlockObjectResponse, totalColumns: number):
     return defaultColWidth;
 };
 
-const Column: React.FC<{ block: BlockObjectResponse, }> = ({block}) => {
+const Column = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "column") return null;
 
     return (
@@ -819,8 +950,7 @@ const Column: React.FC<{ block: BlockObjectResponse, }> = ({block}) => {
 };
 
 // Special component for tables
-const TableBlock: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
-// hooks always run
+const TableBlock = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     const [tableRows, setTableRows] = useState<BlockObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -846,7 +976,7 @@ const TableBlock: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 
     if (block.type !== "table") return null;
 
-// Table header properties
+    // Table header properties
     const hasColumnHeader = block.table.has_column_header;
     const hasRowHeader = block.table.has_row_header;
 
@@ -879,21 +1009,21 @@ const TableBlock: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         return <div className="text-muted my-3">Empty table</div>;
     }
 
-// Determine table styling based on content
+    // Determine table styling based on content
     const tableStyles = {
-// Use striped for better readability
+        // Use striped for better readability
         className: "table table-bordered table-striped table-responsive-md",
-// Make the table fill its container width but respect content
+        // Make the table fill its container width but respect content
         style: {width: "100%", minWidth: "50%", maxWidth: "100%"}
     };
 
-// Apply different hover effects based on if the table has headers
+    // Apply different hover effects based on if the table has headers
     if (hasColumnHeader || hasRowHeader) {
         tableStyles.className += " table-hover";
     }
 
     return (
-        <div className="table-responsive-md mb-4">
+        <div className="table-responsive-md my-2">
             <table {...tableStyles}>
                 {hasColumnHeader && tableRows.length > 0 && (
                     <thead className="table-light">
@@ -921,11 +1051,11 @@ const TableBlock: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
     );
 };
 
-const TableRow: React.FC<{
+const TableRow = ({block, isHeader, hasRowHeader = false}: {
     block: BlockObjectResponse;
     isHeader: boolean;
-    hasRowHeader?: boolean;
-}> = ({block, isHeader, hasRowHeader = false}) => {
+    hasRowHeader?: boolean
+}): JSX.Element | null => {
     if (block.type !== "table_row") return null;
 
     return (
@@ -955,7 +1085,7 @@ const TableRow: React.FC<{
 };
 
 // Special component for link previews
-const LinkPreview: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const LinkPreview = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== 'link_preview') return null
 
     const {url} = block.link_preview
@@ -997,7 +1127,7 @@ const LinkPreview: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 };
 
 // Special component for child_database blocks
-const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
+const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     const [database, setDatabase] = useState<DatabaseObjectResponse | null>(null);
     const [entries, setEntries] = useState<PageObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
@@ -1066,11 +1196,8 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
         galleryImageContent: {
             width: '100%',
             height: '100%',
-            objectFit: 'cover' as const,
-        },
-        galleryContent: {
-            padding: '16px',
-        },
+            objectFit: 'cover',
+        } as React.CSSProperties,
         list: {
             display: 'flex',
             flexDirection: 'column' as const,
@@ -1377,7 +1504,7 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                                 />
                             </div>
                         )}
-                        <div style={styles.galleryContent}>
+                        <div style={styles.galleryImageContent}>
                             <h4>{getPrimaryProperty(entry)}</h4>
                         </div>
                     </a>
@@ -1430,7 +1557,7 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
                     <div className="d-flex align-items-center flex-grow-1 overflow-hidden">
                         <h3 className="h5 mb-0 text-truncate d-flex align-items-center">
                             <ChildIcon block={block}/>
-                            <span className="ms-2"><p className="lead m-auto">{block.child_database.title}</p>                                </span>
+                            <span className="ms-2 lead text-truncate">{block.child_database.title}</span>
                         </h3>
                     </div>
 
@@ -1483,16 +1610,22 @@ const ChildDatabase: React.FC<{ block: BlockObjectResponse }> = ({block}) => {
 };
 
 // Main component to render blocks
-export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({blocks}) => {
+export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.Element => {
     if (!blocks || blocks.length === 0) {
-        return <p>No content available.</p>;
+        return <div className="text-muted">No content available.</div>;
     }
 
-// Filter out blocks that will be rendered within columns to prevent duplicate rendering
+    useEffect(() => {
+        const h = typeof window !== 'undefined' ? window.location.hash.slice(1) : '';
+        if (!h) return;
+        const el = document.getElementById(h);
+        if (el) {
+            el.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    }, []);
+
     const shouldRender = (block: BlockObjectResponse): boolean => {
-// Don't render blocks that are direct children of columns in the main flow
         if (block.parent?.type === "block_id") {
-// Now TypeScript knows parent has a block_id property
             const parentBlockId = block.parent.block_id;
             const parentBlock = blocks.find(b => b.id === parentBlockId);
             if (parentBlock && parentBlock.type === "column") {
@@ -1502,7 +1635,6 @@ export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({block
         return true;
     };
 
-// Apply the filter to blocks
     const topLevelBlocks = blocks.filter(shouldRender);
 
     const renderedBlocks: JSX.Element[] = [];
@@ -1510,7 +1642,6 @@ export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({block
     for (let i = 0; i < topLevelBlocks.length; i++) {
         const block = topLevelBlocks[i];
 
-// Handle list types specially (grouping them together)
         if (
             (block.type === "bulleted_list_item" || block.type === "numbered_list_item") &&
             (i === 0 || topLevelBlocks[i - 1].type !== block.type)
@@ -1528,7 +1659,7 @@ export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({block
             continue;
         }
 
-// Render appropriate component based on block type
+        // Render appropriate component based on block type
         let component;
         switch (block.type) {
             case "paragraph":
@@ -1551,7 +1682,6 @@ export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({block
                 break;
             case "bulleted_list_item":
             case "numbered_list_item":
-// These are handled by ListWrapper
                 continue;
             case "to_do":
                 component = <TodoItem key={block.id} block={block}/>;
@@ -1599,7 +1729,12 @@ export const NotionBlocks: React.FC<{ blocks: BlockObjectResponse[] }> = ({block
         renderedBlocks.push(component);
     }
 
-    return <div className="notion-content">{renderedBlocks}</div>;
+    return (
+        <div className="notion-content">
+            <style>{`:target { scroll-margin-top: 40px; } /* match your 40px offset */`}</style>
+            {renderedBlocks}
+        </div>
+    );
 };
 
 export default NotionBlocks;

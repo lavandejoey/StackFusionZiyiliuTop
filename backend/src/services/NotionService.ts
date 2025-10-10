@@ -25,8 +25,9 @@ import type {
 import {NODE_ENV, NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS} from "@src/common/constants/ENV";
 import {redisGet, redisSet} from "@src/common/util/redisClient";
 import logger from "jet-logger";
+import {ClientOptions} from "@notionhq/client/build/src/Client";
 
-const notion = new Client({auth: NOTION_API_KEY});
+const notion = new Client({auth: NOTION_API_KEY} as ClientOptions);
 
 interface PaginatedPropertyResponse {
     object: "list";

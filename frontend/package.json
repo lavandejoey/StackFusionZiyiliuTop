@@ -30,6 +30,8 @@
     "jet-logger": "^2.0.1",
     "lodash.debounce": "^4.0.8",
     "mermaid": "^11.7.0",
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.30.0",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",

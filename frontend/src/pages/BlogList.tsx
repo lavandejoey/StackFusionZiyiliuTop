@@ -1,6 +1,5 @@
 // /frontend/src/pages/BlogList.tsx
-import "@/styles/masonry.css"
-import React from "react";
+import React, {type JSX} from "react";
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Card, Col, Container, Spinner} from "react-bootstrap";
@@ -8,6 +7,7 @@ import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
 import type {PageObjectResponse} from "@notionhq/client";
 import {getAllBlogPages} from "@/services/blogService";
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 
 function extractTitle(page: PageObjectResponse): string {
     const titleProp = Object.values(page.properties).find(
@@ -30,8 +30,8 @@ function extractCover(page: PageObjectResponse): string | undefined {
         : page.cover.file.url;
 }
 
-function extractIcon(page: PageObjectResponse): React.ReactNode {
-    if (!page.icon) return null;
+function extractIcon(page: PageObjectResponse): JSX.Element {
+    if (!page.icon) return <></>;
     if (page.icon.type === "emoji") {
         return <span style={{fontSize: "1.5rem"}}>{page.icon.emoji}</span>;
     }
@@ -131,11 +131,16 @@ export default function BlogList() {
                 ) : pages.length === 0 ? (
                     <p>No posts yet—check back soon!</p>
                 ) : (
-                    <div className="masonry">
-                        {pages.map((page) => (
-                            <BlogCard key={page.id} page={page}/>
-                        ))}
-                    </div>
+                    <ResponsiveMasonry
+                        columnsCountBreakPoints={{0: 1, 780: 2, 1200: 3}}
+                        className="masonry-grid"
+                    >
+                        <Masonry>
+                            {pages.map((page) => (
+                                <BlogCard key={page.id} page={page}/>
+                            ))}
+                        </Masonry>
+                    </ResponsiveMasonry>
                 )}
             </Container>
         </MainLayout>
