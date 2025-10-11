@@ -9,7 +9,7 @@ import logger from "jet-logger";
 import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
 
 const notionRootBlogList: string[] = NOTION_ROOT_BLOG_LIST.split(",").map(id => id.trim());
-
+console.log(notionRootBlogList)
 export const blogRouter = Router();
 
 /** Retrieve all root blog posts

@@ -7,16 +7,11 @@
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/services/NotionService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/services/NotionService.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/MathJaxProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MathJaxProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NavBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/main.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/masonry.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,10 +128,7 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.frontend &gt; build">
-    <configuration name="localhost:35835" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:35835/">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="npm.start">
     <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" path-to-node="wsl://Ubuntu-22.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" nameIsGenerated="true" path-to-js-file="parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
@@ -145,6 +137,16 @@
       <command value="run" />
       <scripts>
         <script value="build" />
+      </scripts>
+      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:all" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:all" />
       </scripts>
       <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
       <envs />
@@ -170,19 +172,31 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="JavaScript Debug.localhost:35835" />
       <item itemvalue="Node.js.frontend &gt; parser.cjs" />
+      <item itemvalue="npm.build:all" />
+      <item itemvalue="npm.start" />
       <item itemvalue="npm.backend &gt; build" />
       <item itemvalue="npm.frontend &gt; build" />
       <item itemvalue="npm.dev:all" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build:all" />
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.backend &gt; build" />
         <item itemvalue="npm.frontend &gt; build" />
         <item itemvalue="npm.dev:all" />
-        <item itemvalue="npm.backend &gt; build" />
-        <item itemvalue="JavaScript Debug.localhost:35835" />
       </list>
     </recent_temporary>
   </component>
@@ -234,7 +248,7 @@
       <workItem from="1759680453602" duration="1787000" />
       <workItem from="1759750137236" duration="17128000" />
       <workItem from="1759932881249" duration="3029000" />
-      <workItem from="1760016997102" duration="28465000" />
+      <workItem from="1760016997102" duration="35754000" />
     </task>
     <servers />
   </component>

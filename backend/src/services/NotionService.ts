@@ -1,5 +1,4 @@
 // backend/src/services/NotionService.ts
-
 import {Client, collectPaginatedAPI, isFullBlock, isFullDatabase, isFullPage, isFullUser} from "@notionhq/client";
 import type {
     AppendBlockChildrenParameters,
@@ -263,9 +262,7 @@ const NotionService = {
         const cacheKey = getCacheKey("getDatabase", params);
         const cachedData = await getFromCache<DatabaseObjectResponse>(cacheKey);
 
-        if (cachedData) {
-            return cachedData;
-        }
+        if (cachedData) return cachedData;
 
         const res = await notion.databases.retrieve(params);
         if (!isFullDatabase(res)) {

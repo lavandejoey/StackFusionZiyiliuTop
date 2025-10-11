@@ -65,7 +65,7 @@ export const env = cleanEnv(process.env, {
     ANTHROPIC_API_KEY: str({default: ""}),
     DEFAULT_MODEL: str({default: ""}),
     NOTION_API_KEY: str({default: ""}),
-    NOTION_CACHE_EXPIRY_SECONDS: num({default: 3600}),
+    NOTION_CACHE_EXPIRY_SECONDS: num({default: 5 * 60 * 60}),
     GITHUB_ACCESS_TOKEN: str({default: ""}),
 
     // Content
