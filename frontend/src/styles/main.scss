@@ -8,9 +8,7 @@
 //  Works with Bootstrap .img-fluid, .rounded, etc.
 // -------------------------
 
-$fade-edge: 15%; // how tall the transparent edge region is
-
-@mixin vertical-fade-mask($edge: $fade-edge) {
+@mixin vertical-fade-mask($edge: $fade-cover-img-edge) {
   -webkit-mask-image: linear-gradient(
                   to bottom,
                   rgba(0, 0, 0, 0) 0%, // transparent at very top

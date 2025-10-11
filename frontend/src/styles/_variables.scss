@@ -29,6 +29,17 @@ $line-height-base: 1.5;
 $nav-link-padding-y: 0.5rem;
 $display-font-weight: 700;
 
+$fade-cover-img-edge: 15%; // how tall the transparent edge region is
+
+// TOC animation tuning
+$toc-dur: .28s !default;
+$toc-ease: cubic-bezier(.22, .61, .36, 1) !default; // "standard" ease-out
+$desk-dur: .25s !default;
+$desk-ease: cubic-bezier(.25, .46, .45, .94) !default;
+
+// Matches your blurred bar colour
+$toc-blur-bg: rgba(255,255,255,.6) !default;
+
 // NOW import Bootstrap's functions and variables to make use of above definitions
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";

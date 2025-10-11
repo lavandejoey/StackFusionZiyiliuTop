@@ -34,7 +34,11 @@
 
   // Ensure the card doesn't visually touch the frame border
   margin-bottom: $frame-gap;
+
+  // smooths keyboard/home/end/page-up/down inside the card
+  scroll-behavior: smooth;
 }
+
 
 .toc-desktop-title {
   font-weight: 600;
@@ -67,79 +71,173 @@
   }
 }
 
-/* ---------- Mobile TOC (separate row before main content) ---------- */
+/* ---------- Mobile TOC: smooth expand/collapse ---------- */
 .toc-mobile-row {
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(0, 0, 0, .06);
+  background: $toc-blur-bg;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   overflow: hidden;
 
-  // collapsed height:25vh
+  .toc-mobile-header {
+    padding: 8px 12px;
+  }
+
+  .toc-mobile-title {
+    font-weight: 600;
+    min-width: 0;
+  }
+
   .toc-mobile-body {
     position: relative;
-    max-height: 25vh;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
+    padding: 0 0 28px; // room for the expand button
+    max-height: 25vh; // collapsed height
+    opacity: .98;
+    transform: translateY(0);
+    transition: max-height $toc-dur $toc-ease,
+    opacity $toc-dur $toc-ease,
+    transform $toc-dur $toc-ease;
+    will-change: max-height, opacity, transform;
+
+    // gradient fade at the bottom in collapsed state
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42px;
+      pointer-events: none;
+      background: linear-gradient(to bottom,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, .85) 70%,
+              rgba(255, 255, 255, .95) 100%);
+      opacity: 1;
+      transition: opacity $toc-dur $toc-ease;
+    }
+  }
+
+  .toc-mobile-expand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 4px;
+    width: 100vh;
+    height: 28px;
+    border: none;
+    background: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    line-height: 26px;
+    text-align: center;
+    font-size: 14px;
+    color: #495057;
+    z-index: 1;
+
+    // If your arrow is a span/svg child, this rotates smoothly.
+    > * {
+      display: inline-block;
+      transition: transform $toc-dur $toc-ease;
+    }
   }
 
   &.is-open {
     .toc-mobile-body {
-      max-height: none; // full list
+      max-height: 500vh; // use a numeric value to animate reliably
+      opacity: 1;
+      transform: translateY(0);
+
+      &::after {
+        opacity: 0;
+      }
+
+      // hide fade when expanded
     }
 
-    .toc-mobile-fade {
-      display: none;
+    .toc-mobile-expand > * {
+      transform: rotate(180deg);
     }
   }
 }
 
-.toc-mobile-header {
-  padding: 8px 12px;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .toc-mobile-row .toc-mobile-body,
+  .toc-mobile-row .toc-mobile-body::after,
+  .toc-mobile-row .toc-mobile-expand > * {
+    transition: none !important;
+  }
 }
 
-.toc-mobile-title {
-  font-weight: 600;
-  min-width: 0;
+/* ---------- Desktop TOC: smooth list scrolling & gentle centre snap ---------- */
+.toc-desktop-card {
+  max-height: min(80vh, calc(100vh - (2 * (1em + 5px + 8px))));
+  overflow: auto;
+
+  // the scrollable container
+  scroll-behavior: smooth; // smooths programmatic & keyboard scroll
+  scroll-snap-type: y proximity; // 'mandatory' is stricter; try proximity first
+  overscroll-behavior: contain; // avoid rubber-band bounce propagating
+  scrollbar-gutter: stable both-edges;
+  -webkit-overflow-scrolling: touch; // inertia on iOS
+
+  // optional visual edge fades (sticky inside the scrollport)
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 12px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  }
+
+  &::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  }
 }
 
-.toc-mobile-body {
-  padding: 0 0 28px; // room for the expand button overlap
+.toc-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0 4px 8px;
+
+  > li {
+    scroll-snap-align: center; // centre items when scrolling settles
+    // scroll-snap-stop: always;      // uncomment for stronger snapping
+
+    .toc-link {
+      display: block;
+      padding: 6px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color $desk-dur $desk-ease, font-weight $desk-dur $desk-ease;
+
+      &.active {
+        color: var(--bs-primary, #0d6efd);
+        font-weight: 700;
+      }
+    }
+  }
 }
 
-.toc-mobile-fade {
-  // gradient fade at bottom when collapsed
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 42px;
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 70%, rgba(255, 255, 255, 0.95) 100%);
-}
-
-.toc-mobile-expand {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 4px;
-  //width: 36px;
-  width: 98%;
-  height: 28px;
-  border: 0px solid rgba(0, 0, 0, 0.12);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  cursor: pointer;
-  line-height: 26px;
-  text-align: center;
-  font-size: 14px;
-  color: #495057;
-}
-
-/* Spacing for list entries on mobile */
-.toc-mobile-row .toc-list li {
-  margin: 2px 0;
+@media (prefers-reduced-motion: reduce) {
+  .toc-desktop-card {
+    scroll-behavior: auto;
+  }
+  .toc-list > li .toc-link {
+    transition: none !important;
+  }
 }

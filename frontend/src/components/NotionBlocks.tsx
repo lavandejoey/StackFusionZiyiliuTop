@@ -11,7 +11,7 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 import {MathJax} from "better-react-mathjax";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClipboard, faGrip, faTable} from "@fortawesome/free-solid-svg-icons";
+import {faClipboard, faGrip, faTable, faChevronDown, faChevronUp} from "@fortawesome/free-solid-svg-icons";
 import {highlight, languages} from "prismjs";
 import "prismjs/themes/prism.css";
 // import "prismjs/themes/prism-tomorrow.css";
@@ -663,6 +663,17 @@ const MobileTOC = ({
                    }: { headings: TOCItem[]; title: string; activeId: string | null }) => {
     const [open, setOpen] = useState(false);
 
+    const handleToggle = (force?: boolean) => {
+        setOpen(prev => (typeof force === "boolean" ? force : !prev));
+        // Jump to "toc-mobile-body" with 1rem offset for header
+        setTimeout(() => {
+            const el = document.querySelector(".toc-mobile-body");
+            if (!el) return;
+            const top = el.getBoundingClientRect().top + window.scrollY - 16;
+            window.scrollTo({top, behavior: "smooth"});
+        }, 100);
+    };
+
     const scrollToId = (id: string) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -701,9 +712,11 @@ const MobileTOC = ({
                 <button
                     className="toc-mobile-expand"
                     aria-label={open ? "Collapse table of contents" : "Expand table of contents"}
-                    onClick={() => setOpen(v => !v)}
+                    onClick={() => handleToggle()}
                 >
-                    <span aria-hidden>{open ? "▴" : "▾"}</span>
+                    <span aria-hidden> <FontAwesomeIcon icon={faChevronDown}/> </span>
+                    {/*{open ? <span aria-hidden> <FontAwesomeIcon icon={faChevronDown}/> </span> :*/}
+                    {/*    <span aria-hidden> <FontAwesomeIcon icon={faChevronUp}/> </span>}*/}
                 </button>
             </div>
         </div>
@@ -717,9 +730,51 @@ const DesktopTOC = ({
     const wrapRef = useRef<HTMLDivElement | null>(null);
     const [affixed, setAffixed] = useState(false);
     const [width, setWidth] = useState<number | undefined>(undefined);
+    const cardRef = useRef<HTMLDivElement | null>(null);
+    const listRef = useRef<HTMLUListElement | null>(null);
+    const userScrollingRef = useRef(false);
+    const idleTimerRef = useRef<number | null>(null);
 
-    // frame-aware offsets are done purely in CSS via SCSS variables;
-    // JS ensures affix start position and width lock.
+    // helper: start an "idle window" after which auto-scroll can resume
+    const markUserActive = useCallback(() => {
+        userScrollingRef.current = true;
+        if (idleTimerRef.current) {
+            window.clearTimeout(idleTimerRef.current);
+            idleTimerRef.current = null;
+        }
+        idleTimerRef.current = window.setTimeout(() => {
+            userScrollingRef.current = false;
+        }, 1000); // 1.0s idle to restore auto-centre
+    }, []);
+
+    // attach listeners to pause auto-scroll during user interaction with the TOC
+    useEffect(() => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        const onWheel = () => markUserActive();
+        const onScroll = () => markUserActive();
+        const onPointerDown = () => markUserActive();
+        const onTouchMove = () => markUserActive();
+
+        card.addEventListener("wheel", onWheel, {passive: true});
+        card.addEventListener("scroll", onScroll, {passive: true});
+        card.addEventListener("pointerdown", onPointerDown, {passive: true});
+        card.addEventListener("touchmove", onTouchMove, {passive: true});
+
+        return () => {
+            card.removeEventListener("wheel", onWheel);
+            card.removeEventListener("scroll", onScroll);
+            card.removeEventListener("pointerdown", onPointerDown);
+            card.removeEventListener("touchmove", onTouchMove);
+            if (idleTimerRef.current) {
+                window.clearTimeout(idleTimerRef.current);
+                idleTimerRef.current = null;
+            }
+        };
+    }, [markUserActive]);
+
+    // frame-aware offsets are done purely in SCSS variables; JS ensures affix start position and width lock.
     useEffect(() => {
         const recompute = () => {
             const wrap = wrapRef.current;
@@ -743,6 +798,41 @@ const DesktopTOC = ({
         };
     }, []);
 
+    // auto-centre logic when activeId changes and user isn't interacting
+    const centerActiveIntoView = useCallback(() => {
+        if (!activeId) return;
+        if (userScrollingRef.current) return;             // user is busy with the TOC
+        const card = cardRef.current;
+        const list = listRef.current;
+        if (!card || !list) return;
+
+        const link = list.querySelector<HTMLAnchorElement>(`.toc-link.active`);
+        if (!link) return;
+
+        // Find the anchor’s offset relative to the scroll container
+        const itemRect = link.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const itemOffsetTop = itemRect.top - cardRect.top + card.scrollTop;
+
+        const targetScrollTop =
+            itemOffsetTop - (card.clientHeight / 2 - itemRect.height / 2);
+
+        const maxScroll = card.scrollHeight - card.clientHeight;
+        const clamped = Math.max(0, Math.min(maxScroll, targetScrollTop));
+
+        // Smoothly scroll the TOC container itself
+        // Use rAF to avoid layout jank if multiple activeId changes happen quickly
+        window.requestAnimationFrame(() => {
+            card.scrollTo({top: clamped, behavior: "smooth"});
+        });
+    }, [activeId]);
+
+    // trigger auto-centre on activeId changes or when the TOC becomes affixed
+    useEffect(() => {
+        if (!affixed) return;        // only when affixed (i.e., desktop sticky -> fixed phase)
+        centerActiveIntoView();
+    }, [activeId, affixed, centerActiveIntoView]);
+
     const scrollToId = (id: string) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -754,9 +844,11 @@ const DesktopTOC = ({
     return (
         <div ref={wrapRef} className="toc-desktop-wrap">
             <div className={`toc-desktop ${affixed ? "is-fixed" : ""}`} style={affixed ? {width} : undefined}>
-                <div className="toc-desktop-card">
+                {/* attach ref to the scrollable card container */}
+                <div className="toc-desktop-card" ref={cardRef}>
                     <div className="toc-desktop-title">{title}</div>
-                    <ul className="toc-list">
+                    {/* attach ref to the list to locate active item */}
+                    <ul className="toc-list" ref={listRef}>
                         {headings.map(h => (
                             <li key={h.id} style={{paddingLeft: `${(h.level - 1) * 12}px`}}>
                                 <a
