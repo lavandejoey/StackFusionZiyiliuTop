@@ -312,9 +312,21 @@ export default function BlogPost() {
 
                         {/* Two column layout for content and TOC */}
                         <MathJaxProvider>
+                            {/* MOBILE: TOC as a dedicated top row inside content flow */}
+                            {showToc && (
+                                <Row className="d-lg-none">
+                                    <Col xs={12}>
+                                        <TableOfContents
+                                            blocks={data.type === "page" ? data.data.blocks : []}
+                                            mode="mobile"
+                                            title="On this page"
+                                        />
+                                    </Col>
+                                </Row>
+                            )}
                             <Row>
                                 {/* Main content column */}
-                                <Col xs={12} lg={showToc ? 9 : 12} className="blog-main-content">
+                                <Col xs={12} md={showToc ? 8 : 12} lg={showToc ? 9 : 12} className="blog-main-content">
                                     {data.type === "page" ? (
                                         <>
                                             <NotionBlocks blocks={data.data.blocks}/>
@@ -330,11 +342,18 @@ export default function BlogPost() {
                                 </Col>
 
                                 {/* Table of Contents sidebar */}
+                                {/* Desktop TOC in sidebar */}
                                 {showToc && (
-                                    <Col lg={3} className="d-none d-lg-block">
-                                        <TableOfContents blocks={data.type === "page" ? data.data.blocks : []}/>
+                                    <Col md={4} lg={3} className="d-none d-lg-block">
+                                        <TableOfContents blocks={data.type === "page" ? data.data.blocks : []}
+                                                         mode="desktop" title="On this page"/>
                                     </Col>
                                 )}
+                                {/*{showToc && (*/}
+                                {/*    <Col md={4} lg={3} className="d-none d-lg-block">*/}
+                                {/*        <TableOfContents blocks={data.type === "page" ? data.data.blocks : []}/>*/}
+                                {/*    </Col>*/}
+                                {/*)}*/}
                             </Row>
                         </MathJaxProvider>
                     </Row>

@@ -13,9 +13,10 @@ import {MathJax} from "better-react-mathjax";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClipboard, faGrip, faTable} from "@fortawesome/free-solid-svg-icons";
 import {highlight, languages} from "prismjs";
-import 'prismjs/themes/prism.css';
-// import 'prismjs/themes/prism-tomorrow.css';
-import 'prismjs/components/prism-python';
+import "prismjs/themes/prism.css";
+// import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/components/prism-python";
+import "@/styles/_toc.scss"
 
 // Anchors
 const getBlockRawId = (block: BlockObjectResponse) => block.id.replace(/-/g, '');// match your TOC offset
@@ -598,168 +599,182 @@ interface TOCItem {
     level: number;
 }
 
+type TOCMode = "mobile" | "desktop";
+
 // Table of Contents component with fixed positioning and vertical centering
-export const TableOfContents = ({blocks, title, isMobile = false}: {
+export const TableOfContents = ({
+                                    blocks,
+                                    title = "Contents",
+                                    mode = "desktop",
+                                }: {
     blocks: BlockObjectResponse[];
     title?: string;
-    isMobile?: boolean
+    mode?: TOCMode;
 }): JSX.Element | null => {
     const [activeId, setActiveId] = useState<string | null>(null);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const scrollOffset = 40;
 
-    // Extract headings from blocks
     const headings: TOCItem[] = useMemo(() => {
         return blocks
-            .filter(block => ["heading_1", "heading_2", "heading_3"].includes(block.type))
-            .map(block => {
-                const type = block.type as "heading_1" | "heading_2" | "heading_3";
-                const level = parseInt(type.split('_')[1]);
-
-                // Type-safe access to rich_text based on heading type
-                let richText: RichTextItemResponse[] = [];
-                if (type === "heading_1" && "heading_1" in block) {
-                    richText = block.heading_1.rich_text;
-                } else if (type === "heading_2" && "heading_2" in block) {
-                    richText = block.heading_2.rich_text;
-                } else if (type === "heading_3" && "heading_3" in block) {
-                    richText = block.heading_3.rich_text;
-                }
-
-                const id = createHeadingId(richText);
-                const text = richText.map((t: { plain_text: string }) => t.plain_text).join('');
-
+            .filter(b => ["heading_1", "heading_2", "heading_3"].includes(b.type))
+            .map(b => {
+                const type = b.type as "heading_1" | "heading_2" | "heading_3";
+                const level = parseInt(type.split("_")[1], 10);
+                let rt: RichTextItemResponse[] = [];
+                if (type === "heading_1" && "heading_1" in b) rt = b.heading_1.rich_text;
+                if (type === "heading_2" && "heading_2" in b) rt = b.heading_2.rich_text;
+                if (type === "heading_3" && "heading_3" in b) rt = b.heading_3.rich_text;
+                const id = createHeadingId(rt);
+                const text = rt.map(t => t.plain_text).join("");
                 return {id, text, level};
             });
     }, [blocks]);
 
-    // Track scroll position to apply vertical centering
     useEffect(() => {
-        const handleScroll = () => {
-            setScrollPosition(window.scrollY);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // Handle intersection observer to highlight active section
-    useEffect(() => {
-        if (typeof window === 'undefined' || !headings.length) return;
-
-        const observer = new IntersectionObserver(
+        if (!headings.length) return;
+        const offset = 80;
+        const io = new IntersectionObserver(
             entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        setActiveId(entry.target.id);
-                    }
-                });
+                const vis = entries
+                    .filter(e => e.isIntersecting)
+                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+                if (vis[0]) setActiveId(vis[0].target.id);
             },
-            {
-                // Adjust the rootMargin to account for the fixed border frame
-                // Format: "top right bottom left"
-                rootMargin: `-${scrollOffset}px 0px -80% 0px`,
-                threshold: 0.1
-            }
+            {root: null, rootMargin: `-${offset}px 0px -60% 0px`, threshold: [0, 1]}
         );
-
-        // Observe all heading elements
-        headings.forEach(heading => {
-            const element = document.getElementById(heading.id);
-            if (element) observer.observe(element);
+        headings.forEach(h => {
+            const el = document.getElementById(h.id);
+            if (el) io.observe(el);
         });
+        return () => io.disconnect();
+    }, [headings]);
 
-        return () => {
-            headings.forEach(heading => {
-                const element = document.getElementById(heading.id);
-                if (element) observer.unobserve(element);
-            });
-        };
-    }, [headings, scrollOffset]);
+    if (!headings.length) return null;
 
-    if (!headings.length) {
-        return null;
-    }
-
-    // Calculate the vertical positioning for the TOC
-    // When user scrolls down more than 300px, we start vertically centering the TOC
-    const shouldCenter = scrollPosition > 200;
-
-    const navStyle: React.CSSProperties = isMobile
-        ? {
-            position: 'relative',
-            top: 0,
-            left: 0,
-            right: 0,
-            width: '100%',
-            zIndex: 1000,
-            backgroundColor: 'white',
-            borderBottom: '1px solid #dee2e6',
-            overflowY: 'auto'
-        }
-        : {
-            position: 'sticky',
-            top: shouldCenter ? '50%' : '2rem',
-            transform: shouldCenter ? 'translateY(-50%)' : 'none',
-            maxHeight: shouldCenter ? '80vh' : 'calc(100vh - 4rem)',
-            overflowY: 'auto',
-            padding: '1rem',
-            borderLeft: '1px solid #dee2e6',
-            transition: 'top 0.3s ease, transform 0.3s ease'
-        };
-
-    return (
-        <nav className="table-of-contents" style={navStyle}>
-            <h5 className="mb-3">{title}</h5>
-            <ul className="list-unstyled">
-                {headings.map((heading) => (
-                    <li
-                        key={heading.id}
-                        className="mb-2 text-truncate"
-                        style={{
-                            paddingLeft: `${(heading.level - 1) * 0.75}rem`,
-                            fontSize: `${0.95 - (heading.level - 1) * 0.05}rem`,
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        <a
-                            href={`#${heading.id}`}
-                            className={`text-decoration-none ${activeId === heading.id ? 'fw-bold text-primary' : 'text-secondary'}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const element = document.getElementById(heading.id);
-                                if (element) {
-                                    // Get the element's position relative to the document
-                                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                                    // Scroll to the element with the offset adjustment
-                                    window.scrollTo({
-                                        top: elementPosition - scrollOffset,
-                                        behavior: 'smooth'
-                                    });
-                                    window.history.pushState(null, '', `#${heading.id}`);
-                                    setActiveId(heading.id);
-                                }
-                            }}
-                        >
-                            {heading.text}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+    return mode === "mobile" ? (
+        <MobileTOC headings={headings} title={title} activeId={activeId}/>
+    ) : (
+        <DesktopTOC headings={headings} title={title} activeId={activeId}/>
     );
 };
 
-// Add a new component for table_of_contents block type
-const TableOfContentsBlock = ({block, allBlocks}: {
-    block: BlockObjectResponse;
-    allBlocks: BlockObjectResponse[]
-}): JSX.Element | null => {
-    if (block.type !== "table_of_contents") return null;
+/* ----------------- Mobile TOC (separate row, 20vh collapsed) ----------------- */
+const MobileTOC = ({
+                       headings, title, activeId
+                   }: { headings: TOCItem[]; title: string; activeId: string | null }) => {
+    const [open, setOpen] = useState(false);
+
+    const scrollToId = (id: string) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const top = el.getBoundingClientRect().top + window.scrollY - 64; // adjust for any fixed navbar
+        window.scrollTo({top, behavior: "smooth"});
+        history.replaceState(null, "", `#${id}`);
+    };
 
     return (
-        <div className="toc-container d-lg-none">
-            <TableOfContents blocks={allBlocks} isMobile={true}/>
+        <div className={`toc-mobile-row ${open ? "is-open" : ""}`}>
+            <div className="toc-mobile-header">
+                <div className="toc-mobile-title text-truncate">{title}</div>
+            </div>
+
+            <div className="toc-mobile-body">
+                <ul className="toc-list">
+                    {headings.map(h => (
+                        <li key={h.id} style={{paddingLeft: `${(h.level - 1) * 12}px`}}>
+                            <a
+                                className={`toc-link ${activeId === h.id ? "active" : ""}`}
+                                href={`#${h.id}`}
+                                title={h.text}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setOpen(false);
+                                    scrollToId(h.id);
+                                }}
+                            >
+                                {h.text}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                {/* bottom gradient mask only when collapsed */}
+                {!open && <div className="toc-mobile-fade"/>}
+                <button
+                    className="toc-mobile-expand"
+                    aria-label={open ? "Collapse table of contents" : "Expand table of contents"}
+                    onClick={() => setOpen(v => !v)}
+                >
+                    <span aria-hidden>{open ? "▴" : "▾"}</span>
+                </button>
+            </div>
+        </div>
+    );
+};
+
+/* ----------------- Desktop TOC (affix; inside .phoframe bounds) ----------------- */
+const DesktopTOC = ({
+                        headings, title, activeId
+                    }: { headings: TOCItem[]; title: string; activeId: string | null }) => {
+    const wrapRef = useRef<HTMLDivElement | null>(null);
+    const [affixed, setAffixed] = useState(false);
+    const [width, setWidth] = useState<number | undefined>(undefined);
+
+    // frame-aware offsets are done purely in CSS via SCSS variables;
+    // JS ensures affix start position and width lock.
+    useEffect(() => {
+        const recompute = () => {
+            const wrap = wrapRef.current;
+            if (!wrap) return;
+            setWidth(wrap.getBoundingClientRect().width);
+
+            const start = wrap.getBoundingClientRect().top + window.scrollY - 1; // tiny buffer
+            const onScroll = () => setAffixed(window.scrollY >= start);
+            onScroll();
+
+            window.removeEventListener("scroll", onScroll);
+            window.addEventListener("scroll", onScroll, {passive: true});
+            return () => window.removeEventListener("scroll", onScroll);
+        };
+
+        const cleanup = recompute();
+        window.addEventListener("resize", recompute);
+        return () => {
+            if (typeof cleanup === "function") cleanup();
+            window.removeEventListener("resize", recompute);
+        };
+    }, []);
+
+    const scrollToId = (id: string) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const top = el.getBoundingClientRect().top + window.scrollY - 72; // site navbar margin
+        window.scrollTo({top, behavior: "smooth"});
+        history.replaceState(null, "", `#${id}`);
+    };
+
+    return (
+        <div ref={wrapRef} className="toc-desktop-wrap">
+            <div className={`toc-desktop ${affixed ? "is-fixed" : ""}`} style={affixed ? {width} : undefined}>
+                <div className="toc-desktop-card">
+                    <div className="toc-desktop-title">{title}</div>
+                    <ul className="toc-list">
+                        {headings.map(h => (
+                            <li key={h.id} style={{paddingLeft: `${(h.level - 1) * 12}px`}}>
+                                <a
+                                    className={`toc-link ${activeId === h.id ? "active" : ""}`}
+                                    href={`#${h.id}`}
+                                    title={h.text}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        scrollToId(h.id);
+                                    }}
+                                >
+                                    {h.text}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
         </div>
     );
 };
@@ -1660,7 +1675,7 @@ export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.
         }
 
         // Render appropriate component based on block type
-        let component;
+        let component = <></>;
         switch (block.type) {
             case "paragraph":
                 component = <Paragraph key={block.id} block={block}/>;
@@ -1678,7 +1693,7 @@ export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.
                 component = <Heading3 key={block.id} block={block}/>;
                 break;
             case "table_of_contents":
-                component = <TableOfContentsBlock key={block.id} block={block} allBlocks={blocks}/>;
+                // component = <TableOfContentsBlock key={block.id} block={block} allBlocks={blocks}/>;
                 break;
             case "bulleted_list_item":
             case "numbered_list_item":

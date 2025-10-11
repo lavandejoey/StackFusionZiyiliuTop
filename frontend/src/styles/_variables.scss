@@ -6,6 +6,14 @@ $quaternary: #dda15e;
 $quinary: #bc6c25;
 $frame-color: #ffc9b9;
 
+$frame-border: 1em; // .phoframe border
+$frame-padding: 5px; // .phoframe padding
+$frame-gap: 8px; // small breathing gap inside frame
+
+// Combined top/bottom inset inside frame where content should start
+// (border + padding + gap) * 2 for both top and bottom
+$frame-vertical-total: calc(2 * (#{$frame-border} + #{$frame-padding} + #{$frame-gap}));
+
 $theme-colors: (
         "primary": $primary,
         "secondary": $secondary,

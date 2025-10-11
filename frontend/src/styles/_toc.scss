@@ -1,0 +1,145 @@
+@import "variables";
+
+/* ---------- Desktop TOC ---------- */
+.toc-desktop-wrap {
+  position: relative;
+}
+
+.toc-desktop {
+  position: static;
+
+  &.is-fixed {
+    position: fixed;
+    // Keep TOC inside visible area defined by the frame with a small gap.
+    // top/bottom derived from frame values so it never "bounces" at page end.
+    top: calc(#{$frame-border} + #{$frame-padding} + #{$frame-gap});
+    // No bottom limit -> but we still bound the card by max-height; the container itself can extend
+    // We don't set bottom to avoid any push/bounce effect.
+    right: auto; // width locked inline by JS
+    left: auto; // relies on the natural column position
+    z-index: 10;
+  }
+}
+
+.toc-desktop-card {
+  background: #fff;
+  border-left: 1px solid #dee2e6;
+  padding: 12px;
+
+  // Max height: 85vh AND within inner frame height
+  // Inner frame height = 100vh - total top+bottom frame inset
+  $inner-frame-h: calc(100vh - #{$frame-vertical-total});
+  max-height: min(85vh, #{$inner-frame-h});
+  overflow: auto;
+
+  // Ensure the card doesn't visually touch the frame border
+  margin-bottom: $frame-gap;
+}
+
+.toc-desktop-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0 4px 8px;
+}
+
+.toc-link {
+  display: block;
+  padding: 1px 4px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #6c757d;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.active {
+    font-weight: 700;
+    color: var(--bs-primary, #0d6efd);
+  }
+}
+
+/* ---------- Mobile TOC (separate row before main content) ---------- */
+.toc-mobile-row {
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+
+  // collapsed height:25vh
+  .toc-mobile-body {
+    position: relative;
+    max-height: 25vh;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+
+  &.is-open {
+    .toc-mobile-body {
+      max-height: none; // full list
+    }
+
+    .toc-mobile-fade {
+      display: none;
+    }
+  }
+}
+
+.toc-mobile-header {
+  padding: 8px 12px;
+}
+
+.toc-mobile-title {
+  font-weight: 600;
+  min-width: 0;
+}
+
+.toc-mobile-body {
+  padding: 0 0 28px; // room for the expand button overlap
+}
+
+.toc-mobile-fade {
+  // gradient fade at bottom when collapsed
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 70%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.toc-mobile-expand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 4px;
+  //width: 36px;
+  width: 98%;
+  height: 28px;
+  border: 0px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  line-height: 26px;
+  text-align: center;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Spacing for list entries on mobile */
+.toc-mobile-row .toc-list li {
+  margin: 2px 0;
+}

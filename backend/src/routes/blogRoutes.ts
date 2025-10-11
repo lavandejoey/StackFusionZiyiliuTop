@@ -104,46 +104,41 @@ blogRouter.get(ENDPOINTS.blogs.blockChildren, async (req, res) => {
 /** Retrieve database metadata
  * GET /api/${API_VERSION}/blogs/database/:id
  */
-blogRouter.get(
-    ENDPOINTS.blogs.database, async (req, res) => {
-        const database_id = req.params.id;
-        try {
-            const database = await NotionService.getDatabase({database_id});
-            res.status(HttpStatusCodes.OK)
-                .json(successResponse(req, res, database));
-        } catch (error) {
-            logger.err(`Error retrieving database ${database_id}: ${error}`);
-            res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-                .json(errorResponse(req, res, "Failed to retrieve database", error));
-        }
-    },
-);
+blogRouter.get(ENDPOINTS.blogs.database, async (req, res) => {
+    const database_id = req.params.id;
+    try {
+        const database = await NotionService.getDatabase({database_id});
+        res.status(HttpStatusCodes.OK)
+            .json(successResponse(req, res, database));
+    } catch (error) {
+        logger.err(`Error retrieving database ${database_id}: ${error}`);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json(errorResponse(req, res, "Failed to retrieve database", error));
+    }
+});
 
 /** Query database entries
  * POST /api/${API_VERSION}/blogs/database/:id/query
  */
-blogRouter.post(
-    ENDPOINTS.blogs.queryDatabase,
-    async (req, res) => {
-        const database_id = req.params.id;
-        const { filter, sorts } = req.body;
+blogRouter.post(ENDPOINTS.blogs.queryDatabase, async (req, res) => {
+    const database_id = req.params.id;
+    const {filter, sorts} = req.body;
 
-        try {
-            const results = await NotionService.queryDatabaseAll({
-                database_id,
-                ...(filter && { filter }),
-                ...(sorts && { sorts }),
-            });
-            res.status(HttpStatusCodes.OK)
-                .json(successResponse(req, res, {
-                    results,
-                    has_more: false, // We're using queryDatabaseAll which fetches all pages
-                    next_cursor: null,
-                }));
-        } catch (error) {
-            logger.err(`Error querying database ${database_id}: ${error}`);
-            res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-                .json(errorResponse(req, res, "Failed to query database", error));
-        }
-    },
-);
+    try {
+        const results = await NotionService.queryDatabaseAll({
+            database_id,
+            ...(filter && {filter}),
+            ...(sorts && {sorts}),
+        });
+        res.status(HttpStatusCodes.OK)
+            .json(successResponse(req, res, {
+                results,
+                has_more: false, // We're using queryDatabaseAll which fetches all pages
+                next_cursor: null,
+            }));
+    } catch (error) {
+        logger.err(`Error querying database ${database_id}: ${error}`);
+        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json(errorResponse(req, res, "Failed to query database", error));
+    }
+});
