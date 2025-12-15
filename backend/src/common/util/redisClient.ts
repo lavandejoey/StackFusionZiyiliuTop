@@ -12,7 +12,7 @@ import {
 // Initialize Redis client
 export const redisClient = new Redis({
     host: REDIS_LOCAL_HOST,
-    port: Number(REDIS_LOCAL_PORT),
+    port: REDIS_LOCAL_PORT,
     username: REDIS_USER,
     password: REDIS_PASSWORD,
     keyPrefix: REDIS_SECRET_KEY,

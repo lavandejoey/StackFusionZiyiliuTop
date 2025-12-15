@@ -1,7 +1,7 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/BlogPost.tsx
-import React, {type JSX, useCallback, useEffect, useState} from "react";
-import {useParams, Link} from "react-router-dom";
-import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
+import React, { type JSX, useCallback, useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import MainLayout from "@/components/MainLayout";
 import PageHead from "@/components/PageHead";
 import {
@@ -10,12 +10,12 @@ import {
     getBlogPostParents,
     type BlogParent
 } from "@/services/blogService";
-import NotionBlocks, {TableOfContents} from "@/components/NotionBlocks";
+import NotionBlocks, { TableOfContents } from "@/components/NotionBlocks";
 import MathJaxProvider from "@/components/MathJaxProvider";
-import type {DatabaseObjectResponse, PageObjectResponse} from "@notionhq/client";
+import type { DatabaseObjectResponse, PageObjectResponse } from "@notionhq/client";
 
 export default function BlogPost() {
-    const {id} = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string }>();
     const [data, setData] = useState<BlogPostResponse | null>(null);
     const [parents, setParents] = useState<BlogParent[]>([]);
     const [loading, setLoading] = useState(true);
@@ -129,38 +129,49 @@ export default function BlogPost() {
 
         const className = opts?.className ?? "";
 
-        if ("type" in (icon as any) && (icon as any).type === "emoji") {
-            const emo = (icon as any).emoji as string;
+        const obj = icon as unknown;
+        if (typeof obj === "object" && obj !== null && "type" in obj) {
+            const typed = obj as Record<string, unknown>;
+            const type = typeof typed.type === "string" ? typed.type : undefined;
+            if (type === "emoji") {
+                const emo = typeof typed.emoji === "string" ? typed.emoji : "";
+                return (
+                    <span
+                        className={className}
+                        style={{ ...baseStyle, fontSize: isInline ? "1em" : px }}
+                        aria-hidden="true"
+                    >
+                        {emo}
+                    </span>
+                );
+            }
+
+            let url: string | undefined;
+            if (type === "external") {
+                const external = typed.external as Record<string, unknown> | undefined;
+                url = typeof external?.url === "string" ? (external.url as string) : undefined;
+            } else if (type === "file") {
+                const file = typed.file as Record<string, unknown> | undefined;
+                url = typeof file?.url === "string" ? (file.url as string) : undefined;
+            }
+
+            if (!url) return null;
+
             return (
-                <span
+                <img
                     className={className}
-                    style={{...baseStyle, fontSize: isInline ? "1em" : px}}
-                    aria-hidden="true"
-                >
-        {emo}
-      </span>
+                    src={url}
+                    alt=""
+                    style={{
+                        ...baseStyle,
+                        objectFit: "cover",
+                        borderRadius: isInline ? 2 : 8,
+                    }}
+                />
             );
         }
 
-        const url =
-            (icon as any).type === "external"
-                ? (icon as any).external?.url
-                : (icon as any).file?.url;
-
-        if (!url) return null;
-
-        return (
-            <img
-                className={className}
-                src={url}
-                alt=""
-                style={{
-                    ...baseStyle,
-                    objectFit: "cover",
-                    borderRadius: isInline ? 2 : 8,
-                }}
-            />
-        );
+        return null;
     }
 
     // Format the last edited date
@@ -174,41 +185,41 @@ export default function BlogPost() {
     const coverImage = getCoverImage();
     const renderDatabaseView = () => {
         if (data?.type !== "database") return null;
-        const {pages} = data.data;
+        const { pages } = data.data;
 
         return (
             <div className="table-responsive">
                 <table className="table table-hover">
                     <thead>
-                    <tr>
-                        <th scope="col" style={{width: "2rem"}}></th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Last Updated</th>
-                    </tr>
+                        <tr>
+                            <th scope="col" style={{ width: "2rem" }}></th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Last Updated</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {pages.map(page => {
-                        const titleProp = Object.values(page.properties).find(p => p.type === "title");
-                        const title = (titleProp && titleProp.type === "title" && titleProp.title.length > 0)
-                            ? titleProp.title[0].plain_text
-                            : "Untitled";
+                        {pages.map(page => {
+                            const titleProp = Object.values(page.properties).find(p => p.type === "title");
+                            const title = (titleProp && titleProp.type === "title" && titleProp.title.length > 0)
+                                ? titleProp.title[0].plain_text
+                                : "Untitled";
 
-                        return (
-                            <tr key={page.id}>
-                                <td>
-                                    {page.icon && page.icon.type === "emoji" && (
-                                        <span>{page.icon.emoji}</span>
-                                    )}
-                                </td>
-                                <td>
-                                    <Link to={`/blog/${page.id}`} className="text-decoration-none">
-                                        {title}
-                                    </Link>
-                                </td>
-                                <td>{formatDate(page.last_edited_time)}</td>
-                            </tr>
-                        );
-                    })}
+                            return (
+                                <tr key={page.id}>
+                                    <td>
+                                        {page.icon && page.icon.type === "emoji" && (
+                                            <span>{page.icon.emoji}</span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <Link to={`/blog/${page.id}`} className="text-decoration-none">
+                                            {title}
+                                        </Link>
+                                    </td>
+                                    <td>{formatDate(page.last_edited_time)}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -217,17 +228,17 @@ export default function BlogPost() {
 
     return (
         <MainLayout>
-            <PageHead title={extractTitle()}/>
+            <PageHead title={extractTitle()} />
             <Row className="container-lg mt-5 mx-0 mx-lg-auto px-0 px-lg-auto">
                 {loading ? (
                     <div className="d-flex justify-content-center">
-                        <Spinner animation="border"/>
+                        <Spinner animation="border" />
                     </div>
                 ) : error ? (
                     <div className="alert alert-danger">
                         {error}
                         <Button variant={"link"} onClick={() => id && loadBlogPostAndParents(id)}>
-                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                             &nbsp;Retry
                         </Button>
                     </div>
@@ -237,7 +248,7 @@ export default function BlogPost() {
                     <Row className="blog-post">
                         {/* Breadcrumb navigation */}
                         <nav aria-label="breadcrumb" className="mb-3">
-                            <ol className="breadcrumb mb-0" style={{fontSize: "0.9rem"}}>
+                            <ol className="breadcrumb mb-0" style={{ fontSize: "0.9rem" }}>
                                 {parents.map((parent) => {
                                     if (parent.object === 'database') return null;
 
@@ -262,16 +273,16 @@ export default function BlogPost() {
                                     );
                                 })}
                                 <li className="breadcrumb-item active" aria-current="page">
-                                        <span style={{
-                                            maxWidth: "400px",
-                                            display: "inline-block",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            whiteSpace: "nowrap",
-                                            verticalAlign: "middle"
-                                        }}>
-                                            {extractTitle()}
-                                        </span>
+                                    <span style={{
+                                        maxWidth: "400px",
+                                        display: "inline-block",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        verticalAlign: "middle"
+                                    }}>
+                                        {extractTitle()}
+                                    </span>
                                 </li>
                             </ol>
                         </nav>
@@ -329,7 +340,7 @@ export default function BlogPost() {
                                 <Col xs={12} md={showToc ? 8 : 12} lg={showToc ? 9 : 12} className="blog-main-content">
                                     {data.type === "page" ? (
                                         <>
-                                            <NotionBlocks blocks={data.data.blocks}/>
+                                            <NotionBlocks blocks={data.data.blocks} />
                                             <style>{`
 .notion-content {
   --indent-step: clamp(0.6rem, 2.4vw, 1.25rem);
@@ -346,7 +357,7 @@ export default function BlogPost() {
                                 {showToc && (
                                     <Col md={4} lg={3} className="d-none d-lg-block">
                                         <TableOfContents blocks={data.type === "page" ? data.data.blocks : []}
-                                                         mode="desktop" title="On this page"/>
+                                            mode="desktop" title="On this page" />
                                     </Col>
                                 )}
                                 {/*{showToc && (*/}

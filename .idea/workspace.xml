@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/styles/_toc.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/blogRoutes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/NotionBlocks.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/BlogPost.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/_custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/_custom.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/_variables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,62 +57,63 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JavaScript Debug.localhost:35835.executor": "Debug",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Node.js.backend > NotionService.ts.executor": "Run",
-    "Node.js.frontend > parser.cjs.executor": "Run",
-    "Node.js.parser.js.executor": "Run",
-    "Node.js.parser.ts.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
-    "WebServerToolWindowPanel.toolwindow.show.date": "false",
-    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
-    "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "//wsl.localhost/Ubuntu-24.04/home/zliu/StackFusionZiyiliuTop",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.backend > build.executor": "Run",
-    "npm.backend > clean.executor": "Run",
-    "npm.backend > dev.executor": "Run",
-    "npm.backend > dev:hot.executor": "Run",
-    "npm.backend > lint --fix.executor": "Run",
-    "npm.backend > lint.executor": "Run",
-    "npm.backend > prestart.executor": "Run",
-    "npm.backend > start.executor": "Run",
-    "npm.build.executor": "Run",
-    "npm.build:all.executor": "Run",
-    "npm.clean-install.executor": "Run",
-    "npm.dev:all.executor": "Run",
-    "npm.dev:hot.executor": "Run",
-    "npm.frontend > build.executor": "Run",
-    "npm.frontend > clean.executor": "Run",
-    "npm.frontend > dev.executor": "Run",
-    "npm.frontend > lint.executor": "Run",
-    "npm.frontend > preview.executor": "Run",
-    "npm.install:all.executor": "Run",
-    "npm.lint.executor": "Run",
-    "npm.lint:all.executor": "Run",
-    "npm.parse:locales.executor": "Run",
-    "npm.start.executor": "Run",
-    "npm.type-check.executor": "Run",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "ts.external.directory.path": "/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.localhost:35835.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Node.js.backend &gt; NotionService.ts.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.frontend &gt; parser.cjs.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.parser.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.parser.ts.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;//wsl.localhost/Ubuntu/home/zliu/StackFusionZiyiliuTop&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.backend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; clean.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; dev:hot.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; lint --fix.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; prestart.executor&quot;: &quot;Run&quot;,
+    &quot;npm.backend &gt; start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.clean-install.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev:hot.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; clean.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend &gt; preview.executor&quot;: &quot;Run&quot;,
+    &quot;npm.install:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.parse:locales.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;npm.type-check.executor&quot;: &quot;Run&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/zliu/Documents/PROJECTS/StackFusionZiyiliuTop/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="\\wsl.localhost\Ubuntu-22.04\home\zliu\StackFusionZiyiliuTop\frontend\src\pages" />
@@ -130,7 +130,7 @@
       <recent name="$PROJECT_DIR$/backend/src/common/types" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.frontend &gt; build">
+  <component name="RunManager" selected="npm.backend &gt; build">
     <configuration name="frontend &gt; parser.cjs" type="NodeJSConfigurationType" path-to-node="wsl://Ubuntu-22.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" nameIsGenerated="true" path-to-js-file="parser.cjs" working-dir="$PROJECT_DIR$/frontend/src/locales">
       <method v="2" />
     </configuration>
@@ -140,7 +140,8 @@
       <scripts>
         <script value="build" />
       </scripts>
-      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <node-interpreter value="wsl://Ubuntu@/home/zliu/.nvm/versions/node/v24.12.0/bin/node" />
+      <package-manager value="npm" />
       <envs />
       <method v="2" />
     </configuration>
@@ -160,7 +161,8 @@
       <scripts>
         <script value="dev:all" />
       </scripts>
-      <node-interpreter value="wsl://Ubuntu-24.04@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <node-interpreter value="wsl://Ubuntu@/home/zliu/.nvm/versions/node/v22.17.0/bin/node" />
+      <package-manager value="npm" />
       <envs />
       <method v="2" />
     </configuration>
@@ -186,19 +188,19 @@
     </configuration>
     <list>
       <item itemvalue="Node.js.frontend &gt; parser.cjs" />
-      <item itemvalue="npm.build:all" />
-      <item itemvalue="npm.start" />
       <item itemvalue="npm.backend &gt; build" />
-      <item itemvalue="npm.frontend &gt; build" />
+      <item itemvalue="npm.build:all" />
       <item itemvalue="npm.dev:all" />
+      <item itemvalue="npm.frontend &gt; build" />
+      <item itemvalue="npm.start" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.frontend &gt; build" />
+        <item itemvalue="npm.backend &gt; build" />
         <item itemvalue="npm.dev:all" />
+        <item itemvalue="npm.frontend &gt; build" />
         <item itemvalue="npm.build:all" />
         <item itemvalue="npm.start" />
-        <item itemvalue="npm.backend &gt; build" />
       </list>
     </recent_temporary>
   </component>
@@ -251,6 +253,11 @@
       <workItem from="1759750137236" duration="17128000" />
       <workItem from="1759932881249" duration="3029000" />
       <workItem from="1760016997102" duration="39683000" />
+      <workItem from="1764922721733" duration="7588000" />
+      <workItem from="1765189159084" duration="1851000" />
+      <workItem from="1765633261244" duration="23254000" />
+      <workItem from="1765684854990" duration="1404000" />
+      <workItem from="1765738372329" duration="2000" />
     </task>
     <servers />
   </component>
@@ -272,5 +279,13 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/backend" />
     </ignored-roots>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

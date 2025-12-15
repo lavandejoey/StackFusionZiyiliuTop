@@ -1,18 +1,18 @@
 // /frontend/src/components/NotionBlocks.tsx
-import React, {type JSX, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Card, Col, Container, Row, Spinner, Table} from "react-bootstrap";
-import {getChildBlocks, getDatabase, queryDatabase} from "@/services/blogService";
-import {useTranslation} from 'react-i18next';
+import React, { type JSX, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
+import { getChildBlocks, getDatabase, queryDatabase } from "@/services/blogService";
+import { useTranslation } from 'react-i18next';
 import type {
     BlockObjectResponse,
     DatabaseObjectResponse,
     PageObjectResponse,
     RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import {MathJax} from "better-react-mathjax";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClipboard, faGrip, faTable, faChevronDown, faChevronUp} from "@fortawesome/free-solid-svg-icons";
-import {highlight, languages} from "prismjs";
+import { MathJax } from "better-react-mathjax";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClipboard, faGrip, faTable, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { highlight, languages } from "prismjs";
 import "prismjs/themes/prism.css";
 // import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-python";
@@ -21,22 +21,22 @@ import "@/styles/_toc.scss"
 // Anchors
 const getBlockRawId = (block: BlockObjectResponse) => block.id.replace(/-/g, '');// match your TOC offset
 // Helper function to render rich text blocks with proper formatting
-const RichText = ({richText}: { richText: RichTextItemResponse[] }): JSX.Element => {
+const RichText = ({ richText }: { richText: RichTextItemResponse[] }): JSX.Element => {
     if (!richText || richText.length === 0) return (<></>);
 
     return (
         <>
             {richText.map((textObject, index) => {
                 if (!textObject) return null;
-                const {type} = textObject;
+                const { type } = textObject;
 
                 if (type === "equation") {
-                    const {equation} = textObject;
+                    const { equation } = textObject;
                     return (
                         <MathJax inline key={index}>{`$${equation.expression}$`}</MathJax>
                     );
                 } else if (type === "mention") {
-                    const {mention, annotations, plain_text} = textObject;
+                    const { mention, annotations, plain_text } = textObject;
 
                     // Apply styling based on annotations
                     const style: React.CSSProperties = {
@@ -83,7 +83,7 @@ const RichText = ({richText}: { richText: RichTextItemResponse[] }): JSX.Element
                     return <span key={index} style={style}>{plain_text}</span>;
                 } else if (type === "text") {
                     const {
-                        annotations: {bold, italic, strikethrough, underline, code, color},
+                        annotations: { bold, italic, strikethrough, underline, code, color },
                         plain_text,
                         href,
                     } = textObject;
@@ -156,174 +156,174 @@ const AsyncChildBlocks: React.FC<{
     initiallyExpanded?: boolean;
     customClassName?: string;
 }> = ({
-          parentId,
-          initiallyExpanded = false,
-          customClassName = "",
-      }) => {
-    const [childBlocks, setChildBlocks] = useState<BlockObjectResponse[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [expanded, setExpanded] = useState(initiallyExpanded);
+    parentId,
+    initiallyExpanded = false,
+    customClassName = "",
+}) => {
+        const [childBlocks, setChildBlocks] = useState<BlockObjectResponse[]>([]);
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState<string | null>(null);
+        const [expanded, setExpanded] = useState(initiallyExpanded);
 
-    const loadChildren = useCallback(async () => {
-        if (childBlocks.length > 0) {
-            setExpanded(true);
-            return;
-        }
-        setLoading(true);
-        setError(null);
-        try {
-            const blocks = await getChildBlocks(parentId);
-            setChildBlocks(blocks);
-            setExpanded(true);
-        } catch (err) {
-            console.error(`Failed to load child blocks for ${parentId}:`, err);
-            setError("Failed to load content");
-        } finally {
-            setLoading(false);
-        }
-    }, [childBlocks.length, parentId]);
+        const loadChildren = useCallback(async () => {
+            if (childBlocks.length > 0) {
+                setExpanded(true);
+                return;
+            }
+            setLoading(true);
+            setError(null);
+            try {
+                const blocks = await getChildBlocks(parentId);
+                setChildBlocks(blocks);
+                setExpanded(true);
+            } catch (err) {
+                console.error(`Failed to load child blocks for ${parentId}:`, err);
+                setError("Failed to load content");
+            } finally {
+                setLoading(false);
+            }
+        }, [childBlocks.length, parentId]);
 
-    // Automatically attempt to load content when component mounts or when not expanded
-    useEffect(() => {
-        if ((initiallyExpanded || !expanded) && childBlocks.length === 0 && !loading) {
-            loadChildren().catch(console.error);
-        }
-    }, [initiallyExpanded, expanded, childBlocks.length, loading, loadChildren]);
+        // Automatically attempt to load content when component mounts or when not expanded
+        useEffect(() => {
+            if ((initiallyExpanded || !expanded) && childBlocks.length === 0 && !loading) {
+                loadChildren().catch(console.error);
+            }
+        }, [initiallyExpanded, expanded, childBlocks.length, loading, loadChildren]);
 
-    // If content is already loading, show loading indicator
-    if (loading) {
-        return (
-            <div className={customClassName}>
-                <div className="d-flex align-items-center">
-                    <Spinner animation="border" size="sm" className="me-2"/>
-                    <span>Loading content...</span>
+        // If content is already loading, show loading indicator
+        if (loading) {
+            return (
+                <div className={customClassName}>
+                    <div className="d-flex align-items-center">
+                        <Spinner animation="border" size="sm" className="me-2" />
+                        <span>Loading content...</span>
+                    </div>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    // If there was an error loading content, show error with retry option
-    if (error) {
-        return (
-            <div className={customClassName}>
-                <div className="text-danger">
-                    {error}
-                    <button
-                        className="btn btn-sm btn-link"
-                        onClick={() => {
-                            loadChildren().catch(err => {
-                                console.error(`Failed to retry loading children for ${parentId}:`, err);
-                            });
-                        }}
-                    >
-                        Try again
-                    </button>
+        // If there was an error loading content, show error with retry option
+        if (error) {
+            return (
+                <div className={customClassName}>
+                    <div className="text-danger">
+                        {error}
+                        <button
+                            className="btn btn-sm btn-link"
+                            onClick={() => {
+                                loadChildren().catch(err => {
+                                    console.error(`Failed to retry loading children for ${parentId}:`, err);
+                                });
+                            }}
+                        >
+                            Try again
+                        </button>
+                    </div>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    // If no content available after loading
-    if (childBlocks.length === 0) {
-        return (
-            <div className={customClassName}>
-                <p className="text-muted">No content available</p>
-            </div>
-        );
-    }
+        // If no content available after loading
+        if (childBlocks.length === 0) {
+            return (
+                <div className={customClassName}>
+                    <p className="text-muted">No content available</p>
+                </div>
+            );
+        }
 
-    // If we have content, and we're expanded, show the content
-    if (expanded) {
-        return (
-            <div className={customClassName}>
-                <NotionBlocks blocks={childBlocks}/>
-            </div>
-        );
-    }
+        // If we have content, and we're expanded, show the content
+        if (expanded) {
+            return (
+                <div className={customClassName}>
+                    <NotionBlocks blocks={childBlocks} />
+                </div>
+            );
+        }
 
-    // If not expanded and not already loading, trigger loading
-    return null;
-};
+        // If not expanded and not already loading, trigger loading
+        return null;
+    };
 
 // Individual block rendering components
-const Paragraph = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+const Paragraph = ({ block }: { block: BlockObjectResponse }): JSX.Element => {
     if (block.type !== "paragraph") return <></>;
     const hasEquation = block.paragraph.rich_text.some(text => text.type === 'equation');
     const className = hasEquation ? 'my-2' : 'mb-1';
     return (
         <>
             <p className={className} id={getBlockRawId(block)}>
-                <RichText richText={block.paragraph.rich_text}/>
+                <RichText richText={block.paragraph.rich_text} />
             </p>
             {block.has_children && (
-                <AsyncChildBlocks parentId={block.id} customClassName="ms-4 mt-2"/>
+                <AsyncChildBlocks parentId={block.id} customClassName="ms-4 mt-2" />
             )}
         </>
     );
 };
 
-const Heading1 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+const Heading1 = ({ block }: { block: BlockObjectResponse }): JSX.Element => {
     if (block.type !== "heading_1") return <></>;
     const slugId = createHeadingId(block.heading_1.rich_text);
     const rawId = getBlockRawId(block);
     return (
         <h1 id={slugId} className="mt-5 mb-3">
-            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
-            <RichText richText={block.heading_1.rich_text}/>
+            <span id={rawId} style={{ position: 'relative', top: '-40px' }} aria-hidden="true" />
+            <RichText richText={block.heading_1.rich_text} />
         </h1>
     );
 };
 
-const Heading2 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+const Heading2 = ({ block }: { block: BlockObjectResponse }): JSX.Element => {
     if (block.type !== "heading_2") return <></>;
     const slugId = createHeadingId(block.heading_2.rich_text);
     const rawId = getBlockRawId(block);
     return (
         <h2 id={slugId} className="mt-4 mb-2">
-            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
-            <RichText richText={block.heading_2.rich_text}/>
+            <span id={rawId} style={{ position: 'relative', top: '-40px' }} aria-hidden="true" />
+            <RichText richText={block.heading_2.rich_text} />
         </h2>
     );
 };
 
-const Heading3 = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+const Heading3 = ({ block }: { block: BlockObjectResponse }): JSX.Element => {
     if (block.type !== "heading_3") return <></>;
     const slugId = createHeadingId(block.heading_3.rich_text);
     const rawId = getBlockRawId(block);
     return (
         <h3 id={slugId} className="mt-3 mb-2">
-            <span id={rawId} style={{position: 'relative', top: '-40px'}} aria-hidden="true"/>
-            <RichText richText={block.heading_3.rich_text}/>
+            <span id={rawId} style={{ position: 'relative', top: '-40px' }} aria-hidden="true" />
+            <RichText richText={block.heading_3.rich_text} />
         </h3>
     );
 };
 
-const BulletedListItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const BulletedListItem = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "bulleted_list_item") return null;
     return (
         <li id={getBlockRawId(block)}>
-            <RichText richText={block.bulleted_list_item.rich_text}/>
+            <RichText richText={block.bulleted_list_item.rich_text} />
             {block.has_children && (
-                <AsyncChildBlocks parentId={block.id}/>
+                <AsyncChildBlocks parentId={block.id} />
             )}
         </li>
     );
 };
 
-const NumberedListItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const NumberedListItem = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "numbered_list_item") return null;
     return (
         <li id={getBlockRawId(block)}>
-            <RichText richText={block.numbered_list_item.rich_text}/>
+            <RichText richText={block.numbered_list_item.rich_text} />
             {block.has_children && (
-                <AsyncChildBlocks parentId={block.id}/>
+                <AsyncChildBlocks parentId={block.id} />
             )}
         </li>
     );
 };
 
-const TodoItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const TodoItem = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "to_do") return null;
     return (
         <div className="d-flex align-items-center mb-2">
@@ -334,22 +334,22 @@ const TodoItem = ({block}: { block: BlockObjectResponse }): JSX.Element | null =
                 className="me-2"
             />
             <span>
-<RichText richText={block.to_do.rich_text}/>
-</span>
+                <RichText richText={block.to_do.rich_text} />
+            </span>
         </div>
     );
 };
 
-const Toggle = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Toggle = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "toggle") return null;
 
     return (
         <details className="mb-3">
             <summary className="fw-bold">
-                <RichText richText={block.toggle.rich_text}/>
+                <RichText richText={block.toggle.rich_text} />
             </summary>
             {block.has_children && (
-                <AsyncChildBlocks parentId={block.id}/>
+                <AsyncChildBlocks parentId={block.id} />
             )}
         </details>
     );
@@ -378,21 +378,18 @@ const mapLanguage = (langRaw: string | undefined): string | undefined => {
     return aliases[lang] ?? lang.replace(/\s+/g, "");
 };
 
-const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Code = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     const mermaidInitialisedRef = useRef(false);
     const [copied, setCopied] = useState(false);
     const codeRef = useRef<HTMLElement | null>(null);
     const mermaidContainerRef = useRef<HTMLDivElement | null>(null);
 
-    if (block.type !== "code") return null;
+    const codeText = useMemo(() => {
+        return block.type === 'code' ? block.code.rich_text.map(t => t.plain_text).join("") : "";
+    }, [block]);
 
-    const codeText = useMemo(
-        () => block.code.rich_text.map(t => t.plain_text).join(""),
-        [block.code.rich_text]
-    );
-
-    const rawLanguage = block.code.language;
-    const language = mapLanguage(rawLanguage);
+    const rawLanguage = block.type === 'code' ? block.code.language : undefined;
+    const language = mapLanguage(rawLanguage as string | undefined);
     const isMermaid = language === "mermaid";
 
     useEffect(() => {
@@ -435,7 +432,11 @@ const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
 
             try {
                 // v10+ supports run() which parses `.mermaid` nodes in the subtree
-                await mermaid.run({querySelector: ".mermaid"});
+                // Only run if container exists and has content
+                if (mermaidContainerRef.current) {
+                    // Run on the specific container element only, not globally
+                    await mermaid.run({ nodes: [mermaidContainerRef.current] });
+                }
             } catch (e) {
                 console.error("Mermaid rendering error:", e);
             }
@@ -483,9 +484,9 @@ const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
                             title="Copy to clipboard"
                         >
                             {copied ? <>
-                                <FontAwesomeIcon icon={faClipboard}/>&nbsp;Copied!
+                                <FontAwesomeIcon icon={faClipboard} />&nbsp;Copied!
                             </> : <>
-                                <FontAwesomeIcon icon={faClipboard}/>&nbsp;Copy
+                                <FontAwesomeIcon icon={faClipboard} />&nbsp;Copy
                             </>}
                         </button>
                     </div>
@@ -503,7 +504,7 @@ const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     // Regular highlighted code
     return (
         <Container id={getBlockRawId(block)} className="mb-2 d-flex justify-content-center">
-            <div style={{display: "inline-block", maxWidth: "100%", minWidth: "80%", overflowX: "auto"}}>
+            <div style={{ display: "inline-block", maxWidth: "100%", minWidth: "80%", overflowX: "auto" }}>
                 <Container className="d-flex justify-content-between align-items-center px-3 pb-2 border-bottom">
                     <small className="text-muted">
                         {rawLanguage ? rawLanguage[0].toUpperCase() + rawLanguage.slice(1) : "Code"}
@@ -514,30 +515,30 @@ const Code = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
                         aria-label="Copy code"
                         title="Copy to clipboard"
                     >
-                        <FontAwesomeIcon icon={faClipboard}/>&nbsp;{copied ? "Copied!" : "Copy"}
+                        <FontAwesomeIcon icon={faClipboard} />&nbsp;{copied ? "Copied!" : "Copy"}
                     </button>
                 </Container>
                 <pre className={`p-2 m-0 bg-body-tertiary language-${language}`}><code
                     ref={codeRef}
                     className={`language-${language}`}
-                    style={{display: "inline-block"}}
+                    style={{ display: "inline-block" }}
                 >{codeText}</code></pre>
             </div>
         </Container>
     );
 };
 
-const Quote = ({block}: { key: string, block: BlockObjectResponse }): JSX.Element | null => {
+const Quote = ({ block }: { key: string, block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "quote") return null;
     return (
         <blockquote id={getBlockRawId(block)} className="border-start border-3 ps-3 mb-4 fst-italic">
-            <RichText richText={block.quote.rich_text}/>
-            {block.has_children ? <AsyncChildBlocks parentId={block.id}/> : null}
+            <RichText richText={block.quote.rich_text} />
+            {block.has_children ? <AsyncChildBlocks parentId={block.id} /> : null}
         </blockquote>
     );
 };
 
-const Callout = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Callout = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "callout") return null;
     return (
         <div className="bg-light p-3 rounded d-flex mb-4">
@@ -545,18 +546,18 @@ const Callout = ({block}: { block: BlockObjectResponse }): JSX.Element | null =>
                 {block.callout.icon?.type === "emoji" ? block.callout.icon.emoji : "💡"}
             </div>
             <div>
-                <RichText richText={block.callout.rich_text}/>
+                <RichText richText={block.callout.rich_text} />
             </div>
         </div>
     );
 };
 
-const Divider = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Divider = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "divider") return null;
-    return <hr className="my-4"/>;
+    return <hr className="my-4" />;
 };
 
-const Image = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Image = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "image") return null;
 
     const imageUrl =
@@ -574,7 +575,7 @@ const Image = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
                 src={imageUrl}
                 alt={caption || "Image"}
                 className="img-fluid rounded"
-                style={{maxHeight: "500px"}}
+                style={{ maxHeight: "500px" }}
             />
             {caption && (
                 <figcaption className="text-muted mt-2">{caption}</figcaption>
@@ -583,7 +584,7 @@ const Image = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
     );
 };
 
-const ChildIcon = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const ChildIcon = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "child_database") return null;
     // TODO
     // Return a database icon
@@ -603,10 +604,10 @@ type TOCMode = "mobile" | "desktop";
 
 // Table of Contents component with fixed positioning and vertical centering
 export const TableOfContents = ({
-                                    blocks,
-                                    title = "Contents",
-                                    mode = "desktop",
-                                }: {
+    blocks,
+    title = "Contents",
+    mode = "desktop",
+}: {
     blocks: BlockObjectResponse[];
     title?: string;
     mode?: TOCMode;
@@ -625,7 +626,7 @@ export const TableOfContents = ({
                 if (type === "heading_3" && "heading_3" in b) rt = b.heading_3.rich_text;
                 const id = createHeadingId(rt);
                 const text = rt.map(t => t.plain_text).join("");
-                return {id, text, level};
+                return { id, text, level };
             });
     }, [blocks]);
 
@@ -639,7 +640,7 @@ export const TableOfContents = ({
                     .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
                 if (vis[0]) setActiveId(vis[0].target.id);
             },
-            {root: null, rootMargin: `-${offset}px 0px -60% 0px`, threshold: [0, 1]}
+            { root: null, rootMargin: `-${offset}px 0px -60% 0px`, threshold: [0, 1] }
         );
         headings.forEach(h => {
             const el = document.getElementById(h.id);
@@ -651,16 +652,16 @@ export const TableOfContents = ({
     if (!headings.length) return null;
 
     return mode === "mobile" ? (
-        <MobileTOC headings={headings} title={title} activeId={activeId}/>
+        <MobileTOC headings={headings} title={title} activeId={activeId} />
     ) : (
-        <DesktopTOC headings={headings} title={title} activeId={activeId}/>
+        <DesktopTOC headings={headings} title={title} activeId={activeId} />
     );
 };
 
 /* ----------------- Mobile TOC (separate row, 20vh collapsed) ----------------- */
 const MobileTOC = ({
-                       headings, title, activeId
-                   }: { headings: TOCItem[]; title: string; activeId: string | null }) => {
+    headings, title, activeId
+}: { headings: TOCItem[]; title: string; activeId: string | null }) => {
     const [open, setOpen] = useState(false);
 
     const handleToggle = (force?: boolean) => {
@@ -670,7 +671,7 @@ const MobileTOC = ({
             const el = document.querySelector(".toc-mobile-body");
             if (!el) return;
             const top = el.getBoundingClientRect().top + window.scrollY - 16;
-            window.scrollTo({top, behavior: "smooth"});
+            window.scrollTo({ top, behavior: "smooth" });
         }, 100);
     };
 
@@ -678,7 +679,7 @@ const MobileTOC = ({
         const el = document.getElementById(id);
         if (!el) return;
         const top = el.getBoundingClientRect().top + window.scrollY - 64; // adjust for any fixed navbar
-        window.scrollTo({top, behavior: "smooth"});
+        window.scrollTo({ top, behavior: "smooth" });
         history.replaceState(null, "", `#${id}`);
     };
 
@@ -691,7 +692,7 @@ const MobileTOC = ({
             <div className="toc-mobile-body">
                 <ul className="toc-list">
                     {headings.map(h => (
-                        <li key={h.id} style={{paddingLeft: `${(h.level - 1) * 12}px`}}>
+                        <li key={h.id} style={{ paddingLeft: `${(h.level - 1) * 12}px` }}>
                             <a
                                 className={`toc-link ${activeId === h.id ? "active" : ""}`}
                                 href={`#${h.id}`}
@@ -708,13 +709,13 @@ const MobileTOC = ({
                     ))}
                 </ul>
                 {/* bottom gradient mask only when collapsed */}
-                {!open && <div className="toc-mobile-fade"/>}
+                {!open && <div className="toc-mobile-fade" />}
                 <button
                     className="toc-mobile-expand"
                     aria-label={open ? "Collapse table of contents" : "Expand table of contents"}
                     onClick={() => handleToggle()}
                 >
-                    <span aria-hidden> <FontAwesomeIcon icon={faChevronDown}/> </span>
+                    <span aria-hidden> <FontAwesomeIcon icon={faChevronDown} /> </span>
                     {/*{open ? <span aria-hidden> <FontAwesomeIcon icon={faChevronDown}/> </span> :*/}
                     {/*    <span aria-hidden> <FontAwesomeIcon icon={faChevronUp}/> </span>}*/}
                 </button>
@@ -725,8 +726,8 @@ const MobileTOC = ({
 
 /* ----------------- Desktop TOC (affix; inside .phoframe bounds) ----------------- */
 const DesktopTOC = ({
-                        headings, title, activeId
-                    }: { headings: TOCItem[]; title: string; activeId: string | null }) => {
+    headings, title, activeId
+}: { headings: TOCItem[]; title: string; activeId: string | null }) => {
     const wrapRef = useRef<HTMLDivElement | null>(null);
     const [affixed, setAffixed] = useState(false);
     const [width, setWidth] = useState<number | undefined>(undefined);
@@ -757,10 +758,10 @@ const DesktopTOC = ({
         const onPointerDown = () => markUserActive();
         const onTouchMove = () => markUserActive();
 
-        card.addEventListener("wheel", onWheel, {passive: true});
-        card.addEventListener("scroll", onScroll, {passive: true});
-        card.addEventListener("pointerdown", onPointerDown, {passive: true});
-        card.addEventListener("touchmove", onTouchMove, {passive: true});
+        card.addEventListener("wheel", onWheel, { passive: true });
+        card.addEventListener("scroll", onScroll, { passive: true });
+        card.addEventListener("pointerdown", onPointerDown, { passive: true });
+        card.addEventListener("touchmove", onTouchMove, { passive: true });
 
         return () => {
             card.removeEventListener("wheel", onWheel);
@@ -786,7 +787,7 @@ const DesktopTOC = ({
             onScroll();
 
             window.removeEventListener("scroll", onScroll);
-            window.addEventListener("scroll", onScroll, {passive: true});
+            window.addEventListener("scroll", onScroll, { passive: true });
             return () => window.removeEventListener("scroll", onScroll);
         };
 
@@ -823,7 +824,7 @@ const DesktopTOC = ({
         // Smoothly scroll the TOC container itself
         // Use rAF to avoid layout jank if multiple activeId changes happen quickly
         window.requestAnimationFrame(() => {
-            card.scrollTo({top: clamped, behavior: "smooth"});
+            card.scrollTo({ top: clamped, behavior: "smooth" });
         });
     }, [activeId]);
 
@@ -837,20 +838,20 @@ const DesktopTOC = ({
         const el = document.getElementById(id);
         if (!el) return;
         const top = el.getBoundingClientRect().top + window.scrollY - 72; // site navbar margin
-        window.scrollTo({top, behavior: "smooth"});
+        window.scrollTo({ top, behavior: "smooth" });
         history.replaceState(null, "", `#${id}`);
     };
 
     return (
         <div ref={wrapRef} className="toc-desktop-wrap">
-            <div className={`toc-desktop ${affixed ? "is-fixed" : ""}`} style={affixed ? {width} : undefined}>
+            <div className={`toc-desktop ${affixed ? "is-fixed" : ""}`} style={affixed ? { width } : undefined}>
                 {/* attach ref to the scrollable card container */}
                 <div className="toc-desktop-card" ref={cardRef}>
                     <div className="toc-desktop-title">{title}</div>
                     {/* attach ref to the list to locate active item */}
                     <ul className="toc-list" ref={listRef}>
                         {headings.map(h => (
-                            <li key={h.id} style={{paddingLeft: `${(h.level - 1) * 12}px`}}>
+                            <li key={h.id} style={{ paddingLeft: `${(h.level - 1) * 12}px` }}>
                                 <a
                                     className={`toc-link ${activeId === h.id ? "active" : ""}`}
                                     href={`#${h.id}`}
@@ -872,7 +873,7 @@ const DesktopTOC = ({
 };
 
 // Special component to handle both list types
-const ListWrapper = ({blocks, startIndex}: {
+const ListWrapper = ({ blocks, startIndex }: {
     blocks: BlockObjectResponse[];
     startIndex: number
 }): JSX.Element | null => {
@@ -891,7 +892,7 @@ const ListWrapper = ({blocks, startIndex}: {
             <div className="list-wrapper">
                 <ul className="my-1">
                     {listItems.map((block) => (
-                        <BulletedListItem key={block.id} block={block}/>
+                        <BulletedListItem key={block.id} block={block} />
                     ))}
                 </ul>
             </div>
@@ -901,7 +902,7 @@ const ListWrapper = ({blocks, startIndex}: {
             <div className="list-wrapper">
                 <ol className="my-1">
                     {listItems.map((block) => (
-                        <NumberedListItem key={block.id} block={block}/>
+                        <NumberedListItem key={block.id} block={block} />
                     ))}
                 </ol>
             </div>
@@ -911,7 +912,7 @@ const ListWrapper = ({blocks, startIndex}: {
 };
 
 // Special component for equation blocks
-const Equation = ({block}: { block: BlockObjectResponse }): JSX.Element => {
+const Equation = ({ block }: { block: BlockObjectResponse }): JSX.Element => {
     if (block.type !== "equation") return <></>;
     return (
         <>
@@ -957,8 +958,8 @@ const Equation = ({block}: { block: BlockObjectResponse }): JSX.Element => {
 };
 
 // Special component for column lists and columns
-const ColumnList = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
-// always run these hooks
+const ColumnList = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
+    // always run these hooks
     const [columnBlocks, setColumnBlocks] = useState<BlockObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -986,7 +987,7 @@ const ColumnList = ({block}: { block: BlockObjectResponse }): JSX.Element | null
     if (block.type !== "column_list") return null;
 
     if (loading) {
-        return <div className="d-flex justify-content-center my-4"><Spinner animation="border"/></div>;
+        return <div className="d-flex justify-content-center my-4"><Spinner animation="border" /></div>;
     }
 
     if (error) {
@@ -1018,7 +1019,7 @@ const ColumnList = ({block}: { block: BlockObjectResponse }): JSX.Element | null
                     md={getColumnWidth(columnBlock, columnBlocks.length)}
                     className="mb-3 mb-md-0"
                 >
-                    <Column block={columnBlock}/>
+                    <Column block={columnBlock} />
                 </Col>
             ))}
         </Row>
@@ -1040,15 +1041,15 @@ const getColumnWidth = (columnBlock: BlockObjectResponse, totalColumns: number):
     return defaultColWidth;
 };
 
-const Column = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const Column = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== "column") return null;
 
     return (
         <>
             {block.has_children ? (
-                <AsyncChildBlocks parentId={block.id} initiallyExpanded={true} customClassName="p-0"/>
+                <AsyncChildBlocks parentId={block.id} initiallyExpanded={true} customClassName="p-0" />
             ) : (
-                <div style={{minHeight: "50px", color: "#ccc", textAlign: "center"}}>
+                <div style={{ minHeight: "50px", color: "#ccc", textAlign: "center" }}>
                     Empty column
                 </div>
             )}
@@ -1057,7 +1058,7 @@ const Column = ({block}: { block: BlockObjectResponse }): JSX.Element | null => 
 };
 
 // Special component for tables
-const TableBlock = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const TableBlock = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     const [tableRows, setTableRows] = useState<BlockObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -1090,7 +1091,7 @@ const TableBlock = ({block}: { block: BlockObjectResponse }): JSX.Element | null
     if (loading) {
         return (
             <div className="my-4 text-center">
-                <Spinner animation="border" role="status"/>
+                <Spinner animation="border" role="status" />
                 <span className="ms-2">Loading table...</span>
             </div>
         );
@@ -1121,7 +1122,7 @@ const TableBlock = ({block}: { block: BlockObjectResponse }): JSX.Element | null
         // Use striped for better readability
         className: "table table-bordered table-striped table-responsive-md",
         // Make the table fill its container width but respect content
-        style: {width: "100%", minWidth: "50%", maxWidth: "100%"}
+        style: { width: "100%", minWidth: "50%", maxWidth: "100%" }
     };
 
     // Apply different hover effects based on if the table has headers
@@ -1134,31 +1135,31 @@ const TableBlock = ({block}: { block: BlockObjectResponse }): JSX.Element | null
             <table {...tableStyles}>
                 {hasColumnHeader && tableRows.length > 0 && (
                     <thead className="table-light">
-                    <TableRow
-                        block={tableRows[0]}
-                        isHeader={true}
-                        hasRowHeader={hasRowHeader}
-                    />
+                        <TableRow
+                            block={tableRows[0]}
+                            isHeader={true}
+                            hasRowHeader={hasRowHeader}
+                        />
                     </thead>
                 )}
                 <tbody>
-                {tableRows
-                    .slice(hasColumnHeader ? 1 : 0)
-                    .map((rowBlock) => (
-                        <TableRow
-                            key={rowBlock.id}
-                            block={rowBlock}
-                            isHeader={false}
-                            hasRowHeader={hasRowHeader}
-                        />
-                    ))}
+                    {tableRows
+                        .slice(hasColumnHeader ? 1 : 0)
+                        .map((rowBlock) => (
+                            <TableRow
+                                key={rowBlock.id}
+                                block={rowBlock}
+                                isHeader={false}
+                                hasRowHeader={hasRowHeader}
+                            />
+                        ))}
                 </tbody>
             </table>
         </div>
     );
 };
 
-const TableRow = ({block, isHeader, hasRowHeader = false}: {
+const TableRow = ({ block, isHeader, hasRowHeader = false }: {
     block: BlockObjectResponse;
     isHeader: boolean;
     hasRowHeader?: boolean
@@ -1192,10 +1193,10 @@ const TableRow = ({block, isHeader, hasRowHeader = false}: {
 };
 
 // Special component for link previews
-const LinkPreview = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
+const LinkPreview = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
     if (block.type !== 'link_preview') return null
 
-    const {url} = block.link_preview
+    const { url } = block.link_preview
     if (!url) return null
 
     const domain = new URL(url).hostname.replace(/^www\./, '').toUpperCase()
@@ -1233,14 +1234,30 @@ const LinkPreview = ({block}: { block: BlockObjectResponse }): JSX.Element | nul
     )
 };
 
+// Extended type for database with properties (merged from data source by backend)
+type DatabaseWithProperties = DatabaseObjectResponse & {
+    properties?: Record<string, unknown>;
+};
+
+// Helpers to safely access property metadata without using `any`
+const getProp = (p: unknown): Record<string, unknown> | null => (typeof p === 'object' && p !== null ? (p as Record<string, unknown>) : null);
+const getPropType = (p: unknown): string | undefined => {
+    const obj = getProp(p);
+    return obj && typeof obj.type === 'string' ? obj.type : undefined;
+};
+const getPropName = (p: unknown): string | undefined => {
+    const obj = getProp(p);
+    return obj && typeof obj.name === 'string' ? obj.name : undefined;
+};
+
 // Special component for child_database blocks
-const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | null => {
-    const [database, setDatabase] = useState<DatabaseObjectResponse | null>(null);
+const ChildDatabase = ({ block }: { block: BlockObjectResponse }): JSX.Element | null => {
+    const [database, setDatabase] = useState<DatabaseWithProperties | null>(null);
     const [entries, setEntries] = useState<PageObjectResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [viewType, setViewType] = useState<'table' | 'gallery' | 'list'>('table');
-    const {i18n} = useTranslation();
+    const { i18n } = useTranslation();
 
     // CSS styles as an object for inline styling
     const styles = {
@@ -1357,28 +1374,28 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
 
             try {
                 // First, fetch database metadata to get column information
-                const databaseData = await getDatabase(databaseId);
+                const databaseData = await getDatabase(databaseId) as DatabaseWithProperties;
 
                 if (!mounted) return;
                 setDatabase(databaseData);
 
                 // Look for a ranking property (Rank, Order, Sort Order, etc.)
-                const rankProperty = Object.entries(databaseData.properties).find(
-                    ([name, prop]) =>
-                        prop.type === 'number' &&
+                const rankProperty = databaseData.properties ? Object.entries(databaseData.properties).find(
+                    ([name, prop]: [string, unknown]) =>
+                        getPropType(prop) === 'number' &&
                         (name.toLowerCase() === 'rank' ||
                             name.toLowerCase() === 'order' ||
                             name.toLowerCase() === 'sort order' ||
                             name.toLowerCase() === 'sort')
-                );
+                ) : undefined;
 
                 // Build sorts array - prioritize manual ranking if available
                 const sorts = rankProperty
-                    ? [{property: rankProperty[0], direction: 'ascending'}]
-                    : [{timestamp: 'created_time', direction: 'ascending'}];
+                    ? [{ property: rankProperty[0], direction: 'ascending' }]
+                    : [{ timestamp: 'created_time', direction: 'ascending' }];
 
                 // Then query database entries with sorting
-                const entriesData = await queryDatabase(databaseId, {sorts});
+                const entriesData = await queryDatabase(databaseId, { sorts });
 
                 if (!mounted) return;
                 setEntries(entriesData.results);
@@ -1406,13 +1423,13 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
 
         switch (property.type) {
             case 'title':
-                return property.title.map(t => t.plain_text).join('');
+                return property.title?.map(t => t?.plain_text).filter(Boolean).join('') || null;
             case 'rich_text':
-                return property.rich_text.map(t => t.plain_text).join('');
+                return property.rich_text?.map(t => t?.plain_text).filter(Boolean).join('') || null;
             case 'select':
                 return property.select?.name || null;
             case 'multi_select':
-                return property.multi_select.map(s => s.name).join(', ');
+                return property.multi_select?.map(s => s?.name).filter(Boolean).join(', ') || null;
             case 'date':
                 return property.date?.start || null;
             case "created_by":
@@ -1420,14 +1437,14 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
             case "created_time":
                 return property.created_time
                     ? new Date(property.created_time)
-                        .toLocaleDateString(i18n.language, {year: 'numeric', month: 'long', day: '2-digit'})
+                        .toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })
                     : null;
             case "last_edited_by":
                 return "name" in property.last_edited_by ? property.last_edited_by.name : null;
             case "last_edited_time":
                 return property.last_edited_time
                     ? new Date(property.last_edited_time)
-                        .toLocaleDateString(i18n.language, {year: 'numeric', month: 'long', day: '2-digit'})
+                        .toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })
                     : null;
             case 'checkbox':
                 return property.checkbox ? '✓' : '✗';
@@ -1442,16 +1459,12 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
             case 'status':
                 return property.status?.name || null;
             case 'people':
-                // Fix TypeScript error by safely checking if name exists
-                // The UserObjectResponse has a name property but PartialUserObjectResponse doesn't
-                return property.people.map(p => {
-                    // Check if it's a full user object with the name property
-                    if ('name' in p) {
+                return property.people?.map(p => {
+                    if (p && 'name' in p) {
                         return p.name;
                     }
-                    // Fall back to ID for partial user objects
-                    return p.id;
-                }).join(', ');
+                    return p?.id;
+                }).filter(Boolean).join(', ') || null;
             default:
                 return 'Unsupported property type';
         }
@@ -1459,15 +1472,15 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
 
     // Format display name for a property (column)
     const getPropertyDisplayName = (propertyId: string) => {
-        if (!database || !database.properties[propertyId]) return propertyId;
-        return database.properties[propertyId].name;
+        if (!database || !database.properties || !database.properties[propertyId]) return propertyId;
+        return getPropName(database.properties[propertyId]) ?? propertyId;
     };
 
     // Get primary column for each entry (usually the title)
     const getPrimaryProperty = (entry: PageObjectResponse) => {
-        if (!database) return null;
+        if (!database || !database.properties) return null;
         const titlePropId = Object.keys(database.properties).find(
-            key => database.properties[key].type === 'title'
+            key => getPropType(database.properties![key]) === 'title'
         );
         return titlePropId ? extractPropertyValue(entry, titlePropId) : null;
     };
@@ -1478,22 +1491,25 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
     };
 
     const renderTableView = () => {
-        if (!database || entries.length === 0) return <div>No items to display</div>;
+        if (!database || !database.properties || entries.length === 0) return <div>No items to display</div>;
 
         // Determine which columns to display
         const visibleColumns = Object.entries(database.properties)
-            .filter(([, prop]) => !['files', 'formula', 'rollup'].includes(prop.type))
+            .filter(([, prop]) => {
+                const t = getPropType(prop);
+                return t !== 'files' && t !== 'formula' && t !== 'rollup';
+            })
             .map(([id]) => id);
 
         // Order: primary (title) first, metadata last
         const primaryPropId = Object.entries(database.properties)
-            .find(([, prop]) => prop.type === 'title')?.[0];
+            .find(([, prop]) => getPropType(prop) === 'title')?.[0];
         const metaTypes = ['created_by', 'created_time', 'last_edited_by', 'last_edited_time'];
         const otherColumns = visibleColumns.filter(
-            id => id !== primaryPropId && !metaTypes.includes(database.properties[id].type)
+            id => id !== primaryPropId && !metaTypes.includes(getPropType(database.properties![id]) ?? '')
         );
         const metaColumns = visibleColumns.filter(
-            id => metaTypes.includes(database.properties[id].type)
+            id => metaTypes.includes(getPropType(database.properties![id]) ?? '')
         );
         const orderedColumns = [
             ...(primaryPropId && visibleColumns.includes(primaryPropId) ? [primaryPropId] : []),
@@ -1504,29 +1520,29 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
         return (
             <Table responsive size="sm" className="m-auto db-table">
                 <thead>
-                <tr>
-                    {orderedColumns.map(propId => (
-                        <th key={propId} className="text-nowrap">
-                            {getPropertyDisplayName(propId)}
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {entries.map(entry => (
-                    <tr
-                        key={entry.id}
-                        className="db-table-row"
-                        onClick={() => (window.location.href = getPageUrl(entry))}
-                        style={{cursor: 'pointer'}}
-                    >
+                    <tr>
                         {orderedColumns.map(propId => (
-                            <td key={propId} className="text-nowrap">
-                                {extractPropertyValue(entry, propId)}
-                            </td>
+                            <th key={propId} className="text-nowrap">
+                                {getPropertyDisplayName(propId)}
+                            </th>
                         ))}
                     </tr>
-                ))}
+                </thead>
+                <tbody>
+                    {entries.map(entry => (
+                        <tr
+                            key={entry.id}
+                            className="db-table-row"
+                            onClick={() => (window.location.href = getPageUrl(entry))}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {orderedColumns.map(propId => (
+                                <td key={propId} className="text-nowrap">
+                                    {extractPropertyValue(entry, propId)}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
                 <style type="text/css">{`
 /* Base table: no heavy borders, neutral bg */
@@ -1628,7 +1644,7 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
                     <strong>{block.child_database.title}</strong>
                 </Card.Header>
                 <Card.Body className="text-center py-5">
-                    <Spinner animation="border" role="status"/>
+                    <Spinner animation="border" role="status" />
                     <p className="mt-2">Loading database...</p>
                 </Card.Body>
             </Card>
@@ -1663,7 +1679,7 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <div className="d-flex align-items-center flex-grow-1 overflow-hidden">
                         <h3 className="h5 mb-0 text-truncate d-flex align-items-center">
-                            <ChildIcon block={block}/>
+                            <ChildIcon block={block} />
                             <span className="ms-2 lead text-truncate">{block.child_database.title}</span>
                         </h3>
                     </div>
@@ -1671,7 +1687,7 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
                     <div className="ms-auto">
                         {/* track */}
                         <div className="d-inline-flex bg-body-tertiary rounded-pill p-1 gap-1" role="group"
-                             aria-label="View type">
+                            aria-label="View type">
                             {/* table */}
                             <button
                                 type="button"
@@ -1685,7 +1701,7 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
                                 ].join(' ')}
                                 onClick={() => setViewType('table')}
                             >
-                                <FontAwesomeIcon icon={faTable}/>
+                                <FontAwesomeIcon icon={faTable} />
                             </button>
 
                             {/* gallery */}
@@ -1701,7 +1717,7 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
                                 ].join(' ')}
                                 onClick={() => setViewType('gallery')}
                             >
-                                <FontAwesomeIcon icon={faGrip}/>
+                                <FontAwesomeIcon icon={faGrip} />
                             </button>
                         </div>
                     </div>
@@ -1717,19 +1733,19 @@ const ChildDatabase = ({block}: { block: BlockObjectResponse }): JSX.Element | n
 };
 
 // Main component to render blocks
-export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.Element => {
-    if (!blocks || blocks.length === 0) {
-        return <div className="text-muted">No content available.</div>;
-    }
-
+export const NotionBlocks = ({ blocks }: { blocks?: BlockObjectResponse[] }): JSX.Element => {
     useEffect(() => {
         const h = typeof window !== 'undefined' ? window.location.hash.slice(1) : '';
         if (!h) return;
         const el = document.getElementById(h);
         if (el) {
-            el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, []);
+
+    if (!blocks || blocks.length === 0) {
+        return <div className="text-muted">No content available.</div>;
+    }
 
     const shouldRender = (block: BlockObjectResponse): boolean => {
         if (block.parent?.type === "block_id") {
@@ -1754,13 +1770,13 @@ export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.
             (i === 0 || topLevelBlocks[i - 1].type !== block.type)
         ) {
             renderedBlocks.push(
-                <ListWrapper key={block.id} blocks={topLevelBlocks} startIndex={i}/>
+                <ListWrapper key={block.id} blocks={topLevelBlocks} startIndex={i} />
             );
-// Skip ahead to the end of this list
+            // Skip ahead to the end of this list
             while (
                 i + 1 < topLevelBlocks.length &&
                 topLevelBlocks[i + 1].type === block.type
-                ) {
+            ) {
                 i++;
             }
             continue;
@@ -1770,19 +1786,19 @@ export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.
         let component = <></>;
         switch (block.type) {
             case "paragraph":
-                component = <Paragraph key={block.id} block={block}/>;
+                component = <Paragraph key={block.id} block={block} />;
                 break;
             case "equation":
-                component = <Equation key={block.id} block={block}/>;
+                component = <Equation key={block.id} block={block} />;
                 break;
             case "heading_1":
-                component = <Heading1 key={block.id} block={block}/>;
+                component = <Heading1 key={block.id} block={block} />;
                 break;
             case "heading_2":
-                component = <Heading2 key={block.id} block={block}/>;
+                component = <Heading2 key={block.id} block={block} />;
                 break;
             case "heading_3":
-                component = <Heading3 key={block.id} block={block}/>;
+                component = <Heading3 key={block.id} block={block} />;
                 break;
             case "table_of_contents":
                 // component = <TableOfContentsBlock key={block.id} block={block} allBlocks={blocks}/>;
@@ -1791,39 +1807,39 @@ export const NotionBlocks = ({blocks}: { blocks?: BlockObjectResponse[] }): JSX.
             case "numbered_list_item":
                 continue;
             case "to_do":
-                component = <TodoItem key={block.id} block={block}/>;
+                component = <TodoItem key={block.id} block={block} />;
                 break;
             case "toggle":
-                component = <Toggle key={block.id} block={block}/>;
+                component = <Toggle key={block.id} block={block} />;
                 break;
             case "code":
-                component = <Code key={block.id} block={block}/>;
+                component = <Code key={block.id} block={block} />;
                 break;
             case "quote":
-                component = <Quote key={block.id} block={block}/>;
+                component = <Quote key={block.id} block={block} />;
                 break;
             case "callout":
-                component = <Callout key={block.id} block={block}/>;
+                component = <Callout key={block.id} block={block} />;
                 break;
             case "divider":
-                component = <Divider key={block.id} block={block}/>;
+                component = <Divider key={block.id} block={block} />;
                 break;
             case "image":
-                component = <Image key={block.id} block={block}/>;
+                component = <Image key={block.id} block={block} />;
                 break;
             case "column_list":
-                component = <ColumnList key={block.id} block={block}/>;
+                component = <ColumnList key={block.id} block={block} />;
                 break;
             case "table":
-                component = <TableBlock key={block.id} block={block}/>;
+                component = <TableBlock key={block.id} block={block} />;
                 break;
             case "link_preview":
                 // inline icon + web page name
                 // description?
-                component = <LinkPreview key={block.id} block={block}/>;
+                component = <LinkPreview key={block.id} block={block} />;
                 break;
             case "child_database":
-                component = <ChildDatabase key={block.id} block={block}/>;
+                component = <ChildDatabase key={block.id} block={block} />;
                 break;
             default:
                 component = (

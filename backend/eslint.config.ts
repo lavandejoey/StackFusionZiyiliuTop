@@ -1,9 +1,18 @@
 import eslint from "@eslint/js";
+import eslintPkg from "eslint";
+
+// Some installed ESLint versions may not export `defineConfig` at runtime.
+// Provide a safe fallback that returns the config object unchanged.
+const defineConfig = (eslintPkg as any).defineConfig ?? ((c: any) => c);
 import tseslint from "typescript-eslint";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import stylistic from "@stylistic/eslint-plugin";
 import nodePlugin from "eslint-plugin-n";
 
-export default tseslint.config(
+export default defineConfig(tseslint.config(
     eslint.configs.recommended,
     nodePlugin.configs["flat/recommended-script"],
     ...tseslint.configs.strictTypeChecked,
@@ -13,12 +22,17 @@ export default tseslint.config(
             "**/node_modules/*",
             "**/*.mjs",
             "**/*.js",
+            // Don't attempt to lint the ESLint config file itself
+            "eslint.config.ts",
         ],
     },
     {
         languageOptions: {
             parserOptions: {
-                project: "./tsconfig.json",
+                // Use a dedicated tsconfig for ESLint that enables ESM features
+                project: "./tsconfig.eslint.json",
+                // Ensure typescript-eslint resolves the correct tsconfig when multiple project roots exist
+                tsconfigRootDir: __dirname,
                 warnOnUnsupportedTypeScriptVersion: false,
             },
         },
@@ -29,7 +43,8 @@ export default tseslint.config(
         },
     },
     {
-        files: ["**/*.ts"],
+        // Only target project source files for linting (avoid config/build files)
+        files: ["src/**/*.ts", "tests/**/*.ts"],
     },
     {
         rules: {
@@ -39,10 +54,10 @@ export default tseslint.config(
             "@typescript-eslint/no-confusing-void-expression": 0,
             "@typescript-eslint/no-unnecessary-condition": 0,
             "@typescript-eslint/restrict-template-expressions": [
-                "error", {allowNumber: true},
+                "error", { allowNumber: true },
             ],
             "@typescript-eslint/restrict-plus-operands": [
-                "warn", {allowNumberAndString: true},
+                "warn", { allowNumberAndString: true },
             ],
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/no-unsafe-enum-comparison": 0,
@@ -90,4 +105,4 @@ export default tseslint.config(
             "prefer-const": "warn",
         },
     },
-);
+));

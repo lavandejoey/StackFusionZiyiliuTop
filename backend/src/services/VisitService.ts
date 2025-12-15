@@ -1,34 +1,34 @@
 // /StackFusionZiyiliuTop/backend/src/services/VisitService.ts
-import VisitRepo, {VisitInsert} from "@src/repos/VisitRepo";
-import {Buffer} from 'buffer';
+import VisitRepo, { VisitInsert } from "@src/repos/VisitRepo";
+import { Buffer } from "buffer";
 
 const BOT_UA = [
     /bot/i, /crawler/i, /spider/i,
-    /bingpreview/i, /facebookexternalhit/i
+    /bingpreview/i, /facebookexternalhit/i,
 ];
 
 interface VisitService {
     recordEvent(
         body: Partial<{
-            path: string;
-            url: string;
-            referrer: string;
-            ua: string;
-            visitor_id: string;
-            ts: string | number;
+            path: string,
+            url: string,
+            referrer: string,
+            ua: string,
+            visitor_id: string,
+            ts: string | number,
         }>,
         xffHeader?: string,
         remoteIp?: string
     ): Promise<void>;
 
-    getBriefing(): Promise<any>;
+    getBriefing(): Promise<import("@src/repos/VisitRepo").Briefing | null>;
 
     rollupNow(): Promise<void>;     // if you trigger in app (10-min)
     retentionNow(): Promise<void>;  // if you trigger in app (daily)
 }
 
 function looksLikeBot(ua?: string) {
-    const s = ua || "";
+    const s = ua ?? "";
     return BOT_UA.some(rx => rx.test(s));
 }
 
@@ -44,18 +44,18 @@ function maskIp(ipRaw?: string | null): Buffer | null {
 class VisitServiceImpl implements VisitService {
     public async recordEvent(
         body: Partial<{
-            path: string;
-            url: string;
-            referrer: string;
-            ua: string;
-            visitor_id: string;
-            ts: string | number;
+            path: string,
+            url: string,
+            referrer: string,
+            ua: string,
+            visitor_id: string,
+            ts: string | number,
         }>,
         xffHeader?: string,
-        remoteIp?: string
+        remoteIp?: string,
     ): Promise<void> {
-        const path = (body.path || "").slice(0, 512);
-        const ua = (body.ua || "").slice(0, 512);
+        const path = (body.path ?? "").slice(0, 512);
+        const ua = (body.ua ?? "").slice(0, 512);
 
         if (!path) return;
         if (looksLikeBot(ua)) return;
@@ -63,11 +63,11 @@ class VisitServiceImpl implements VisitService {
         const v: VisitInsert = {
             ts: body.ts ? new Date(body.ts) : new Date(),
             path,
-            url: (body.url || "").slice(0, 1024) || null,
-            referrer: (body.referrer || "").slice(0, 1024) || null,
+            url: (body.url ?? "").slice(0, 1024) || null,
+            referrer: (body.referrer ?? "").slice(0, 1024) || null,
             ua,
-            visitor_id: (body.visitor_id || "").slice(0, 36) || null,
-            ip_mask: maskIp(((xffHeader || "").split(",")[0] || remoteIp || "").trim()),
+            visitor_id: (body.visitor_id ?? "").slice(0, 36) || null,
+            ip_mask: maskIp((((xffHeader ?? "").split(",")[0]) ?? remoteIp ?? "").trim()),
         };
 
         await VisitRepo.insertEvent(v);

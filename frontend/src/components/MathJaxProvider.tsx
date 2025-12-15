@@ -5,14 +5,14 @@
  * Fully supported by MathJax v3 with OpenAI and GitHub Copilot.
  */
 // import React from 'react';
-import React, {useRef, useEffect} from 'react';
-import {MathJaxContext} from 'better-react-mathjax';
+import React, { useRef, useEffect } from 'react';
+import { MathJaxContext } from 'better-react-mathjax';
 
 // MathJax configuration options
 const config = {
-    loader: {load: ['[tex]/color', '[tex]/mathtools']},
+    loader: { load: ['[tex]/color', '[tex]/mathtools'] },
     tex: {
-        packages: {'[+]': ['color', 'mathtools']},
+        packages: { '[+]': ['color', 'mathtools'] },
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true,
@@ -28,12 +28,12 @@ const config = {
     },
 };
 
-const MathJaxProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+const MathJaxProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const rootRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const w = window as any;
-        const MJ = w?.MathJax;
+        type MathJaxType = { typesetPromise?: (nodes: Element[]) => Promise<void> } | undefined;
+        const MJ = (window as Window & { MathJax?: MathJaxType }).MathJax;
         const root = rootRef.current;
         if (!MJ || !root) return;
 
@@ -50,19 +50,19 @@ const MathJaxProvider: React.FC<{ children: React.ReactNode }> = ({children}) =>
                 disconnected = true;
                 observer.disconnect();
                 try {
-                    await MJ.typesetPromise([root]);
+                    await (MJ.typesetPromise ? MJ.typesetPromise([root]) : Promise.resolve());
                 } catch {
                     // no-op
                 } finally {
                     // resume observing
-                    observer.observe(root, {childList: true, subtree: true});
+                    observer.observe(root, { childList: true, subtree: true });
                     disconnected = false;
                 }
             });
         });
 
         // observe only within this provider
-        observer.observe(root, {childList: true, subtree: true});
+        observer.observe(root, { childList: true, subtree: true });
 
         return () => observer.disconnect();
     }, []);

@@ -5,14 +5,25 @@ import dotenv from "dotenv";
 import moduleAlias from "module-alias";
 
 // Check the env
-const NODE_ENV = (process.env.NODE_ENV ?? "development");
+const NODE_ENV = process.env.NODE_ENV ?? "development";
 
-// Configure "dotenv"
-const result2 = dotenv.config({
-    path: path.join(process.cwd(), `/config/.env.${NODE_ENV}`),
-});
-if (result2.error) {
-    throw result2.error;
+// Configure "dotenv" (prefer backend/config/.env.<NODE_ENV>, fallback to .env)
+const envCandidates = [
+    path.join(process.cwd(), `/config/.env.${NODE_ENV}`),
+    path.join(process.cwd(), ".env"),
+];
+let loaded = false;
+for (const p of envCandidates) {
+    const res = dotenv.config({ path: p });
+    if (!res.error) {
+        loaded = true;
+        break;
+    }
+}
+if (!loaded) {
+    throw new Error(
+        "Failed to load environment file from config/.env.<NODE_ENV> or .env",
+    );
 }
 
 // Configure moduleAlias

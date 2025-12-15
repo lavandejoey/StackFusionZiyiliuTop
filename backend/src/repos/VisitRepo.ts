@@ -1,9 +1,9 @@
 // /StackFusionZiyiliuTop/backend/src/repos/VisitRepo.ts
-import {FieldPacket, ResultSetHeader} from "mysql2/promise";
-import {default as dbClient} from "@src/common/util/mysql2Config";
-import {Buffer} from "buffer";
+import { FieldPacket } from "mysql2/promise";
+import { default as dbClient } from "@src/common/util/mysql2Config";
+import { Buffer } from "buffer";
 
-export type VisitInsert = {
+export interface VisitInsert {
     ts: Date;
     path: string;
     url?: string | null;
@@ -11,20 +11,29 @@ export type VisitInsert = {
     ua?: string | null;
     visitor_id?: string | null;
     ip_mask?: Buffer | null;
-};
+}
 
 interface VisitRepo {
     insertEvent(v: VisitInsert): Promise<void>;
 
     getBriefing(): Promise<{
-        pv_today: number; uv_today: number;
-        pv_7d: number; uv_7d: number;
-        top_paths_today: string; // JSON string: [["/path",123],...]
-        top_ref_today: string;   // JSON string: [["direct",100],...]
+        pv_today: number, uv_today: number,
+        pv_7d: number, uv_7d: number,
+        top_paths_today: string, // JSON string: [["/path",123],...]
+        top_ref_today: string,   // JSON string: [["direct",100],...]
     } | null>;
 
     upsertRollupToday(): Promise<void>;  // if you run rollups in-app
     pruneOldRaw(): Promise<void>;        // retention (30 days)
+}
+
+export interface Briefing {
+    pv_today: number;
+    uv_today: number;
+    pv_7d: number;
+    uv_7d: number;
+    top_paths_today: string;
+    top_ref_today: string;
 }
 
 const INSERT_SQL = `
@@ -124,12 +133,32 @@ class VisitRepoImpl implements VisitRepo {
             v.ua ?? null,
             v.visitor_id ?? null,
             v.ip_mask ?? null,
-        ]) as [ResultSetHeader, FieldPacket[]];
+        ]);
     }
 
-    public async getBriefing() {
-        const [rows] = await dbClient.query(BRIEF_SQL);
-        return (rows as any[])[0] ?? null;
+    public async getBriefing(): Promise<{
+        pv_today: number, uv_today: number,
+        pv_7d: number, uv_7d: number,
+        top_paths_today: string,
+        top_ref_today: string,
+    } | null> {
+        const [rows] = await dbClient.query(BRIEF_SQL) as [Record<string, unknown>[], FieldPacket[]];
+        const row = rows[0];
+        if (!row) return null;
+
+        const toNumber = (v: unknown) => (v === null || v === undefined) ? 0 : Number(v);
+
+        const stringifySafe = (v: unknown) =>
+            typeof v === "string" ? v : JSON.stringify(v ?? []);
+
+        return {
+            pv_today: toNumber(row.pv_today),
+            uv_today: toNumber(row.uv_today),
+            pv_7d: toNumber(row.pv_7d),
+            uv_7d: toNumber(row.uv_7d),
+            top_paths_today: stringifySafe(row.top_paths_today),
+            top_ref_today: stringifySafe(row.top_ref_today),
+        };
     }
 
     public async upsertRollupToday(): Promise<void> {

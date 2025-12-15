@@ -15,7 +15,7 @@ repoRouter.get("/", async (req, res) => {
     } catch (error) {
         logger.err(`Failed to fetch repository data: ${error}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json(
-            errorResponse(req, res, "Failed to fetch repository data", error)
+            errorResponse(req, res, "Failed to fetch repository data", error),
         );
     }
 });

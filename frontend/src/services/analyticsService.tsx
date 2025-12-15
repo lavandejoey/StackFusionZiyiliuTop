@@ -1,5 +1,5 @@
 // /frontend/src/services/analyticsService.tsx
-import {AnalyticsAPI, type TrackVisitPayload, type BriefingData} from "./axios";
+import { AnalyticsAPI, type TrackVisitPayload, type BriefingData } from "./axios";
 
 /**
  * Sends a "fire-and-forget" tracking event to the backend.
@@ -30,7 +30,7 @@ export const fetchAnalyticsBriefing = async (): Promise<BriefingData | null> => 
     try {
         const res = await AnalyticsAPI.briefing();
         // axios returns the payload under `data`.
-        return (res as any).data as BriefingData;
+        return res.data as BriefingData;
     } catch (e) {
         console.error('fetchAnalyticsBriefing failed', e);
         return null;

@@ -1,9 +1,9 @@
 // StackFusionZiyiliuTop/backend/src/routes/analyticsRoutes.ts
-import {Router} from "express";
-import {randomUUID} from "crypto";
+import { Router } from "express";
+import { randomUUID } from "crypto";
 import VisitService from "@src/services/VisitService";
-import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
-import {NODE_ENV, NodeEnvs} from "@src/common/constants/ENV";
+import { ENDPOINTS } from "@src/common/constants/ENDPOINTS";
+import { NODE_ENV, NodeEnvs } from "@src/common/constants/ENV";
 
 export const analyticsRouter = Router();
 
@@ -15,7 +15,8 @@ const VISITOR_COOKIE = "visitor_id";
 analyticsRouter.post(ENDPOINTS.analytics.track, async (req, res) => {
     try {
         // Get or create a visitor_id, and set it in a long-lived cookie
-        let visitorId = req.cookies[VISITOR_COOKIE];
+        const cookies = req.cookies as Record<string, string | undefined>;
+        let visitorId = cookies[VISITOR_COOKIE];
         if (!visitorId) {
             visitorId = randomUUID();
             res.cookie(VISITOR_COOKIE, visitorId, {
@@ -27,10 +28,12 @@ analyticsRouter.post(ENDPOINTS.analytics.track, async (req, res) => {
         }
 
         // Add visitorId to the body for the service layer
-        const body = {...req.body, visitor_id: visitorId};
+        const body = { ...(req.body as Record<string, unknown>), visitor_id: visitorId };
 
-        const xff = (req.headers["x-forwarded-for"] as string) || "";
-        await VisitService.recordEvent(body || {}, xff, req.socket.remoteAddress || "");
+        const xffRaw = req.headers["x-forwarded-for"];
+        const xff = typeof xffRaw === "string" ? xffRaw : (Array.isArray(xffRaw) ? xffRaw[0] : "");
+        const remote = req.socket.remoteAddress ?? "";
+        await VisitService.recordEvent(body, xff, remote);
         res.status(204).end();
     } catch {
         // swallow to avoid any impact on page performance
@@ -44,9 +47,9 @@ analyticsRouter.post(ENDPOINTS.analytics.track, async (req, res) => {
 analyticsRouter.get(ENDPOINTS.analytics.briefing, async (req, res) => {
     try {
         const data = await VisitService.getBriefing();
-        res.json(data || {});
-    } catch (e) {
-        res.status(500).json({error: "briefing_failed"});
+        res.json(data ?? {});
+    } catch {
+        res.status(500).json({ error: "briefing_failed" });
     }
 });
 

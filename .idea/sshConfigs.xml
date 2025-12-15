@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SshConfigs">
     <configs>
-      <sshConfig connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="ziyiliu" id="1a78eddd-5752-4bb2-87d4-56b93badcd6c" keyPath="\\wsl.localhost\Ubuntu-24.04\home\zliu\.ssh\id_ed25519" port="22" nameFormat="DESCRIPTIVE" username="zliu" useOpenSSHConfig="true" />
+      <sshConfig connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="ziyiliu" id="1a78eddd-5752-4bb2-87d4-56b93badcd6c" keyPath="\\wsl.localhost\Ubuntu\home\zliu\.ssh\id_ed25519" port="22" nameFormat="DESCRIPTIVE" username="zliu" useOpenSSHConfig="true" />
     </configs>
   </component>
 </project>

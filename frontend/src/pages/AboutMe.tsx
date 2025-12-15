@@ -1,8 +1,8 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/AboutMe.tsx
-import React, {useEffect, useLayoutEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {Col, Container, Row} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Col, Container, Row } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook,
     faBriefcase,
@@ -13,12 +13,29 @@ import {
     faPhone,
     type IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
-import {cvData as cv} from "@/assets/cvData.ts";
+import { cvData as cv } from "@/assets/cvData.ts";
 import PageHead from "@/components/PageHead";
 import MainLayout from "@/components/MainLayout";
-import {RepoCard, type RepoProps} from "@/components/RepoCard";
-import {fetchRepos} from "@/services/apiService";
-import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+import { RepoCard, type RepoProps } from "@/components/RepoCard";
+import { fetchRepos } from "@/services/apiService";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+
+// Minimal CV data shape used by this page
+interface CVData {
+    aboutMes: string[];
+    educations: InfoItem[];
+    internships: InfoItem[];
+    contact: {
+        name: string;
+        portraitSrc: string;
+        portraitAlt: string;
+        title: string;
+        email?: string;
+        phone?: string;
+        birthday?: string;
+        location?: string;
+    };
+}
 
 /* =========================
  * Geometry & SVG utilities
@@ -104,7 +121,7 @@ const processTimelineSection = (
 };
 
 // Process timeline for either large or small screens.
-const processTimeline = ({bookIcon, internIcon, educationCircles, internshipCircles, svg}: {
+const processTimeline = ({ bookIcon, internIcon, educationCircles, internshipCircles, svg }: {
     bookIcon: (HTMLElement | SVGGraphicsElement | null);
     internIcon: (HTMLElement | SVGGraphicsElement | null);
     educationCircles: NodeListOf<HTMLElement | SVGGraphicsElement>;
@@ -136,64 +153,64 @@ interface InfoSectionProps {
     t: (key: string) => string,
 }
 
-const InfoSection: React.FC<InfoSectionProps> = ({title, icon, data, circleId, logoClass, sizeSuffix, t}) => {
+const InfoSection: React.FC<InfoSectionProps> = ({ title, icon, data, circleId, logoClass, sizeSuffix, t }) => {
     const iconId = `${circleId === "education-circle" ? "book" : "briefcase"}-icon${sizeSuffix}`;
     const circleClass = `${circleId === "education-circle" ? "education" : "internship"}-circle${sizeSuffix}`;
 
     return (
         <Container>
             {/* Short thick line */}
-            <hr className="w-25 bg-primary"/>
+            <hr className="w-25 bg-primary" />
             <Container className="w-25 mx-0 my-3 p-0 pe-2 d-flex justify-content-between align-items-center">
                 <FontAwesomeIcon
                     id={iconId}
                     className="d-flex justify-content-center align-items-center"
                     icon={icon}
                     size="2xl"
-                    style={{zIndex: 99}}
+                    style={{ zIndex: 99 }}
                 />
                 <h2 className="mb-1 mx-3 p-0 text-nowrap">{t(title)}</h2>
             </Container>
             {data.map((item, index) => (
                 <Container key={index} className="mb-3">
                     <Row className="mb-2">
-                        <Col xs={{span: "auto", offset: 1}}
-                             className="d-flex justify-content-center align-items-center d-none d-sm-block">
+                        <Col xs={{ span: "auto", offset: 1 }}
+                            className="d-flex justify-content-center align-items-center d-none d-sm-block">
                             <img
                                 className={`m-0 p-0 ${logoClass}`}
                                 src={item.logoSrc}
                                 alt={item.logoAlt}
                                 title={item.logoTitle}
-                                style={{width: "30px", height: "30px", marginRight: "10px"}}
+                                style={{ width: "30px", height: "30px", marginRight: "10px" }}
                             />
                         </Col>
-                        <Col xs={{span: "auto"}} className="m-0 p-0 d-flex align-items-center">
+                        <Col xs={{ span: "auto" }} className="m-0 p-0 d-flex align-items-center">
                             <strong className="m-0">{item.institution}</strong>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={{span: 1}}
-                             className="d-flex justify-content-start align-items-center d-none d-sm-block">
+                        <Col xs={{ span: 1 }}
+                            className="d-flex justify-content-start align-items-center d-none d-sm-block">
                             <FontAwesomeIcon
                                 icon={faCircle}
                                 color={"gray"}
                                 size="2xs"
                                 className={circleClass}
-                                style={{zIndex: 99}}
+                                style={{ zIndex: 99 }}
                             />
                         </Col>
-                        <Col xs={{span: 12}} md={{span: 10}} xl={{span: 8}}
-                             className="d-sm-flex justify-content-between align-items-center">
+                        <Col xs={{ span: 12 }} md={{ span: 10 }} xl={{ span: 8 }}
+                            className="d-sm-flex justify-content-between align-items-center">
                             <p className="m-0 text-muted">
                                 {item.start} – {item.end}
                             </p>
                             <p className="m-0 text-muted">
-                                <FontAwesomeIcon icon={faMapMarkerAlt}/>&nbsp; {item.location}
+                                <FontAwesomeIcon icon={faMapMarkerAlt} />&nbsp; {item.location}
                             </p>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={{span: 12}} sm={{span: 10, offset: 1}}>
+                        <Col xs={{ span: 12 }} sm={{ span: 10, offset: 1 }}>
                             {item.titles.map((title: string, idx: number) => (
                                 <p key={idx} className="m-0">{title}</p>
                             ))}
@@ -236,9 +253,9 @@ const adjustFixedContainerWidth = () => {
 // Add a new component for the main content sections
 const MainContent: React.FC<{
     t: (key: string) => string;
-    cvData: any;
+    cvData: CVData;
     sizeSuffix: string;
-}> = ({t, cvData, sizeSuffix}) => {
+}> = ({ t, cvData, sizeSuffix }) => {
     const [repos, setRepos] = useState<RepoProps[]>([]);
 
     useEffect(() => {
@@ -259,12 +276,12 @@ const MainContent: React.FC<{
             {/* About Me, Education, Internships Container */}
             <Container
                 className="px-3 px-lg-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary mb-4"
-                style={{zIndex: 0}}
+                style={{ zIndex: 0 }}
             >
                 <Container>
                     <h2 className="d-none mb-3">{t("About Me")}</h2>
                     {cvData.aboutMes.map((about: string, index: number) => (
-                        <p key={index} style={{textAlign: "justify"}}>{about}</p>
+                        <p key={index} style={{ textAlign: "justify" }}>{about}</p>
                     ))}
                 </Container>
                 {/*Education Section*/}
@@ -292,17 +309,17 @@ const MainContent: React.FC<{
             {/* Portfolio Section */}
             <Container
                 className="px-3 px-lg-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary"
-                style={{zIndex: 0}}
+                style={{ zIndex: 0 }}
             >
                 <Container>
                     <h2 className="mb-3">{t("Portfolio")}</h2>
                     <ResponsiveMasonry
-                        columnsCountBreakPoints={{350: 1, 1024: 2, 1440: 3}}
+                        columnsCountBreakPoints={{ 350: 1, 1024: 2, 1440: 3 }}
                         className="masonry-grid"
                     >
                         <Masonry>
                             {repos.map((repo) => (
-                                <RepoCard {...repo} key={repo.url}/>
+                                <RepoCard {...repo} key={repo.url} />
                             ))}
                         </Masonry>
                     </ResponsiveMasonry>
@@ -313,11 +330,11 @@ const MainContent: React.FC<{
 };
 
 // Add a new component for the contact sidebar/header
-const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: boolean }> = ({
-                                                                                                 cvData,
-                                                                                                 contactFields,
-                                                                                                 isMobile = false
-                                                                                             }) => {
+const ContactSection: React.FC<{ cvData: CVData; contactFields: [string, IconDefinition, string | null][]; isMobile?: boolean }> = ({
+    cvData,
+    contactFields,
+    isMobile = false,
+}) => {
     return (
         <Container
             className={`${isMobile ?
@@ -326,14 +343,14 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
             {isMobile ? (
                 // Mobile layout
                 <Row className="my-2 mx-3">
-                    <Col xs={{span: 4}} className="d-flex justify-content-center align-items-center">
+                    <Col xs={{ span: 4 }} className="d-flex justify-content-center align-items-center">
                         <img className="rounded-4" src={cvData.contact.portraitSrc}
-                             alt={cvData.contact.portraitAlt}
-                             style={{scale: 1.2, objectFit: "cover", width: "80px", height: "80px"}}
+                            alt={cvData.contact.portraitAlt}
+                            style={{ scale: 1.2, objectFit: "cover", width: "80px", height: "80px" }}
                         />
                     </Col>
-                    <Col xs={{span: 8}}
-                         className="d-flex flex-column justify-content-center align-items-center">
+                    <Col xs={{ span: 8 }}
+                        className="d-flex flex-column justify-content-center align-items-center">
                         <h2 title={cvData.contact.name}>{cvData.contact.name}</h2>
                         <p className="my-0 py-0">{cvData.contact.title}</p>
                     </Col>
@@ -343,8 +360,8 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
                 <Container>
                     <Container className="my-5 d-flex justify-content-center align-items-center">
                         <img className="rounded-4" src={cvData.contact.portraitSrc}
-                             alt={cvData.contact.portraitAlt}
-                             style={{scale: 1.2, objectFit: "cover", width: "120px", height: "120px"}}
+                            alt={cvData.contact.portraitAlt}
+                            style={{ scale: 1.2, objectFit: "cover", width: "120px", height: "120px" }}
                         />
                     </Container>
                     <Container className="text-center mb-3">
@@ -355,7 +372,7 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
             )}
 
             <Container className="d-flex justify-content-center align-items-center">
-                <hr className="w-75"/>
+                <hr className="w-75" />
             </Container>
 
             {isMobile ? (
@@ -366,17 +383,17 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
                             const [key, iconClass, hrefPrefix] = field;
                             const value = cvData.contact[key as keyof typeof cvData.contact];
                             return (
-                                <Col xs={{span: 12}} sm={{span: 6}} key={index} className="my-1">
+                                <Col xs={{ span: 12 }} sm={{ span: 6 }} key={index} className="my-1">
                                     <Row>
-                                        <Col xs={{span: 2}}
-                                             className="d-flex justify-content-center align-items-center">
-                                            <FontAwesomeIcon icon={iconClass}/>
+                                        <Col xs={{ span: 2 }}
+                                            className="d-flex justify-content-center align-items-center">
+                                            <FontAwesomeIcon icon={iconClass} />
                                         </Col>
-                                        <Col xs={{span: 10}}>
+                                        <Col xs={{ span: 10 }}>
                                             <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
                                                 {hrefPrefix ? (
                                                     <a className="contact-link" href={hrefPrefix + value}
-                                                       style={{textDecoration: "none"}}>
+                                                        style={{ textDecoration: "none" }}>
                                                         {value}
                                                     </a>
                                                 ) : (value)}
@@ -398,13 +415,13 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
                             return (
                                 <li key={index} className="row my-2">
                                     <div className="col-2 d-flex justify-content-end align-items-center">
-                                        <FontAwesomeIcon icon={iconClass}/>
+                                        <FontAwesomeIcon icon={iconClass} />
                                     </div>
                                     <div className="col-10">
                                         <p className={`my-0 text-start ${key === "location" ? "" : "text-truncate"}`}>
                                             {hrefPrefix ? (
                                                 <a className="contact-link" href={hrefPrefix + value}
-                                                   style={{textDecoration: "none"}}>
+                                                    style={{ textDecoration: "none" }}>
                                                     {value}
                                                 </a>
                                             ) : (value)}
@@ -422,7 +439,7 @@ const ContactSection: React.FC<{ cvData: any; contactFields: any[]; isMobile?: b
 
 // AboutMe component
 const AboutMe: React.FC = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const cvData = cv(t);
     const contactFields: [string, IconDefinition, string | null][] = [
         ["email", faEnvelope, "mailto:"], ["phone", faPhone, "tel:"],
@@ -522,39 +539,39 @@ const AboutMe: React.FC = () => {
             />
 
             {/* Desktop View */}
-            <div className="d-none d-lg-block mx-lg-5 mt-5 mb-1 px-5" style={{position: "relative"}}>
+            <div className="d-none d-lg-block mx-lg-5 mt-5 mb-1 px-5" style={{ position: "relative" }}>
                 {/* Left sidebar */}
-                <ContactSection cvData={cvData} contactFields={contactFields}/>
+                <ContactSection cvData={cvData} contactFields={contactFields} />
 
                 {/* Right Content - now with dynamic-content-container class */}
-                <div className="dynamic-content-container" style={{position: "relative"}}>
+                <div className="dynamic-content-container" style={{ position: "relative" }}>
                     {/* Timeline SVG for desktop */}
                     <svg id="timeline-line-lg"
-                         style={{
-                             position: "absolute", width: "100%", height: "100%",
-                             top: 0, left: 0, zIndex: 1, pointerEvents: "none"
-                         }}
+                        style={{
+                            position: "absolute", width: "100%", height: "100%",
+                            top: 0, left: 0, zIndex: 1, pointerEvents: "none"
+                        }}
                     />
-                    <MainContent t={t} cvData={cvData} sizeSuffix="-lg"/>
+                    <MainContent t={t} cvData={cvData} sizeSuffix="-lg" />
                 </div>
             </div>
 
             {/* Mobile View */}
-            <div className="d-lg-none my-4 mx-3" style={{position: "relative"}}>
+            <div className="d-lg-none my-4 mx-3" style={{ position: "relative" }}>
                 <Row>
                     {/* Contact section for mobile */}
-                    <ContactSection cvData={cvData} contactFields={contactFields} isMobile={true}/>
+                    <ContactSection cvData={cvData} contactFields={contactFields} isMobile={true} />
 
                     {/* Timeline SVG for mobile */}
                     <svg id="timeline-line-sm"
-                         style={{
-                             position: "absolute", width: "100%", height: "100%",
-                             top: 0, left: 0, zIndex: 1, pointerEvents: "none"
-                         }}
+                        style={{
+                            position: "absolute", width: "100%", height: "100%",
+                            top: 0, left: 0, zIndex: 1, pointerEvents: "none"
+                        }}
                     />
 
                     {/* Main content for mobile */}
-                    <MainContent t={t} cvData={cvData} sizeSuffix="-sm"/>
+                    <MainContent t={t} cvData={cvData} sizeSuffix="-sm" />
                 </Row>
             </div>
         </MainLayout>

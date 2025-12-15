@@ -1,15 +1,25 @@
 // src/routes/blogRoutes.ts
-import {Router} from "express";
-import {PageObjectResponse} from "@notionhq/client";
+import { Router } from "express";
+import { PageObjectResponse } from "@notionhq/client";
 import NotionService from "@src/services/NotionService";
-import {NOTION_ROOT_BLOG_LIST} from "@src/common/constants/ENV";
-import {errorResponse, successResponse} from "@src/common/util/response";
+import type { QueryDatabaseParams } from "@src/services/NotionService";
+import { NOTION_ROOT_BLOG_LIST } from "@src/common/constants/ENV";
+import { errorResponse, successResponse } from "@src/common/util/response";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import logger from "jet-logger";
-import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
+import { ENDPOINTS } from "@src/common/constants/ENDPOINTS";
+import { inspect } from "util";
 
-const notionRootBlogList: string[] = NOTION_ROOT_BLOG_LIST.split(",").map(id => id.trim());
-console.log(notionRootBlogList)
+const notionRootBlogList: string[] = NOTION_ROOT_BLOG_LIST
+    .split(",")
+    .map((id) => id.trim());
+
+const safeStringify = (v: unknown) => {
+    if (typeof v === "object" && v !== null) {
+        try { return JSON.stringify(v); } catch { return inspect(v, { depth: 2 }); }
+    }
+    return String(v);
+};
 export const blogRouter = Router();
 
 /** Retrieve all root blog posts
@@ -19,14 +29,14 @@ blogRouter.get(ENDPOINTS.blogs.homeList, async (req, res) => {
     try {
         const posts: PageObjectResponse[] = await Promise.all(
             notionRootBlogList.map((page_id) =>
-                NotionService.getPageInfo({page_id}),
+                NotionService.getPageInfo({ page_id }),
             ),
         );
         res.status(HttpStatusCodes.OK).json(successResponse(req, res, posts));
-    } catch (error) {
-        logger.err(`Error retrieving blog posts: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error retrieving blog posts: ${safeStringify(err)}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json(errorResponse(req, res, "Failed to retrieve blog posts", error));
+            .json(errorResponse(req, res, "Failed to retrieve blog posts", safeStringify(err)));
     }
 });
 
@@ -34,38 +44,58 @@ blogRouter.get(ENDPOINTS.blogs.homeList, async (req, res) => {
  *  GET /api/${API_VERSION}/blogs/pages/:id
  */
 blogRouter.get(ENDPOINTS.blogs.pages, async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
         // First, try to get it as a page
-        const page = await NotionService.getPageInfo({page_id: id});
-        const blocks = await NotionService.listAllBlockChildren({block_id: id});
+        const page = await NotionService.getPageInfo({ page_id: id });
+        const blocks = await NotionService.listAllBlockChildren({ block_id: id });
 
         res.status(HttpStatusCodes.OK).json(successResponse(req, res, {
             type: "page",
-            data: {page, blocks},
+            data: { page, blocks },
         }));
-    } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        if (error.code === "object_not_found" && error.message.includes("is a database, not a page")) {
-            try {
-                // If it's a database, get database info and all pages in it
-                const database = await NotionService.getDatabase({database_id: id});
-                const pages = await NotionService.queryDatabaseAll({database_id: id});
+    } catch (err: unknown) {
+        const asObj = (x: unknown): x is Record<string, unknown> => typeof x === "object" && x !== null;
 
-                res.status(HttpStatusCodes.OK).json(successResponse(req, res, {
-                    type: "database",
-                    data: {database, pages},
-                }));
-            } catch (dbError) {
-                logger.err(`Error retrieving database content for ${id}: ${dbError}`);
+        if (asObj(err)) {
+            const eObj = err;
+            if (eObj.code === "object_not_found"
+                && typeof eObj.message === "string"
+                && eObj.message.includes("is a database, not a page")) {
+                try {
+                    // Get database with data sources
+                    const database = await NotionService.getDatabase({ database_id: id });
+                    const pages = await NotionService.queryDatabaseAll({ database_id: id });
+
+                    // Get first data source properties for backward compatibility
+                    const dataSourceId = await NotionService.getFirstDataSourceId(id);
+                    const dataSource = await NotionService.getDataSource(dataSourceId);
+
+                    res.status(HttpStatusCodes.OK).json(successResponse(req, res, {
+                        type: "database",
+                        data: {
+                            database: {
+                                ...database,
+                                // properties may exist on dataSource at runtime — stringify defensively
+                                properties: (dataSource as Record<string, unknown> | null)?.properties ?? {},
+                            },
+                            pages,
+                        },
+                    }));
+                } catch (dbErr: unknown) {
+                    logger.err(`Error retrieving database content for ${id}: ${safeStringify(dbErr)}`);
+                    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+                        .json(errorResponse(req, res, "Failed to retrieve database content", safeStringify(dbErr)));
+                }
+            } else {
+                logger.err(`Error retrieving content for ${id}: ${safeStringify(err)}`);
                 res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-                    .json(errorResponse(req, res, "Failed to retrieve database content", dbError));
+                    .json(errorResponse(req, res, "Failed to retrieve content", safeStringify(err)));
             }
         } else {
-            logger.err(`Error retrieving content for ${id}: ${error}`);
+            logger.err(`Error retrieving content for ${id}: ${safeStringify(err)}`);
             res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-                .json(errorResponse(req, res, "Failed to retrieve content", error));
+                .json(errorResponse(req, res, "Failed to retrieve content", safeStringify(err)));
         }
     }
 });
@@ -78,10 +108,10 @@ blogRouter.get(ENDPOINTS.blogs.parents, async (req, res) => {
     try {
         const parents = await NotionService.getPageParents(page_id);
         res.status(HttpStatusCodes.OK).json(successResponse(req, res, parents));
-    } catch (error) {
-        logger.err(`Error retrieving parents for page ${page_id}: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error retrieving parents for page ${page_id}: ${safeStringify(err)}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json(errorResponse(req, res, "Failed to retrieve page parents", error));
+            .json(errorResponse(req, res, "Failed to retrieve page parents", safeStringify(err)));
     }
 });
 
@@ -91,29 +121,44 @@ blogRouter.get(ENDPOINTS.blogs.parents, async (req, res) => {
 blogRouter.get(ENDPOINTS.blogs.blockChildren, async (req, res) => {
     const block_id = req.params.block_id;
     try {
-        const blocks = await NotionService.listAllBlockChildren({block_id});
+        const blocks = await NotionService.listAllBlockChildren({ block_id });
         res.status(HttpStatusCodes.OK)
             .json(successResponse(req, res, blocks));
-    } catch (error) {
-        logger.err(`Error retrieving blocks for block ID ${block_id}: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error retrieving blocks for block ID ${block_id}: ${safeStringify(err)}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json(errorResponse(req, res, "Failed to retrieve blocks", error));
+            .json(errorResponse(req, res, "Failed to retrieve blocks", safeStringify(err)));
     }
 });
 
-/** Retrieve database metadata
+/** Retrieve database metadata with data source properties
  * GET /api/${API_VERSION}/blogs/database/:id
  */
 blogRouter.get(ENDPOINTS.blogs.database, async (req, res) => {
     const database_id = req.params.id;
     try {
-        const database = await NotionService.getDatabase({database_id});
+        // Get database (contains data_sources array in 2025-09-03)
+        const database = await NotionService.getDatabase({ database_id });
+
+        // Get first data source with properties for backward compatibility
+        const dataSourceId = await NotionService.getFirstDataSourceId(database_id);
+        const dataSource = await NotionService.getDataSource(dataSourceId);
+
+        // Merge properties into database object for frontend compatibility
+        const ds = dataSource as Record<string, unknown> | null;
+        const properties = ds && typeof ds.properties === "object" ? (ds.properties as Record<string, unknown>) : {};
+
+        const response = {
+            ...database,
+            properties,
+        };
+
         res.status(HttpStatusCodes.OK)
-            .json(successResponse(req, res, database));
-    } catch (error) {
-        logger.err(`Error retrieving database ${database_id}: ${error}`);
+            .json(successResponse(req, res, response));
+    } catch (err: unknown) {
+        logger.err(`Error retrieving database ${database_id}: ${safeStringify(err)}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json(errorResponse(req, res, "Failed to retrieve database", error));
+            .json(errorResponse(req, res, "Failed to retrieve database", safeStringify(err)));
     }
 });
 
@@ -122,23 +167,25 @@ blogRouter.get(ENDPOINTS.blogs.database, async (req, res) => {
  */
 blogRouter.post(ENDPOINTS.blogs.queryDatabase, async (req, res) => {
     const database_id = req.params.id;
-    const {filter, sorts} = req.body;
+    const { filter, sorts } = req.body as { filter?: unknown, sorts?: unknown[] };
 
     try {
-        const results = await NotionService.queryDatabaseAll({
+        const params: QueryDatabaseParams = {
             database_id,
-            ...(filter && {filter}),
-            ...(sorts && {sorts}),
-        });
+            ...(filter !== undefined ? { filter } : {}),
+            ...(sorts !== undefined ? { sorts } : {}),
+        };
+
+        const results = await NotionService.queryDatabaseAll(params);
         res.status(HttpStatusCodes.OK)
             .json(successResponse(req, res, {
                 results,
                 has_more: false, // We're using queryDatabaseAll which fetches all pages
                 next_cursor: null,
             }));
-    } catch (error) {
-        logger.err(`Error querying database ${database_id}: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error querying database ${database_id}: ${safeStringify(err)}`);
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json(errorResponse(req, res, "Failed to query database", error));
+            .json(errorResponse(req, res, "Failed to query database", safeStringify(err)));
     }
 });

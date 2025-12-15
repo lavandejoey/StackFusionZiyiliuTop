@@ -1,5 +1,6 @@
 // backend/src/services/NotionService.ts
-import {Client, collectPaginatedAPI, isFullBlock, isFullDatabase, isFullPage, isFullUser} from "@notionhq/client";
+// Updated for Notion API version 2025-09-03 with multi-source database support
+import { Client, collectPaginatedAPI, isFullBlock, isFullDatabase, isFullPage, isFullUser } from "@notionhq/client";
 import type {
     AppendBlockChildrenParameters,
     AppendBlockChildrenResponse,
@@ -14,19 +15,34 @@ import type {
     GetUserParameters,
     PageObjectResponse,
     PropertyItemObjectResponse,
-    QueryDatabaseParameters,
     SearchParameters,
     SearchResponse,
+    QueryDataSourceParameters,
     UpdatePageParameters,
     UpdatePageResponse,
     UserObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import {NODE_ENV, NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS} from "@src/common/constants/ENV";
-import {redisGet, redisSet} from "@src/common/util/redisClient";
+import { NOTION_API_KEY, NOTION_CACHE_EXPIRY_SECONDS } from "@src/common/constants/ENV";
+import { redisGet, redisSet } from "@src/common/util/redisClient";
 import logger from "jet-logger";
-import {ClientOptions} from "@notionhq/client/build/src/Client";
+import { inspect } from "util";
+import { ClientOptions } from "@notionhq/client/build/src/Client";
 
-const notion = new Client({auth: NOTION_API_KEY} as ClientOptions);
+const notion = new Client({
+    auth: NOTION_API_KEY,
+    notionVersion: "2025-09-03", // Use new API version
+} as ClientOptions);
+
+// Type for query parameters
+export interface QueryDatabaseParams {
+    // allow index access so this type can be treated as a Record when caching
+    [key: string]: unknown;
+    database_id: string;
+    filter?: unknown;
+    sorts?: unknown[];
+    start_cursor?: string;
+    page_size?: number;
+}
 
 interface PaginatedPropertyResponse {
     object: "list";
@@ -39,7 +55,14 @@ interface PaginatedPropertyResponse {
  * Cache helper functions
  */
 const getCacheKey = (method: string, params: Record<string, unknown>): string => {
-    return `notion:${method}:${JSON.stringify(params)}`;
+    return `notion:v2025:${method}:${JSON.stringify(params)}`; // New cache namespace
+};
+
+const safeStringify = (v: unknown) => {
+    if (typeof v === "object" && v !== null) {
+        try { return JSON.stringify(v); } catch { return inspect(v, { depth: 2 }); }
+    }
+    return String(v);
 };
 
 const getFromCache = async <T>(cacheKey: string): Promise<T | null> => {
@@ -49,8 +72,8 @@ const getFromCache = async <T>(cacheKey: string): Promise<T | null> => {
             logger.info(`Cache hit for ${cacheKey}`);
             return JSON.parse(cachedData) as T;
         }
-    } catch (error) {
-        logger.err(`Error getting from cache: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error getting from cache: ${safeStringify(err)}`);
     }
     return null;
 };
@@ -59,8 +82,8 @@ const setToCache = async <T>(cacheKey: string, data: T): Promise<void> => {
     try {
         await redisSet(cacheKey, JSON.stringify(data), NOTION_CACHE_EXPIRY_SECONDS);
         logger.info(`Cached data for ${cacheKey}`);
-    } catch (error) {
-        logger.err(`Error setting cache: ${error}`);
+    } catch (err: unknown) {
+        logger.err(`Error setting cache: ${safeStringify(err)}`);
     }
 };
 
@@ -99,7 +122,7 @@ const NotionService = {
 
         const items = await collectPaginatedAPI(
             notion.blocks.children.list,
-            {...params, page_size: 100},
+            { ...params, page_size: 100 },
         );
         const result = items.filter(isFullBlock);
 
@@ -213,25 +236,31 @@ const NotionService = {
         pageId: string,
     ): Promise<(PageObjectResponse | DatabaseObjectResponse)[]> {
         const parents: (PageObjectResponse | DatabaseObjectResponse)[] = [];
-        let currentParent: PageObjectResponse['parent'] | DatabaseObjectResponse['parent'] | null = null;
+        let currentParent: PageObjectResponse["parent"] | DatabaseObjectResponse["parent"] | null = null;
 
         // The initial ID could be a page or a database. We need to find its parent.
         try {
-            const page = await this.getPageInfo({page_id: pageId});
+            const page = await this.getPageInfo({ page_id: pageId });
             currentParent = page.parent;
-        } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (error.code === 'object_not_found' && error.message.includes('is a database, not a page')) {
-                try {
-                    const db = await this.getDatabase({database_id: pageId});
-                    currentParent = db.parent;
-                } catch (dbError) {
-                    logger.err(`Could not retrieve database ${pageId}: ${dbError}`);
+        } catch (err: unknown) {
+            if (typeof err === "object" && err !== null) {
+                const e = err as Record<string, unknown>;
+                if (e.code === "object_not_found"
+                    && typeof e.message === "string"
+                    && e.message.includes("is a database, not a page")) {
+                    try {
+                        const db = await this.getDatabase({ database_id: pageId });
+                        currentParent = db.parent;
+                    } catch (dbError: unknown) {
+                        logger.err(`Could not retrieve database ${pageId}: ${safeStringify(dbError)}`);
+                        return [];
+                    }
+                } else {
+                    logger.err(`Could not retrieve page ${pageId}: ${safeStringify(err)}`);
                     return [];
                 }
             } else {
-                logger.err(`Could not retrieve page ${pageId}: ${error}`);
+                logger.err(`Could not retrieve page ${pageId}: ${safeStringify(err)}`);
                 return [];
             }
         }
@@ -239,11 +268,11 @@ const NotionService = {
         // Now traverse up from the first parent
         for (let i = 0; i < 10 && currentParent; i++) {
             if (currentParent.type === "page_id") {
-                const parentPageInfo = await this.getPageInfo({page_id: currentParent.page_id});
+                const parentPageInfo = await this.getPageInfo({ page_id: currentParent.page_id });
                 parents.unshift(parentPageInfo);
                 currentParent = parentPageInfo.parent;
             } else if (currentParent.type === "database_id") {
-                const parentDbInfo = await this.getDatabase({database_id: currentParent.database_id});
+                const parentDbInfo = await this.getDatabase({ database_id: currentParent.database_id });
                 parents.unshift(parentDbInfo);
                 currentParent = parentDbInfo.parent;
             } else { // workspace or other
@@ -255,7 +284,10 @@ const NotionService = {
     },
 
     /******************** DATABASES ********************/
-    /** Retrieve full database metadata */
+    /**
+     * Retrieve database metadata (including data sources in 2025-09-03)
+     * In new API, this returns database info with data_sources array
+     */
     async getDatabase(
         params: GetDatabaseParameters,
     ): Promise<DatabaseObjectResponse> {
@@ -273,39 +305,145 @@ const NotionService = {
         return res;
     },
 
-    /** Query a database with filters and sorts */
+    /**
+     * Helper: Get first data source ID from a database
+     * Required for 2025-09-03 API - databases now contain multiple data sources
+     */
+    async getFirstDataSourceId(databaseId: string): Promise<string> {
+        const db = await this.getDatabase({ database_id: databaseId });
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - data_sources exists in 2025-09-03 but types may not be updated
+        const dataSources = db.data_sources;
+        if (!dataSources || dataSources.length === 0) {
+            throw new Error(`No data sources found for database ${databaseId}`);
+        }
+
+        return dataSources[0].id;
+    },
+
+    /**
+     * Helper: Get all data source IDs from a database
+     */
+    async getAllDataSourceIds(databaseId: string): Promise<{ id: string, name: string }[]> {
+        const db = await this.getDatabase({ database_id: databaseId });
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - data_sources exists in 2025-09-03 but types may not be updated
+        const dataSources = db.data_sources;
+        if (!dataSources || dataSources.length === 0) {
+            throw new Error(`No data sources found for database ${databaseId}`);
+        }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return dataSources.map((ds) => ({ id: ds.id, name: ds.name }));
+    },
+
+    /**
+     * Query a database - Updated for 2025-09-03
+     * Automatically discovers first data source and queries it
+     */
     async queryDatabase(
-        params: QueryDatabaseParameters,
+        params: QueryDatabaseParams,
     ): Promise<SearchResponse> {
-        const cacheKey = getCacheKey("queryDatabase", params);
+        const cacheKey = getCacheKey("queryDatabase", params as Record<string, unknown>);
         const cachedData = await getFromCache<SearchResponse>(cacheKey);
 
         if (cachedData) {
             return cachedData;
         }
 
-        const result = await notion.databases.query(params);
+        // Get first data source ID from database
+        const dataSourceId = await this.getFirstDataSourceId(params.database_id);
+
+        // Query the data source instead of database (2025-09-03 API)
+        // Narrow unknown params into the SDK types with runtime checks
+        const filterParam: QueryDataSourceParameters["filter"] | undefined =
+            (typeof params.filter === "object" && params.filter !== null)
+                ? (params.filter as QueryDataSourceParameters["filter"])
+                : undefined;
+
+        const sortsParam: QueryDataSourceParameters["sorts"] | undefined =
+            Array.isArray(params.sorts)
+                ? (params.sorts as QueryDataSourceParameters["sorts"])
+                : undefined;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - dataSources API exists in SDK v5
+        const result = await notion.dataSources.query({
+            data_source_id: dataSourceId,
+            filter: filterParam,
+            sorts: sortsParam,
+            start_cursor: params.start_cursor,
+            page_size: params.page_size,
+        });
+
         await setToCache(cacheKey, result);
         return result;
     },
 
-    /** Fetch *all* pages in a database via pagination */
+    /**
+     * Fetch *all* pages in a database via pagination - Updated for 2025-09-03
+     * Automatically discovers first data source and queries it
+     */
     async queryDatabaseAll(
-        params: QueryDatabaseParameters,
+        params: QueryDatabaseParams,
     ): Promise<PageObjectResponse[]> {
-        const cacheKey = getCacheKey("queryDatabaseAll", params);
+        const cacheKey = getCacheKey("queryDatabaseAll", params as Record<string, unknown>);
         const cachedData = await getFromCache<PageObjectResponse[]>(cacheKey);
 
         if (cachedData) {
             return cachedData;
         }
 
+        // Get first data source ID from database
+        const dataSourceId = await this.getFirstDataSourceId(params.database_id);
+
+        // Query all pages from the data source (2025-09-03 API)
+        // Narrow unknown params into the SDK types with runtime checks
+        const filterParamAll: QueryDataSourceParameters["filter"] | undefined =
+            (typeof params.filter === "object" && params.filter !== null)
+                ? (params.filter as QueryDataSourceParameters["filter"])
+                : undefined;
+
+        const sortsParamAll: QueryDataSourceParameters["sorts"] | undefined =
+            Array.isArray(params.sorts)
+                ? (params.sorts as QueryDataSourceParameters["sorts"])
+                : undefined;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - dataSources API exists in SDK v5
         const pages = await collectPaginatedAPI(
-            notion.databases.query,
-            {...params, page_size: 100},
+            notion.dataSources.query,
+            {
+                data_source_id: dataSourceId,
+                filter: filterParamAll,
+                sorts: sortsParamAll,
+                page_size: 100,
+            },
         );
         const result = pages.filter(isFullPage);
 
+        await setToCache(cacheKey, result);
+        return result;
+    },
+
+    /**
+     * Get data source details (schema/properties) - New in 2025-09-03
+     * This is the new way to get database schema
+     */
+    async getDataSource(dataSourceId: string) {
+        const cacheKey = getCacheKey("getDataSource", { data_source_id: dataSourceId });
+        const cachedData = await getFromCache(cacheKey);
+
+        if (cachedData) {
+            return cachedData;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - dataSources API exists in SDK v5
+        const result = await notion.dataSources.retrieve({ data_source_id: dataSourceId });
         await setToCache(cacheKey, result);
         return result;
     },

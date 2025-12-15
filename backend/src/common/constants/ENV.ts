@@ -3,17 +3,29 @@
 // src/common/constants/ENV.ts
 import path from "path";
 import dotenv from "dotenv";
-import {cleanEnv, str, num, email} from "envalid";
+import {cleanEnv, email, num, str} from "envalid";
 import {port} from "envalid/dist/validators";
 import {z} from "zod";
 import logger from "jet-logger";
 
-export enum NodeEnvs { Dev = "development", Test = "test", Production = "production" }
+export enum NodeEnvs {
+    Dev = "development",
+    Test = "test",
+    Production = "production",
+}
 
 // -----------------------------------------------------------------------------
-// 1. Load .env
+// 1. Load environment files (prefer config/.env.<NODE_ENV>, fallback to .env)
 // -----------------------------------------------------------------------------
-dotenv.config({path: path.resolve(process.cwd(), ".env")});
+const NODE_ENV_RAW = process.env.NODE_ENV ?? "development";
+const candidateEnvFiles = [
+    path.resolve(process.cwd(), `config/.env.${NODE_ENV_RAW}`),
+    path.resolve(process.cwd(), ".env"),
+];
+for (const envPath of candidateEnvFiles) {
+    const res = dotenv.config({path: envPath});
+    if (!res.error) break;
+}
 
 // -----------------------------------------------------------------------------
 // 2. Parse basic environment variables with envalid
@@ -48,7 +60,7 @@ export const env = cleanEnv(process.env, {
 
     // auth / JWT
     SECRET_KEY: str(),
-    ACCESS_TOKEN_EXPIRY_MS: num({default: 24 * 60 * 60 * 1000}),  // 24 h
+    ACCESS_TOKEN_EXPIRY_MS: num({default: 24 * 60 * 60 * 1000}), // 24 h
     REFRESH_TOKEN_EXPIRY_MS: num({default: 24 * 60 * 60 * 1000}), // 24 h
     ACCESS_TOKEN_PREFIX: str({default: "access:"}),
     REFRESH_TOKEN_PREFIX: str({default: "refresh:"}),
@@ -71,6 +83,12 @@ export const env = cleanEnv(process.env, {
     // Content
     NOTION_ROOT_BLOG_LIST: str({default: ""}),
     GITHUB_REPO_LIST: str({default: "[]" /* will be parsed by Zod below */}),
+
+    // Proxy
+    REALITY_PUBLIC_KEY: str({default: ""}),
+    REALITY_SHORT_ID: str({default: ""}),
+    XRAY_WS_SERVERS_LIST: str({default: "[]"}),
+    REALITY_SERVERS_LIST: str({default: "[]"}),
 });
 
 // -----------------------------------------------------------------------------
@@ -83,36 +101,77 @@ const RepoSchema = z.object({
     pinned: z.boolean().optional(),
 });
 const RepoArraySchema = z.array(RepoSchema);
-
+const ServerItemSchema = z.object({
+    name: z.enum(["US", "DE", "CN"]),
+    server: z.array(z.string().min(1)).min(1),
+    sni: z.string().optional(),
+});
+const ServerListSchema = z.array(ServerItemSchema);
 // -----------------------------------------------------------------------------
 // 4. Utility: safe JSON parsing for env vars
 // -----------------------------------------------------------------------------
 function parseJsonEnv<T>(
     value: string | undefined,
     name: string,
-    schema: z.ZodType<T>
+    schema: z.ZodType<T>,
 ): T {
     if (!value) throw new Error(`Missing env var: ${name}`);
     let parsed: unknown;
     try {
         parsed = JSON.parse(value);
     } catch (err) {
-        throw new Error(`Env var ${name} is not valid JSON: ${(err as Error).message}`);
+        throw new Error(
+            `Env var ${name} is not valid JSON: ${(err as Error).message}`,
+        );
     }
     const result = schema.safeParse(parsed);
     if (!result.success) {
-        throw new Error(`Env var ${name} failed validation: ${result.error.message}`);
+        throw new Error(
+            `Env var ${name} failed validation: ${result.error.message}`,
+        );
     }
     return result.data;
 }
 
+export const XRAY_WS_SERVERS = (() => {
+    try {
+        return parseJsonEnv(
+            env.XRAY_WS_SERVERS_LIST,
+            "XRAY_WS_SERVERS_LIST",
+            ServerListSchema,
+        );
+    } catch (err) {
+        logger.err(
+            "Failed to parse XRAY_WS_SERVERS_LIST: " + (err as Error).message,
+        );
+        return [];
+    }
+})();
+
+export const REALITY_SERVERS = (() => {
+    try {
+        return parseJsonEnv(
+            env.REALITY_SERVERS_LIST,
+            "REALITY_SERVERS_LIST",
+            ServerListSchema,
+        );
+    } catch (err) {
+        logger.err(
+            "Failed to parse REALITY_SERVERS_LIST: " + (err as Error).message,
+        );
+        return [];
+    }
+})();
 // -----------------------------------------------------------------------------
 // 5. Parse GITHUB_REPO_LIST
 // -----------------------------------------------------------------------------
 export const GITHUB_REPO_LIST = (() => {
     try {
-        const parsed = parseJsonEnv(env.GITHUB_REPO_LIST, "GITHUB_REPO_LIST", RepoArraySchema);
-        return parsed;
+        return parseJsonEnv(
+            env.GITHUB_REPO_LIST,
+            "GITHUB_REPO_LIST",
+            RepoArraySchema,
+        );
     } catch (err) {
         logger.err("Failed to parse GITHUB_REPO_LIST: " + (err as Error).message);
         return [];
@@ -157,4 +216,6 @@ export const {
     NOTION_ROOT_BLOG_LIST,
     NOTION_CACHE_EXPIRY_SECONDS,
     GITHUB_ACCESS_TOKEN,
+    REALITY_PUBLIC_KEY,
+    REALITY_SHORT_ID,
 } = env;

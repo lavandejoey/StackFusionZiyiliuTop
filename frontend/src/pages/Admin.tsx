@@ -1,18 +1,18 @@
 // /StackFusionZiyiliuTop/frontend/src/pages/Admin.tsx
-import {useEffect, useState} from "react";
-import {Container, Row, Col, Card, Table, Spinner, Alert, Button} from "react-bootstrap";
-import {fetchAnalyticsBriefing} from "@/services/analyticsService";
-import {type BriefingData} from "@/services/axios";
-import {getUserRoles, listAllUsers} from "@/services/userService";
-import {UserRole} from "@/types/User";
-import {useTranslation} from "react-i18next";
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Card, Table, Spinner, Alert, Button } from "react-bootstrap";
+import { fetchAnalyticsBriefing } from "@/services/analyticsService";
+import { type BriefingData } from "@/services/axios";
+import { getUserRoles, listAllUsers } from "@/services/userService";
+import { UserRole, type UserModel } from "@/types/User";
+import { useTranslation } from "react-i18next";
 import PageHead from "@/components/PageHead";
 import MainLayout from "@/components/MainLayout";
 
 export default function AdminPage() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [brief, setBrief] = useState<BriefingData | null>(null);
-    const [users, setUsers] = useState<any[] | null>(null);
+    const [users, setUsers] = useState<UserModel[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     // pagination state: default pageSize 10 as requested
@@ -35,13 +35,13 @@ export default function AdminPage() {
                 if (!mounted) return;
                 setBrief(b);
 
-                const usersWithRoles = await Promise.all((rawUsers ?? []).map(async (u: any) => {
+                const usersWithRoles = await Promise.all((rawUsers ?? []).map(async (u: UserModel) => {
                     try {
                         const roles = await getUserRoles(u.uuid);
-                        return {...u, role: roles?.[0] ?? null};
-                    } catch (e) {
+                        return { ...u, role: roles?.[0] ?? null };
+                    } catch (e: unknown) {
                         console.warn(`Failed to fetch roles for user ${u.uuid}:`, e);
-                        return {...u, role: null};
+                        return { ...u, role: null };
                     }
                 }));
 
@@ -49,13 +49,15 @@ export default function AdminPage() {
                 setUsers(usersWithRoles);
                 // If backend returned exactly pageSize items, there may be more pages.
                 setHasMore((rawUsers ?? []).length === pageSize);
-            } catch (e: any) {
+            } catch (e: unknown) {
                 if (!mounted) return;
                 console.error("Admin page load failed", e);
-                setError(e?.message ?? String(e));
+                const msg = e instanceof Error ? e.message : String(e);
+                setError(msg);
             } finally {
-                if (!mounted) return;
-                setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                }
             }
         })();
 
@@ -79,14 +81,14 @@ export default function AdminPage() {
 
                     {loading ? (
                         <div className="d-flex justify-content-center py-5">
-                            <Spinner animation="border" role="status"/>
+                            <Spinner animation="border" role="status" />
                         </div>
                     ) : (
                         <>
                             <Row className="g-4 mb-4">
                                 <Col md={6}>
                                     <Card className="rounded-3 h-100 shadow-sm" role="region"
-                                          aria-label="Visitor statistics">
+                                        aria-label="Visitor statistics">
                                         <Card.Body>
                                             <Card.Title>{t("Visitor Info")}</Card.Title>
                                             {brief ? (
@@ -104,7 +106,7 @@ export default function AdminPage() {
                                                         </div>
                                                     </div>
 
-                                                    <hr/>
+                                                    <hr />
 
                                                     <div className="d-flex justify-content-between">
                                                         <div>
@@ -127,7 +129,7 @@ export default function AdminPage() {
 
                                 <Col md={6}>
                                     <Card className="rounded-3 h-100 shadow-sm" role="region"
-                                          aria-label="Overall visitor info">
+                                        aria-label="Overall visitor info">
                                         <Card.Body>
                                             <Card.Title>{t("Overall Visitor Info")}</Card.Title>
                                             <div
@@ -146,24 +148,24 @@ export default function AdminPage() {
                                             {users && users.length > 0 ? (
                                                 <Table hover responsive className="mb-0">
                                                     <thead>
-                                                    <tr>
-                                                        <th>{t("UUID")}</th>
-                                                        <th>{t("Email")}</th>
-                                                        <th>{t("Name")}</th>
-                                                        <th>{t("Role")}</th>
-                                                        <th>{t("Status")}</th>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>{t("UUID")}</th>
+                                                            <th>{t("Email")}</th>
+                                                            <th>{t("Name")}</th>
+                                                            <th>{t("Role")}</th>
+                                                            <th>{t("Status")}</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {users.map((u: any) => (
-                                                        <tr key={u.uuid}>
-                                                            <td className="text-monospace small">{u.uuid}</td>
-                                                            <td>{u.email}</td>
-                                                            <td>{`${u.first_name ?? ""} ${u.last_name ?? ""}`.trim()}</td>
-                                                            <td>{u.role === UserRole.ADMIN ? "Admin" : (u.role === UserRole.USER_MANAGER ? "Manager" : (u.role === UserRole.USER_FRIEND ? "Friend" : "User"))}</td>
-                                                            <td>{u.status}</td>
-                                                        </tr>
-                                                    ))}
+                                                        {users.map((u: UserModel) => (
+                                                            <tr key={u.uuid}>
+                                                                <td className="text-monospace small">{u.uuid}</td>
+                                                                <td>{u.email}</td>
+                                                                <td>{`${u.first_name ?? ""} ${u.last_name ?? ""}`.trim()}</td>
+                                                                <td>{u.role === UserRole.ADMIN ? "Admin" : (u.role === UserRole.USER_MANAGER ? "Manager" : (u.role === UserRole.USER_FRIEND ? "Friend" : "User"))}</td>
+                                                                <td>{u.status}</td>
+                                                            </tr>
+                                                        ))}
                                                     </tbody>
                                                 </Table>
                                             ) : (
