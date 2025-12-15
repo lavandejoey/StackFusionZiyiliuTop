@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a5703e-296f-4986-836d-01c31266a759" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sshConfigs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sshConfigs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/common/constants/ENV.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/v2rayRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/services/GithubService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/services/GithubService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,6 +255,7 @@
       <workItem from="1765633261244" duration="23254000" />
       <workItem from="1765684854990" duration="1404000" />
       <workItem from="1765738372329" duration="2000" />
+      <workItem from="1765818426371" duration="323000" />
     </task>
     <servers />
   </component>

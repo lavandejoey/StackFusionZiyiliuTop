@@ -13,7 +13,6 @@
     "paths": {
       "@src/*": ["src/*"]
     },
-    "useUnknownInCatchVariables": false,
     "useUnknownInCatchVariables": false
   },
   "ts-node": {
