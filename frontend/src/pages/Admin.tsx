@@ -8,7 +8,7 @@ import { UserRole, type UserModel } from "@/types/User";
 import { useTranslation } from "react-i18next";
 import PageHead from "@/components/PageHead";
 import MainLayout from "@/components/MainLayout";
-import ipCountryCache from "@/config/ipCountryCache.json";
+import ipCountryCache from "@config/ipCountryCache.json";
 import { flag as countryEmojiFlag } from "country-emoji";
 
 export default function AdminPage() {
