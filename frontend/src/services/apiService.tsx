@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/frontend/src/services/apiService.tsx
-import {ContactsAPI, ReposAPI} from "@/services/axios";
+import { ContactsAPI, ReposAPI, PublicationsAPI } from "@/services/axios";
 
 /**
  * Payload for the contact form.
@@ -22,5 +22,11 @@ export async function sendContactForm(
 /** Fetches the repository data from the backend. */
 export async function fetchRepos() {
     const response = await ReposAPI.fetch();
+    return response.data.data;
+}
+
+/** Fetches the publications data from the backend. */
+export async function fetchPublications() {
+    const response = await PublicationsAPI.fetch();
     return response.data.data;
 }

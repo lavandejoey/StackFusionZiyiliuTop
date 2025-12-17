@@ -1,4 +1,4 @@
-import {API_VERSION} from "@src/common/constants/ENV";
+import { API_VERSION } from "@src/common/constants/ENV";
 
 const BASE = `/api/${API_VERSION}`;
 
@@ -75,5 +75,13 @@ export const ENDPOINTS = {
         base: "/analytics",
         track: "/track",
         briefing: "/briefing",
+    },
+
+    publications: {
+        base: "/publications",
+        // GET /api/${API_VERSION}/publications
+        all: "/",
+        // GET /api/${API_VERSION}/publications/:type
+        byType: "/:type",
     },
 } as const;

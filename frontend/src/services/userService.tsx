@@ -17,10 +17,10 @@ export async function getUserRoles(uuid: string): Promise<UserRole[]> {
 }
 
 /** List all users with roles paginated */
-export async function listAllUsers(page = 1, pageSize = 10): Promise<UserModel[]> {
+export async function listAllUsers(page = 1, pageSize = 15): Promise<UserModel[]> {
     // normalize inputs
     const p = Math.max(1, Math.floor(Number(page) || 1));
-    const sz = Math.max(1, Math.floor(Number(pageSize) || 10));
+    const sz = Math.max(1, Math.floor(Number(pageSize) || 15));
     const offset = (p - 1) * sz;
     const response = await UsersAPI.listAll({offset, limit: sz});
     return response.data.data;

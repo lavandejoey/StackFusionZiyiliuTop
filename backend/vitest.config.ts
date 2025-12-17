@@ -1,5 +1,5 @@
 // /StackFusionZiyiliuTop/backend/vitest.config.ts
-import {defineConfig} from "vitest/config";
+import { defineConfig } from "vitest/config";
 import path from "path";
 
 const config = defineConfig({
@@ -12,6 +12,7 @@ const config = defineConfig({
     resolve: {
         alias: {
             "@src": path.resolve(process.cwd(), "./src"),
+            "@config": path.resolve(process.cwd(), "./config"),
         },
     },
 });

@@ -4,6 +4,8 @@ import { randomUUID } from "crypto";
 import VisitService from "@src/services/VisitService";
 import { ENDPOINTS } from "@src/common/constants/ENDPOINTS";
 import { NODE_ENV, NodeEnvs } from "@src/common/constants/ENV";
+import { errorResponse, successResponse } from "@src/common/util/response";
+import logger from "jet-logger";
 
 export const analyticsRouter = Router();
 
@@ -46,10 +48,22 @@ analyticsRouter.post(ENDPOINTS.analytics.track, async (req, res) => {
  */
 analyticsRouter.get(ENDPOINTS.analytics.briefing, async (req, res) => {
     try {
-        const data = await VisitService.getBriefing();
-        res.json(data ?? {});
-    } catch {
-        res.status(500).json({ error: "briefing_failed" });
+        const recentLimit = Math.min(
+            200,
+            Math.max(1, Number(req.query.recent ?? 50) || 50),
+        );
+        const rollupDays = Math.min(
+            90,
+            Math.max(1, Number(req.query.days ?? 14) || 14),
+        );
+
+        const data = await VisitService.getBriefing({ recentLimit, rollupDays });
+        res.status(200).json(successResponse(req, res, data ?? {}));
+    } catch (err) {
+        logger.err(`analytics briefing failed: ${err instanceof Error ? err.message : String(err)}`);
+        res
+            .status(500)
+            .json(errorResponse(req, res, "briefing_failed", err instanceof Error ? err.message : String(err)));
     }
 });
 

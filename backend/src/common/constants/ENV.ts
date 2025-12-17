@@ -84,6 +84,11 @@ export const env = cleanEnv(process.env, {
     // Debug helpers
     REPO_CACHE_OVERWRITE: bool({ default: false }),
 
+    // Visits
+    ENABLE_VISIT_JOBS: bool({ default: false }),
+    VISIT_ROLLUP_INTERVAL_MINUTES: num({ default: 10 }),
+    VISIT_RETENTION_DAYS: num({ default: 30 }),
+
     // Content
     NOTION_ROOT_BLOG_LIST: str({ default: "" }),
     GITHUB_REPO_LIST: str({ default: "[]" /* will be parsed by Zod below */ }),
@@ -243,4 +248,7 @@ export const {
     REPO_CACHE_OVERWRITE,
     REALITY_PUBLIC_KEY,
     REALITY_SHORT_ID,
+    ENABLE_VISIT_JOBS,
+    VISIT_ROLLUP_INTERVAL_MINUTES,
+    VISIT_RETENTION_DAYS,
 } = env;

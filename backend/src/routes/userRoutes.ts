@@ -1,14 +1,62 @@
 // /StackFusionZiyiliuTop/backend/src/routes/userRoutes.ts
-import {Router} from "express";
-import {requireOwner} from "@src/common/middlewares/authJWT";
+import { Router } from "express";
+import { requireOwner } from "@src/common/middlewares/authJWT";
 import UserService from "@src/services/UserService";
-import {errorResponse, successResponse} from "@src/common/util/response";
+import { errorResponse, successResponse } from "@src/common/util/response";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
-import {UserModel, UserRoleEnum} from "@src/types/users";
-import {isUuidV4} from "@src/common/util/validators";
-import {ENDPOINTS} from "@src/common/constants/ENDPOINTS";
+import { UserModel, UserRoleEnum } from "@src/types/users";
+import { isUuidV4 } from "@src/common/util/validators";
+import { ENDPOINTS } from "@src/common/constants/ENDPOINTS";
 
 export const userRouter = Router();
+
+/**
+ * List all users with roles (Admin only).
+ * GET /api/${version}/users/all?offset=${offset}&limit=${limit}
+ * @param {number} offset - The number of items to skip before starting to collect the result set.
+ * @param {number} limit - The number of items to return.
+ * @returns {UserModel[]} - The list of users with their roles.
+ */
+userRouter.get(
+    ENDPOINTS.users.list[1],
+    requireOwner(null, [UserRoleEnum.ADMIN]),
+    async (req, res) => {
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 20;
+
+        try {
+            if (!req.user?.roles) {
+                res.status(HttpStatusCodes.FORBIDDEN).send(errorResponse(req, res, "Forbidden"));
+                return;
+            }
+            const users: UserModel[] = await UserService.listAllUsers({ offset, limit }, req.user.roles);
+            res.status(HttpStatusCodes.OK).send(successResponse(req, res, users));
+        } catch (err) {
+            res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+                .send(errorResponse(req, res, "Failed to list users", (err as Error).message));
+        }
+    });
+
+// Optional root list route for backwards compatibility
+userRouter.get(
+    ENDPOINTS.users.list[0],
+    requireOwner(null, [UserRoleEnum.ADMIN]),
+    async (req, res) => {
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 20;
+
+        try {
+            if (!req.user?.roles) {
+                res.status(HttpStatusCodes.FORBIDDEN).send(errorResponse(req, res, "Forbidden"));
+                return;
+            }
+            const users: UserModel[] = await UserService.listAllUsers({ offset, limit }, req.user.roles);
+            res.status(HttpStatusCodes.OK).send(successResponse(req, res, users));
+        } catch (err) {
+            res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+                .send(errorResponse(req, res, "Failed to list users", (err as Error).message));
+        }
+    });
 
 /**
  * Fetches a user by their UUID.
@@ -64,30 +112,3 @@ userRouter.get(
         }
     });
 
-
-/**
- * List all users with roles (Admin only).
- * GET /api/${version}/users/all?offset=${offset}&limit=${limit}
- * @param {number} offset - The number of items to skip before starting to collect the result set.
- * @param {number} limit - The number of items to return.
- * @returns {UserModel[]} - The list of users with their roles.
- */
-userRouter.get(
-    [...ENDPOINTS.users.list],
-    requireOwner(null, [UserRoleEnum.ADMIN]),
-    async (req, res) => {
-        const offset = parseInt(req.query.offset as string) || 0;
-        const limit = parseInt(req.query.limit as string) || 20;
-
-        try {
-            if (!req.user?.roles) {
-                res.status(HttpStatusCodes.FORBIDDEN).send(errorResponse(req, res, "Forbidden"));
-                return;
-            }
-            const users: UserModel[] = await UserService.listAllUsers({offset, limit}, req.user.roles);
-            res.status(HttpStatusCodes.OK).send(successResponse(req, res, users));
-        } catch (err) {
-            res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-                .send(errorResponse(req, res, "Failed to list users", (err as Error).message));
-        }
-    });

@@ -40,7 +40,7 @@ try {
 }
 
 async function fetchRepoDetails(
-    platform: string, owner: string, repo: string, hfType?: string
+    platform: string, owner: string, repo: string, hfType?: string,
 ): Promise<Partial<RepoProps>> {
     try {
         if (platform === "github") {
@@ -184,6 +184,12 @@ async function fetchRepoDetails(
                 } as Partial<RepoProps>;
             }
         }
+
+        // Unsupported platform fallback
+        return {
+            owner,
+            name: repo,
+        } as Partial<RepoProps>;
     } catch (err: unknown) {
         logger.err(`Error fetching repo ${owner}/${repo}: ${safeStringify(err)}`);
         return {} as Partial<RepoProps>;

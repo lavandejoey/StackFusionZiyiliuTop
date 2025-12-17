@@ -7,6 +7,7 @@
     "frontend"
   ],
   "scripts": {
+    "update:locales": "node frontend/src/locales/parser.cjs",
     "clean:all": "npm run clean --workspace backend && npm run clean --workspace frontend && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "install:all": "npm install",
     "lint:all": "npm run lint --workspace backend && npm run lint --workspace frontend",

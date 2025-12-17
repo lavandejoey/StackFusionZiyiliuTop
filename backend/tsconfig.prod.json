@@ -18,10 +18,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@src/*": [
-        "src/*"
-      ]
+      "@src/*": ["src/*"],
+      "@config/*": ["config/*"]
     },
+    "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
     "sourceMap": false,
     "removeComments": true

@@ -17,7 +17,9 @@ import { cvData as cv } from "@/assets/cvData.ts";
 import PageHead from "@/components/PageHead";
 import MainLayout from "@/components/MainLayout";
 import { RepoCard, type RepoProps } from "@/components/RepoCard";
-import { fetchRepos } from "@/services/apiService";
+import { PublicationCard } from "@/components/PublicationCard";
+import type { Publication } from "@/types/Publication";
+import { fetchRepos, fetchPublications } from "@/services/apiService";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 // Minimal CV data shape used by this page
@@ -257,6 +259,7 @@ const MainContent: React.FC<{
     sizeSuffix: string;
 }> = ({ t, cvData, sizeSuffix }) => {
     const [repos, setRepos] = useState<RepoProps[]>([]);
+    const [publications, setPublications] = useState<Publication[]>([]);
 
     useEffect(() => {
         const loadRepos = async () => {
@@ -268,7 +271,17 @@ const MainContent: React.FC<{
             }
         };
 
+        const loadPublications = async () => {
+            try {
+                const fetchedPublications = await fetchPublications();
+                setPublications(fetchedPublications);
+            } catch (error) {
+                console.error("Failed to fetch publications:", error);
+            }
+        };
+
         loadRepos();
+        loadPublications();
     }, []);
 
     return (
@@ -305,6 +318,29 @@ const MainContent: React.FC<{
                     t={t}
                 />
             </Container>
+
+            {/* Publications Section */}
+            {publications.length > 0 && (
+                <Container
+                    className="px-3 px-lg-5 py-4 rounded-5 bg-white bg-opacity-0 border border-primary mb-4"
+                    style={{ zIndex: 0 }}
+                >
+                    <Container>
+                        <Container className="w-25 mx-0 my-3 p-0 pe-2 d-flex justify-content-between align-items-center">
+                            <FontAwesomeIcon
+                                className="d-flex justify-content-center align-items-center"
+                                icon={faBook}
+                                size="2xl"
+                                style={{ zIndex: 99 }}
+                            />
+                            <h2 className="mb-1 mx-3 p-0 text-nowrap">{t("Publications")}</h2>
+                        </Container>
+                        {publications.map((pub, index) => (
+                            <PublicationCard key={index} {...pub} />
+                        ))}
+                    </Container>
+                </Container>
+            )}
 
             {/* Portfolio Section */}
             <Container

@@ -6,8 +6,8 @@ import axios, {
     type AxiosResponse,
     type InternalAxiosRequestConfig,
 } from 'axios';
-import {apiRefreshToken} from "@/services/authService";
-import type {ContactFormPayload} from "@/services/apiService";
+import { apiRefreshToken } from "@/services/authService";
+import type { ContactFormPayload } from "@/services/apiService";
 
 // Prefix for all API calls
 const API_PREFIX = `/api/${import.meta.env.VITE_API_VERSION}`;
@@ -32,7 +32,7 @@ const BASE_URL = `${DOMAIN}${API_PREFIX}`;
 const api: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
 });
 
 // ---- REQUEST INTERCEPTOR: attach access token ----
@@ -135,23 +135,23 @@ api.interceptors.response.use(
 // Auth endpoints
 export const AuthAPI = {
     // POST /api/v1/auth/login
-    login: ({email, password}: { email: string; password: string }) =>
-        api.post(`/auth/login`, {}, {params: {email, password}}),
+    login: ({ email, password }: { email: string; password: string }) =>
+        api.post(`/auth/login`, {}, { params: { email, password } }),
     logout: (): Promise<void> =>
         api.post(`/auth/logout`),
     refreshToken: () =>
         api.post(`/auth/refresh`),
     me: () =>
         api.get(`/auth/me`),
-    signup: ({email, password, first_name, last_name}: {
+    signup: ({ email, password, first_name, last_name }: {
         email: string;
         password: string;
         first_name: string;
         last_name: string
     }) =>
-        api.post(`/auth/signup`, {}, {params: {email, password, first_name, last_name}}),
+        api.post(`/auth/signup`, {}, { params: { email, password, first_name, last_name } }),
     exists: (params: { email?: string; uuid?: string }) =>
-        api.get(`/auth/exists`, {params}),
+        api.get(`/auth/exists`, { params }),
 };
 
 // User endpoints
@@ -159,7 +159,7 @@ export const UsersAPI = {
     list: () =>
         api.get(`/users`),
     listAll: (params?: { offset?: number; limit?: number }) =>
-        api.get(`/users/all`, {params}),
+        api.get(`/users/all`, { params }),
     getByUuid: (uuid: string) =>
         api.get(`/users/${uuid}`),
     getByEmail: (email: string) =>
@@ -193,12 +193,18 @@ export const BlogsAPI = {
 
 // Proxy endpoints
 export const ProxyAPI = {
-    config: (email: string) => api.get(`/proxy/config`, {params: {email}}),
+    config: (email: string) => api.get(`/proxy/config`, { params: { email } }),
 };
 
 // GitHub Repo endpoints
 export const ReposAPI = {
     fetch: () => api.get(`/repos`),
+}
+
+// Publications endpoints
+export const PublicationsAPI = {
+    fetch: () => api.get(`/publications`),
+    fetchByType: (type: string) => api.get(`/publications/${type}`),
 }
 
 // Analytics endpoints
@@ -210,16 +216,41 @@ export type TrackVisitPayload = {
     ua: string;
 };
 
-export type BriefingData = {
+export type VisitTuple = [string, number];
+
+export type VisitRecent = {
+    ts: string;
+    path: string;
+    referrer: string | null;
+    url: string | null;
+    visitor_hint: string;
+    ip_mask: string | null;
+};
+
+export type VisitRollup = {
+    day: string;
+    pageviews: number;
+    visitors: number;
+    top_paths: VisitTuple[];
+    top_ref: VisitTuple[];
+};
+
+export type BriefingMetrics = {
     pv_today: number;
     uv_today: number;
     pv_7d: number;
     uv_7d: number;
-    top_paths_today: string;
-    top_ref_today: string;
+    top_paths_today: VisitTuple[];
+    top_ref_today: VisitTuple[];
+};
+
+export type BriefingData = {
+    metrics: BriefingMetrics;
+    recent: VisitRecent[];
+    rollups: VisitRollup[];
 };
 
 export const AnalyticsAPI = {
     track: (data: TrackVisitPayload) => api.post(`/analytics/track`, data),
-    briefing: () => api.get(`/analytics/briefing`),
+    briefing: (params?: { recent?: number; days?: number }) => api.get(`/analytics/briefing`, { params }),
 };

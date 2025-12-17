@@ -40,5 +40,6 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
-/backend/config/
+**/config/
 .idea/
+**/*.env*
