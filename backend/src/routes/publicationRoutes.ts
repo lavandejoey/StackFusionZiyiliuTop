@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPublications, getPublicationsByType } from "@src/services/PublicationService";
+import { getPublications } from "@src/services/PublicationService";
 import { errorResponse, successResponse } from "@src/common/util/response";
 import HttpStatusCodes from "@src/common/constants/HttpStatusCodes";
 import logger from "jet-logger";
@@ -14,28 +14,6 @@ publicationRouter.get("/", (req, res) => {
         );
     } catch (error) {
         logger.err(`Failed to fetch publications: ${error}`);
-        res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json(
-            errorResponse(
-                req,
-                res,
-                "Failed to fetch publications",
-                error,
-            ),
-        );
-    }
-});
-
-publicationRouter.get("/:type", (req, res) => {
-    try {
-        const { type } = req.params;
-        const publications = getPublicationsByType(type);
-        res.status(HttpStatusCodes.OK).json(
-            successResponse(req, res, publications),
-        );
-    } catch (error) {
-        logger.err(
-            `Failed to fetch publications by type '${req.params.type}': ${error}`,
-        );
         res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json(
             errorResponse(
                 req,

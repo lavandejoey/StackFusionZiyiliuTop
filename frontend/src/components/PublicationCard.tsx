@@ -11,13 +11,14 @@ export const PublicationCard: React.FC<Publication> = ({
     title,
     authors,
     url,
+    book,
     repo,
 }) => {
     return (
         <Container className="mb-3 p-3 border rounded-3" style={{ borderColor: "var(--bs-primary)" }}>
-            <Row className="mb-2">
-                <h6 className="m-0 mb-1">
-                    <a
+            <Row className="mb-1">
+                <span className="lead m-0">
+                    {url !== "#" && (<a
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -31,8 +32,15 @@ export const PublicationCard: React.FC<Publication> = ({
                             className="ms-2"
                             style={{ opacity: 0.6 }}
                         />
-                    </a>
-                </h6>
+                    </a>)}
+                    {url === "#" && (
+                        <>
+                            <span>{title}</span>
+                            <span className="ms-2 badge text-reset small">(Under Review)</span>
+                        </>
+                    )}
+                </span>
+                {book && (<span className="m-0 small fst-italic text-muted">{book}</span>)}
             </Row>
             <Row>
                 <p className="m-0 text-muted small">{formatAuthorsForDisplay(authors)}</p>
@@ -60,7 +68,7 @@ export const PublicationCard: React.FC<Publication> = ({
                                     <SiHuggingface className="me-1" style={{ display: "inline" }} />
                                 )}
                                 {r.name}
-                                {r.type && <span className="ms-1 badge bg-secondary">{r.type}</span>}
+                                {r.type && <span className="ms-2 badge bg-secondary">{r.type}</span>}
                             </a>
                         ))}
                     </div>

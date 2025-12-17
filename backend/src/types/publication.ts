@@ -11,5 +11,6 @@ export interface Publication {
     title: string;
     authors: string;
     url: string;
+    book?: string;
     repo?: PublicationRepo[];
 }

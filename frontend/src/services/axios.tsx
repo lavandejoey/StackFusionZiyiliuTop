@@ -204,7 +204,6 @@ export const ReposAPI = {
 // Publications endpoints
 export const PublicationsAPI = {
     fetch: () => api.get(`/publications`),
-    fetchByType: (type: string) => api.get(`/publications/${type}`),
 }
 
 // Analytics endpoints

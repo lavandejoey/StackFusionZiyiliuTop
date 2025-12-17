@@ -30,4 +30,6 @@ if (!loaded) {
 if (__filename.endsWith("js")) {
     moduleAlias.addAlias("@src", process.cwd() + "/dist");
     moduleAlias.addAlias("@src", path.join(process.cwd(), "dist"));
+    moduleAlias.addAlias("@config", process.cwd() + "/dist/config");
+    moduleAlias.addAlias("@config", path.join(process.cwd(), "dist", "config"));
 }

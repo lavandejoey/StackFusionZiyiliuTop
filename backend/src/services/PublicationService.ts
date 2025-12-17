@@ -21,16 +21,3 @@ export function getPublications(): Publication[] {
         throw error;
     }
 }
-
-/**
- * Get publications by type
- */
-export function getPublicationsByType(type: string): Publication[] {
-    try {
-        const publications = getPublications();
-        return publications.filter((pub: Publication) => pub.type === type);
-    } catch (error: unknown) {
-        logger.err(`Failed to filter publications by type: ${String(error)}`);
-        throw error;
-    }
-}

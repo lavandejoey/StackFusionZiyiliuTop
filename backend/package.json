@@ -15,7 +15,7 @@
   },
   "scripts": {
     "clean": "rm -rf ./dist && rm -rf ./node_modules && rm -rf ./package-lock.json",
-    "build": "tsc -p tsconfig.prod.json",
+    "build": "tsc -p tsconfig.prod.json && cp -R ./config ./dist/config",
     "dev": "NODE_ENV=development REPO_CACHE_OVERWRITE=false ts-node -r tsconfig-paths/register src/index.ts",
     "dev:hot": "nodemon --exec \"npm run dev\" --watch ./src --ext .ts",
     "lint": "eslint . --fix",
