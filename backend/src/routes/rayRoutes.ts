@@ -1,4 +1,4 @@
-// /StackFusionZiyiliuTop/backend/src/routes/v2rayRoutes.ts
+// /StackFusionZiyiliuTop/backend/src/routes/rayRoutes.ts
 import {Request, Response, Router} from "express";
 import YAML from "yaml";
 import UserService from "@src/services/UserService";
@@ -11,6 +11,7 @@ import {
     REALITY_SHORT_ID,
     XRAY_WS_SERVERS,
     REALITY_SERVERS,
+    V2RAY_SERVERS,
 } from "@src/common/constants/ENV";
 
 export const proxyRouter = Router();
@@ -21,11 +22,19 @@ const LOCATION_MAP: Record<string, string> = {
     "DE": "DE-BaWü",
 };
 
-function getNodeName(regionKey: string, type: "Stable" | "Turbo"): string {
+function getNodeName(regionKey: string, type: "Stable" | "Turbo" | "Legacy"): string {
     const prettyRegion = LOCATION_MAP[regionKey] || regionKey;
     return `ZLiu ${prettyRegion} ${type}`;
 }
 
+function parseIterId(raw: unknown): number | null {
+    if (raw === null || raw === undefined) return null;
+    const n = typeof raw === "number" ? raw : Number.parseInt(String(raw), 10);
+    if (!Number.isFinite(n)) return null;
+    if (!Number.isInteger(n)) return null;
+    if (n < 0) return null;
+    return n;
+}
 
 /** * Retrieve the Proxy Config by Email (Available for Users on Clash / Shadowrocket)
  * GET /api/v1/proxy/config?email=xxx@xxx.com
@@ -40,8 +49,9 @@ proxyRouter.get(ENDPOINTS.proxy.config, async (req: Request, res: Response) => {
 
     try {
         const user = await UserService.getSelfProfile(undefined, email);
+        const iterId = parseIterId(user?.v2_iter_id);
 
-        if (!user?.uuid || !user?.email || !user?.v2_iter_id) {
+        if (!user?.uuid || !user?.email || iterId === null) {
             res.status(HttpStatusCodes.NOT_FOUND)
                 .send(errorResponse(req, res, "User not found or incomplete user data"));
             return;
@@ -53,7 +63,7 @@ proxyRouter.get(ENDPOINTS.proxy.config, async (req: Request, res: Response) => {
             return;
         } else {
             // Generate the YAML content
-            const yamlContent = generateClashYaml(user.email, user.uuid);
+            const yamlContent = generateClashYaml(user.email, user.uuid, iterId);
             const filename = `${user.email.split("@")[0]}.yaml`;
 
             res.setHeader("Cache-Control", "no-cache");
@@ -178,12 +188,47 @@ function buildRuleSection(email: string) {
 export function generateClashYaml(
     email: string,
     uuid: string,
+    v2_iter_id: number = 64,
 ): string {
     email.slice(0, email.indexOf("@"));
     // Generate Norm Proxies (VLESS + WS + TLS)
     const uniqueNormServers = XRAY_WS_SERVERS.filter(
         (v, i, a) => a.findIndex(t => (t.name === v.name && t.server === v.server)) === i,
     );
+
+    // Generate Legacy Proxies (VMess + WS + NO TLS) - matches your v2ray inbound:
+    // ws path: /v2ray, security: none， port: 443
+    const uniqueLegacyServers = V2RAY_SERVERS.filter(
+        (v, i, a) => a.findIndex(t => (t.name === v.name && t.server === v.server)) === i,
+    );
+
+    const legacyProxies = uniqueLegacyServers.map((server) => {
+        const address = server.server[0]; // ENV schema says server is always string[]
+        return {
+            name: getNodeName(server.name, "Legacy"),
+            type: "vmess",
+            server: address,
+            port: 443,
+            uuid,
+            alterId: 0,
+            cipher: "auto",
+            udp: true,
+            tls: true,
+            servername: address,
+            "skip-cert-verify": false,
+            network: "ws",
+            "ws-opts": {
+                path: "/v2ray",
+                headers: {
+                    Host: address,
+                },
+            },
+            sniffing: {
+                enabled: true,
+                "dest-override": ["http", "tls"],
+            },
+        };
+    });
 
     const normProxies = uniqueNormServers.map((server) => {
         // Ensure we get a single string address for WS domains
@@ -241,7 +286,7 @@ export function generateClashYaml(
         };
     });
 
-    const allProxies = [...normProxies, ...streamProxies];
+    const allProxies = [...legacyProxies, ...normProxies, ...streamProxies];
 
     const mainProxyGroupName = "ZLiu All Proxy List";
     const globalAutoGroupName = "ZLiu Global Auto Select";

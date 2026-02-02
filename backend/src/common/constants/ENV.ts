@@ -98,6 +98,7 @@ export const env = cleanEnv(process.env, {
     REALITY_SHORT_ID: str({ default: "" }),
     XRAY_WS_SERVERS_LIST: str({ default: "[]" }),
     REALITY_SERVERS_LIST: str({ default: "[]" }),
+    V2RAY_SERVERS_LIST: str({ default: "[]" }),
 });
 
 // -----------------------------------------------------------------------------
@@ -169,6 +170,21 @@ export const REALITY_SERVERS = (() => {
     } catch (err) {
         logger.err(
             "Failed to parse REALITY_SERVERS_LIST: " + (err as Error).message,
+        );
+        return [];
+    }
+})();
+
+export const V2RAY_SERVERS = (()=> {
+    try {
+        return parseJsonEnv(
+            env.V2RAY_SERVERS_LIST,
+            "V2RAY_SERVERS_LIST",
+            ServerListSchema,
+        );
+    } catch (err) {
+        logger.err(
+            "Failed to parse V2RAY_SERVERS_LIST: " + (err as Error).message,
         );
         return [];
     }

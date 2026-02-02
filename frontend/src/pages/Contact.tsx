@@ -4,7 +4,7 @@ import PageHead from '@/components/PageHead';
 import MainLayout from '@/components/MainLayout';
 import ContactForm from '@/components/ContactForm';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGithub, faInstagram, faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
+import {faGithub, faGoogleScholar, faInstagram, faLinkedin, faWhatsapp} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
 
 const Contact: React.FC = () => {
@@ -26,6 +26,9 @@ const Contact: React.FC = () => {
                                 {t("Got questions, feedback, or want to connect? Reach out via my social media channels or email. Let's collaborate!")}
                             </p>
                             <div className="d-flex justify-content-evenly my-3">
+                                <a href="https://scholar.google.com/citations?user=5iI_ZC4AAAAJ" target="_blank" rel="noopener">
+                                    <FontAwesomeIcon icon={faGoogleScholar} size="2x" style={{color: '#4285F4'}}/>
+                                </a>
                                 <a href="https://github.com/lavandejoey" target="_blank" rel="noopener">
                                     <FontAwesomeIcon icon={faGithub} size="2x" style={{color: '#333'}}/>
                                 </a>

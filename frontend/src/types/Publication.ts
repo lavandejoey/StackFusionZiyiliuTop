@@ -7,10 +7,13 @@ export interface PublicationRepo {
 
 export interface Publication {
     active: boolean;
-    type: "paper" | "misc" | "preprint";
+    type: "paper" | "misc" | "preprint" | "inproceedings";
     title: string;
     authors: string | string[];
-    url: string;
     book?: string;
+    year?: number;
+    url: string;
+    reviewed?: boolean;
+    bibtex?: string;
     repo?: PublicationRepo[];
 }

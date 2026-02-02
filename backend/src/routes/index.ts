@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { ENDPOINTS } from "@src/common/constants/ENDPOINTS";
 import { authRouter } from "@src/routes/authRoutes";
-import { proxyRouter } from "@src/routes/v2rayRoutes";
+import { proxyRouter } from "@src/routes/rayRoutes";
 import { contactRouter } from "@src/routes/contactRoutes";
 import { userRouter } from "@src/routes/userRoutes";
 import { blogRouter } from "@src/routes/blogRoutes";
