@@ -10,15 +10,18 @@ A unified workspace hosting a TypeScript-powered Express API backend and a React
 
 ## 📂 Project Structure
 
-- `backend/` – REST API server
-- `frontend/` – Vite-powered React app
+- `apps/backend/` – REST API server
+- `apps/frontend/` – Vite-powered React app
+- `packages/` – shared workspace packages
+- `infra/` – infrastructure assets
+- `scripts/` – operational scripts
 - Root – workspace configuration & orchestration scripts
 
 ## 🔧 Getting Started
 
 ### Prerequisites
 
-- Node.js (>=16) & npm
+- Node.js (>=20) & npm
 - Redis
 - MySQL
 
@@ -32,6 +35,8 @@ npm run install:all
 ### Development
 
 ```bash
+npm run dev:backend  # Start backend in dev mode
+npm run dev:frontend # Start frontend in dev mode
 npm run dev:all      # Start backend + frontend in dev mode
 ```
 
@@ -50,11 +55,11 @@ Root shortcuts:
 - `build:all`, `build:backend`, `build:frontend`
 - `install:all`, `start`
 
-Backend (`backend`):
+Backend (`apps/backend`):
 
 - `dev`, `build`, `start`
 
-Frontend (`frontend`):
+Frontend (`apps/frontend`):
 
 - `dev`, `build`, `lint`, `preview`
 

@@ -1,6 +1,5 @@
 # Node modules
 node_modules/
-package-lock.json
 
 # Logs
 logs
@@ -9,15 +8,15 @@ npm-debug.log*
 
 # Environment variables
 */.env
-apps/backend/.env
-apps/frontend/.env
+.env
+backend/.env
+frontend/.env
 
 # Directories for test coverage reports
 coverage/
 
 # Production build files
 dist/
-*/dist/
 
 # Optional npm cache directory
 .npm
@@ -40,7 +39,6 @@ yarn-error.log*
 /.pnp
 .pnp.js
 
-**/config/
-.idea/
-**/*.env*
-.agent/
+.vscode/*
+/config/
+/src/NotionTypes.zip

@@ -3,21 +3,26 @@
   "version": "3.0.0",
   "description": "Monorepo for Stack Fusion Ziyiliu platform.",
   "workspaces": [
-    "backend",
-    "frontend"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
-    "update:locales": "node frontend/src/locales/parser.cjs",
+    "update:locales": "node apps/frontend/src/locales/parser.cjs",
     "clean:all": "npm run clean --workspace backend && npm run clean --workspace frontend && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "install:all": "npm install --legacy-peer-deps",
     "lint:all": "npm run lint --workspace backend && npm run lint --workspace frontend",
+    "dev:backend": "npm run dev:hot --workspace backend",
+    "dev:frontend": "npm run dev --workspace frontend",
     "dev:all": "concurrently \"npm run dev:hot --workspace backend\" \"npm run dev --workspace frontend\"",
+    "build": "npm run build:all",
+    "build:backend": "npm run build --workspace backend",
+    "build:frontend": "npm run build --workspace frontend",
     "build:all": "concurrently \"npm run build --workspace backend\" \"npm run build --workspace frontend\"",
     "start": "concurrently \"npm run start --workspace backend\" \"npm run preview --workspace frontend\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lavandejoey/StackFusionZiyiliuTop.git"
+    "url": "git+https://github.com/OrkaZeta/StackFusionZiyiliuTop.git"
   },
   "keywords": [
     "stack",
@@ -28,9 +33,9 @@
   "author": "Ziyi LIU",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lavandejoey/StackFusionZiyiliuTop/issues"
+    "url": "https://github.com/OrkaZeta/StackFusionZiyiliuTop/issues"
   },
-  "homepage": "https://github.com/lavandejoey/StackFusionZiyiliuTop#readme",
+  "homepage": "https://github.com/OrkaZeta/StackFusionZiyiliuTop#readme",
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
     "@types/react-responsive-masonry": "^2.6.0",

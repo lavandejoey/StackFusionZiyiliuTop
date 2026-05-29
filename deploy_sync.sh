@@ -52,15 +52,15 @@ rsync_to_remote() {
 echo "Syncing to ${REMOTE}"
 
 # backend compiled output and config
-rsync_to_remote "backend/dist/" "backend/dist"
-rsync_to_remote "backend/config/" "backend/config"
+rsync_to_remote "apps/backend/dist/" "apps/backend/dist"
+rsync_to_remote "apps/backend/config/" "apps/backend/config"
 
 # frontend compiled output
-rsync_to_remote "frontend/dist/" "frontend/dist"
+rsync_to_remote "apps/frontend/dist/" "apps/frontend/dist"
 
 # package.json files (root, backend, frontend)
 rsync_to_remote "package.json" ""
-rsync_to_remote "backend/package.json" "backend"
-rsync_to_remote "frontend/package.json" "frontend"
+rsync_to_remote "apps/backend/package.json" "apps/backend"
+rsync_to_remote "apps/frontend/package.json" "apps/frontend"
 
 echo "Sync complete."
